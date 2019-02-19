@@ -7,7 +7,6 @@ readonly WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
 PACKAGES=(
   ascii
   build-essential
-  clang
   clang-format
   curl
   dos2unix
@@ -16,8 +15,6 @@ PACKAGES=(
   gedit
   git
   jq
-  libclang
-  libclang-dev
   libgmp-dev
   libxml2-utils
   mc
@@ -66,8 +63,10 @@ if [[ "$WSL" == 0 ]]; then
   # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
   timedatectl set-local-rtc 1 --adjust-system-clock
   if ! grep -qF '# My custom crap' /etc/fstab; then
-    sudo echo '# My custom crap' >>/etc/fstab
-    sudo echo 'tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0' >>/etc/fstab
+    sudo bash -c '
+      echo "# My custom crap" >>/etc/fstab
+      echo "tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0" >>/etc/fstab
+    '
   fi
   if ! test -f /usr/bin/code; then
     VSCODE_DEB=$(mktemp)
