@@ -62,4 +62,17 @@ fi
 
 if [[ "$WSL" == 0 ]]; then
   gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
+  # Avoid clock snafu when dual-booting Windows and Linux.
+  # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
+  timedatectl set-local-rtc 1 --adjust-system-clock
+  if ! grep -qF '# My custom crap' /etc/fstab; then
+    sudo echo '# My custom crap' >>/etc/fstab
+    sudo echo 'tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0' >>/etc/fstab
+  fi
+  if ! test -f /usr/bin/code; then
+    VSCODE_DEB=$(mktemp)
+    curl -L 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$VSCODE_DEB"
+    sudo apt install "$VSCODE_DEB"
+    rm "$VSCODE_DEB"
+  fi
 fi
