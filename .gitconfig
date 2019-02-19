@@ -1,0 +1,7 @@
+[user]
+	name = romkatv
+	email = roman.perepelitsa@gmail.com
+[diff]
+	tool = meld
+[merge]
+	tool = meld
