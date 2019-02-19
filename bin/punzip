@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# USAGE: punzip [-n NUM] <file.zip>
+# Extract files from the archive in parallel.
+#
+# Bugs:
+#
+#   * Doesn't work if any of the files in the archive have \n in their names.
+#   * If the archive is corrupted, punzip may return 0 in some cases.
+#   * Console output is fucked up.
+
+set -eEu -o pipefail
+
+readonly USAGE='USAGE: punzip [OPTIONS] <file.zip>
+
+EXAMPLE
+
+  punzip -n 4 pr0n.zip
+
+OPTIONS
+
+  -n=NUM [default=NUMCPUS]
+    Spawn this many processes to unzip in parallel.'
+
+OPT="$(getopt -o "hn:" -l "help" -n "$0" -- "$@")"
+eval set -- "$OPT"
+unset OPT
+
+N=$(getconf _NPROCESSORS_ONLN)
+
+while true; do
+  case "$1" in
+    --)
+      shift
+      break
+      ;;
+    -h|--help)
+      echo "$USAGE" >&2
+      exit 1
+      ;;
+    -n)
+      if [[ "$2" != *([0-9])[1-9]*([0-9]) ]]; then
+        echo "not a positive integer: $2" >&2
+        exit 1
+      fi
+      readonly N="$2"
+      shift 2
+      ;;
+    *)
+      echo "unrecognized flag: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [[ $# != 1 ]]; then
+  echo "$USAGE" >&2
+  exit 1
+fi
+
+readonly N
+readonly ZIP="$1"
+
+IFS=$'\n'
+FILES=($(unzip -Z1 "$ZIP" | sort --random-sort))
+
+I=0
+J=0
+BATCH=()
+readonly F=${#FILES[@]}
+for f in "${FILES[@]}"; do
+  BATCH+=("$f")
+  ((++I))
+  if [[ "$((I * N / F))" -ne "$J" ]]; then
+    if [[ "$BATCH" != "" ]]; then
+      unzip "$ZIP" "${BATCH[@]}" &
+    fi
+    BATCH=()
+    ((++J))
+  fi
+done
+
+wait

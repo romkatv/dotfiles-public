@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if ! xprop -root &>/dev/null; then
+  # No X server at $DISPLAY
+  nano "$@"
+else
+  nohup gedit --wait "$@" &>/dev/null
+fi

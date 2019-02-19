@@ -1,0 +1,3 @@
+#!/bin/bash
+
+perl -ple '$_ /= 1000' </sys/class/thermal/thermal_zone*/temp
