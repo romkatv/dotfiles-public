@@ -52,8 +52,8 @@ alias gedit='gedit &>/dev/null'
 
 # If you want some random config file to be versioned in the dotfiles-public git repo, type
 # `dotfiles-public add -f <random-file>`. Use `commit`, `push`, etc., as with normal git.
-alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/ --work-tree="$HOME"'
-alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/ --work-tree="$HOME"'
+alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/.git --work-tree="$HOME"'
+alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/.git --work-tree="$HOME"'
 
 alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
@@ -77,6 +77,7 @@ setopt HIST_REDUCE_BLANKS    # not sure what it does
 setopt EXTENDEDGLOB          # extended glob support: ^*.cc(.) for all regular files but *.cc
 setopt NOEQUALS              # disable =foo being equivalent to $(which foo)
 setopt NOBANGHIST            # disable old history syntax
+setopt GLOB_DOTS             # glob matches files starting with dot; `*` becomes `*(D)`
 
 unsetopt BG_NICE             # don't nice background jobs; not useful and doesn't work on WSL
 
