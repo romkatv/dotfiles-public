@@ -97,7 +97,3 @@ function man() {
 function chpwd() ls  # run `ls` after every `cd`
 
 function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
-
-if [[ $WSL == 1 ]]; then
-  cd
-fi
