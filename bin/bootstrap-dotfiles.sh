@@ -72,7 +72,7 @@ function clone_repo() {
   popd
 
   git clone --bare "$(get_repo_uri "$repo")" "$git_dir"
-  git --git-dir="$git_dir"/ --work-tree="$HOME" checkout -b master -u origin/master
+  git --git-dir="$git_dir"/ --work-tree="$HOME" checkout --track origin/master
 
   restore_files "$backup_dir"
   trap - INT TERM EXIT
