@@ -17,7 +17,7 @@ function list_files() {
   tmp=$(mktemp -d)
   git clone "$(get_repo_uri "$repo")" "$tmp"
   local files
-  files=$(git --git-dir="$tmp"/.git --work-tree="$tmp" ls-tree -rz --name-only master)
+  files=$(git --git-dir="$tmp"/.git --work-tree="$tmp" ls-tree -r --name-only master)
   rm -rf "$tmp"
   echo "$files"
 }
@@ -33,7 +33,7 @@ function backup_files() {
 
   mkdir -p "$backup_dir"
   pushd "$HOME"
-  while IFS= read -r -d '' file; do
+  while read -r file; do
     if test -f "$file"; then
       cp --parents -a "$file" "$backup_dir"
     fi
@@ -44,9 +44,9 @@ function backup_files() {
 function restore_files() {
   local backup_dir=$1
   pushd "$backup_dir"
-  while IFS= read -r -d '' file; do
+  while read -r file; do
     cp --parents -a -f "$file" "$HOME"
-  done < <(find . -type f -print0)
+  done < <(find . -type f)
   popd
   rm -rf "$backup_dir"
 }
@@ -73,7 +73,7 @@ function clone_repo() {
 
   git clone --bare "$(get_repo_uri "$repo")" "$git_dir"
   git --git-dir="$git_dir"/ --work-tree="$HOME" checkout master
-  git --git-dir="$git_dir"/ --work-tree="$HOME" push -u origin
+  git --git-dir="$git_dir"/ --work-tree="$HOME" push -u origin master
 
   restore_files "$backup_dir"
   trap - INT TERM EXIT
