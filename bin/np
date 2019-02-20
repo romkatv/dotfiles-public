@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+files=()
+for f; do
+  files+=$(wslpath -w $f)
+done
+
+"$WINDOWS_EDITOR" $files

@@ -52,22 +52,12 @@ alias gedit='gedit &>/dev/null'
 
 # If you want some random config file to be versioned in the dotfiles-public git repo, type
 # `dotfiles-public add -f <random-file>`. Use `commit`, `push`, etc., as with normal git.
-alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/.git --work-tree="$HOME"'
-alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/.git --work-tree="$HOME"'
+alias dotfiles-public='git --git-dir=$HOME/.dotfiles-public/.git --work-tree=$HOME'
+alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$HOME'
 
 alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
 alias c='x && v'               # copy to clipboard
-
-if [[ $WSL == 1 ]]; then
-  function np() {
-    local -a files
-    for f; do
-      files+=$(wslpath -w "$f")
-    done
-    "/mnt/c/Program Files/Notepad++/notepad++.exe" $files
-  }
-fi
 
 stty susp '^B'  # ctrl+b instead of ctrl+z to suspend
 
@@ -101,13 +91,13 @@ function man() {
     LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
     LESS_TERMCAP_ue=$(printf "\e[0m")       \
     LESS_TERMCAP_us=$(printf "\e[1;36m")    \
-    man "$@"
+    man $*
 }
 
 function chpwd() ls  # run `ls` after every `cd`
 
 function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
 
-if [[ "$WSL" == 1 ]]; then
+if [[ $WSL == 1 ]]; then
   cd
 fi

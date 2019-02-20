@@ -1,8 +1,18 @@
 #!/bin/bash
 
-if ! xprop -root &>/dev/null; then
-  # No X server at $DISPLAY
-  nano "$@"
-else
+function all_win() {
+  for f in "$@"; do
+    if ! wslpath -w "$f" &>/dev/null; then
+      return 1
+    fi
+  done
+}
+
+if test "$WSL" -eq 1 && all_win "$@" && test -f "$WINDOWS_EDITOR"; then
+  nohup "$HOME"/bin/np "$@" &>/dev/null
+elif xprop -root &>/dev/null; then
+  # Have X server at $DISPLAY.
   nohup gedit --wait "$@" &>/dev/null
+else
+  nano "$@"
 fi

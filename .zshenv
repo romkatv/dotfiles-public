@@ -4,8 +4,9 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
 export EDITOR=$HOME/bin/redit
 export GOPATH=$HOME/go
 
-if [[ "$WSL" == 1 ]]; then
+if [[ $WSL == 1 ]]; then
   export DISPLAY=:0
+  export WINDOWS_EDITOR='/mnt/c/Program Files/Notepad++/notepad++.exe'
 fi
 
 umask 0002
