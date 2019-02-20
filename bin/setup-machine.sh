@@ -44,10 +44,16 @@ function install_packages() {
   sudo apt install -y "${PACKAGES[@]}"
 }
 
-# Install oh-my-zsh
+# If this user's login shell is not already "zsh", attempt to switch.
+function change_shell() {
+  test "${SHELL##*/}" != "zsh" || return 0
+  chsh -s "$(grep -E '/zsh$' /etc/shells | tail -1)"
+}
+
+# Install oh-my-zsh.
 function install_ohmyzsh() {
   test ! -d "$HOME"/.oh-my-zsh || return 0
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+  git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git "$HOME"/.oh-my-zsh
 }
 
 # Install oh-my-zsh plugin or theme.
@@ -104,6 +110,8 @@ function install_font() {
   fi
 }
 
+umask g-w,o-w
+
 install_packages
 install_vscode
 install_font
@@ -116,5 +124,7 @@ install_ohmyzsh_extension theme \
 
 fix_clock
 fix_shm
+
+change_shell
 
 echo SUCCESS
