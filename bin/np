@@ -1,8 +1,23 @@
 #!/bin/zsh
 
-files=()
+set -ue
+
+args=()
+
 for f; do
-  files+=$(wslpath -w $f)
+  if [[ $f == -- ]]; then
+    shift
+    break
+  elif [[ $f == -* ]]; then
+    args+=$f
+    shift
+  else
+    break
+  fi
 done
 
-"$WINDOWS_EDITOR" $files
+for f; do
+  args+=$(wslpath -w $f)
+done
+
+print -r -- "$WINDOWS_EDITOR" $args
