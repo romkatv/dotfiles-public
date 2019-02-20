@@ -1,0 +1,6 @@
+﻿Windows Registry Editor Version 5.00
+; Adds "MesloLGLDZ NF" to the list of True Type fonts in Windows Command Prompt.
+; Afterwards you must reboot and manually change the font in Windows Command Prompt' Properties.
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Console\TrueTypeFont]
+"1337"="MesloLGLDZ NF"
