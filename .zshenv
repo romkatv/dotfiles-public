@@ -8,4 +8,5 @@ if [[ "$WSL" == 1 ]]; then
   export DISPLAY=:0
 fi
 
+umask 0002
 ulimit -c unlimited
