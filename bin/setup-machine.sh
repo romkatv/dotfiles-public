@@ -88,12 +88,17 @@ function install_font() {
   if [[ $WSL == 1 ]]; then
     local fontdir="$HOME/.local/share/fonts/NerdFonts"
     local font="Meslo LG L DZ Regular Nerd Font Complete Mono Windows Compatible.ttf"
+    local reg="register-cmd-font.reg"
     local tmpdir
-    tmpdir=$(wslpath $(cmd.exe /c "echo %TMP%"))
-    cp -f "$fontdir/$font" "$tmpdir/"
+    tmpdir=$(wslpath $(cmd.exe /c "echo %TMP%" | sed 's/\r$//'))
+    cp -f "$fontdir/$font" "$fontdir/$reg" "$tmpdir/"
     # This will open the font in a separate window where the user must click "Install".
-    # Afterwards the user will have to manually switch "cmd" to the new font.
-    cmd.exe /C start "$(wslpath -w "$tmpdir/$font")"
+    cmd.exe /C "$(wslpath -w "$tmpdir/$font")"
+    # This will ask the user for permissions to modify registry.
+    cmd.exe /C "$(wslpath -w "$tmpdir/$reg")"
+    # If everything went well, the font will appear in the list of True Type fonts
+    # in Windows Command Prompt' Properties after a reboot. The user will have to
+    # manually switch to "MesloLGLDZ NF" there.
   else
     gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
   fi
