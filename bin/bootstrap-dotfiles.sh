@@ -3,7 +3,7 @@
 # Clone dotfiles-public and dotfiles-private from github. Requires `git` and ssh
 # keys for github.
 
-set -ueEo pipefail
+set -xueEo pipefail
 
 readonly GITHUB_USER=romkatv
 
