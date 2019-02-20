@@ -59,6 +59,16 @@ alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
 alias c='x && v'               # copy to clipboard
 
+if [[ $WSL == 1 ]]; then
+  function np() {
+    local -a files
+    for f; do
+      files+=$(wslpath -w "$f")
+    done
+    "/mnt/c/Program Files/Notepad++/notepad++.exe" $files
+  }
+fi
+
 stty susp '^B'  # ctrl+b instead of ctrl+z to suspend
 
 bindkey '^H'      backward-kill-word  # ctrl+backspace -- delete previous word
