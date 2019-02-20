@@ -21,6 +21,38 @@ plugins=(git zsh-syntax-highlighting zsh-autosuggestions command-not-found dirhi
 
 source $ZSH/oh-my-zsh.sh
 
+alias clang-format='clang-format -style=file'
+alias ls='ls --group-directories-first --color=tty'
+alias gedit='gedit &>/dev/null'
+
+alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/ --work-tree="$HOME"'
+alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/ --work-tree="$HOME"'
+
+alias x='xsel --clipboard -i'  # cut to clipboard
+alias v='xsel --clipboard -o'  # paste from clipboard
+alias c='x && v'               # copy to clipboard
+
+stty susp '^B'  # ctrl+b instead of ctrl+z to suspend
+
+bindkey '^H'      backward-kill-word  # ctrl+backspace -- delete previous word
+bindkey '^[[3;5~' kill-word           # ctrl+del       -- delete next word
+bindkey '^J'      backward-kill-line  # ctrl+j         -- delete everything before cursor
+bindkey '^Z'      undo                # ctrl+z         -- undo
+bindkey '^Y'      redo                # ctrl+y         -- redo
+
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=1000000000
+SAVEHIST=1000000000
+HISTFILESIZE=1000000000
+
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt EXTENDEDGLOB
+setopt NOEQUALS
+setopt NOBANGHIST
+
+unsetopt BG_NICE
+
 # Colored man pages.
 function man() {
   env \
@@ -36,31 +68,6 @@ function man() {
 
 # Run `ls` after every `cd`.
 function chpwd() { ls }
-
-HISTFILE=$HOME/.zsh_history
-HISTSIZE=1000000000
-SAVEHIST=1000000000
-HISTFILESIZE=1000000000
-
-alias clang-format='/usr/bin/clang-format -style=file'
-alias ls='ls --group-directories-first --color=tty'
-alias gedit='gedit &>/dev/null'
-
-alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/ --work-tree="$HOME"'
-alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/ --work-tree="$HOME"'
-
-alias x='xsel --clipboard -i' # cut to clipboard
-alias v='xsel --clipboard -o' # paste from clipboard
-alias c='x && v'              # copy to clipboard
-
-bindkey '^H'      backward-kill-word # ctrl+backspace
-bindkey '^[[3;5~' kill-word          # ctrl+del
-bindkey '^J'      backward-kill-line # ctrl+j
-
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_REDUCE_BLANKS
-unsetopt BG_NICE
-unsetopt COMPLETE_ALIASES
 
 if [[ "$WSL" == 1 ]]; then
   cd
