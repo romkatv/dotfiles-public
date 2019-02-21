@@ -16,6 +16,7 @@ function install_packages() {
     clang-format
     command-not-found
     curl
+    dconf-cli
     dos2unix
     g++-8
     gawk
@@ -89,7 +90,7 @@ function fix_shm() {
   '
 }
 
-# Install decent monospace font.
+# Install a decent monospace font.
 function install_font() {
   if [[ $WSL == 1 ]]; then
     local fontdir="$HOME/.local/share/fonts/NerdFonts"
@@ -105,9 +106,31 @@ function install_font() {
     # If everything went well, the font will appear in the list of True Type fonts
     # in Windows Command Prompt' Properties after a reboot. The user will have to
     # manually switch to "MesloLGLDZ NF" there.
-  else
-    gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
   fi
+}
+
+# Set preferences for various applications.
+function set_preferences() {
+  gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
+  # These are obtained by running 'dconf dump /org/gnome/gedit/preferences/'.
+  dconf load '/org/gnome/gedit/preferences/' <<END
+[editor]
+highlight-current-line=true
+display-right-margin=true
+display-overview-map=false
+bracket-matching=true
+tabs-size=uint32 2
+display-line-numbers=true
+insert-spaces=true
+right-margin-position=uint32 100
+background-pattern='none'
+wrap-last-split-mode='word'
+auto-indent=true
+
+[ui]
+show-tabs-mode='auto'
+side-panel-visible=true
+END
 }
 
 umask g-w,o-w
@@ -124,6 +147,8 @@ install_ohmyzsh_extension theme \
 
 fix_clock
 fix_shm
+
+set_preferences
 
 change_shell
 
