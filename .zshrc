@@ -69,13 +69,17 @@ bindkey '^J'      backward-kill-line  # ctrl+j         -- delete everything befo
 bindkey '^Z'      undo                # ctrl+z         -- undo
 bindkey '^Y'      redo                # ctrl+y         -- redo
 
+# TODO: Define a set-local-history zle binding.
+
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000000000
 SAVEHIST=1000000000
 HISTFILESIZE=1000000000
 
-setopt HIST_IGNORE_ALL_DUPS  # not sure what it does
-setopt HIST_REDUCE_BLANKS    # not sure what it does
+setopt HIST_IGNORE_SPACE     # don't add commands starting with space to history
+setopt HIST_VERIFY           # if a cmd triggers history expansion, show it instead of running
+setopt HIST_IGNORE_ALL_DUPS  # duplicate commands evict older twins
+setopt HIST_REDUCE_BLANKS    # remove junk whitespace from commands before adding to history
 setopt EXTENDEDGLOB          # extended glob support: ^*.cc(.) for all regular files but *.cc
 setopt NOEQUALS              # disable =foo being equivalent to $(which foo)
 setopt NOBANGHIST            # disable old history syntax
