@@ -5,6 +5,24 @@
 
 set -xueE -o pipefail
 
+# These are obtained by running 'dconf dump /org/gnome/gedit/preferences/'.
+readonly GEDIT_PREFERENCES="[editor]
+highlight-current-line=true
+display-right-margin=true
+display-overview-map=false
+bracket-matching=true
+tabs-size=uint32 2
+display-line-numbers=true
+insert-spaces=true
+right-margin-position=uint32 100
+background-pattern='none'
+wrap-last-split-mode='word'
+auto-indent=true
+
+[ui]
+show-tabs-mode='auto'
+side-panel-visible=true"
+
 # '1' if running under Windows Subsystem for Linux, '0' otherwise.
 readonly WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
 
@@ -37,7 +55,7 @@ function install_packages() {
   )
 
   if [[ "$WSL" == 1 ]]; then
-    PACKAGES+=(ubuntu-gnome-desktop)
+    PACKAGES+=(dbus-x11)
   else
     PACKAGES+=(gnome-tweak-tool)
   fi
@@ -110,31 +128,25 @@ function install_font() {
   fi
 }
 
+function fix_dbus() {
+  test $WSL -eq 1 || return 0
+  sudo dbus-uuidgen --ensure
+}
+
 # Set preferences for various applications.
 function set_preferences() {
   if [[ $WSL == 0 ]]; then
     # It doesn't work on WSL.
     gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
   fi
-  # These are obtained by running 'dconf dump /org/gnome/gedit/preferences/'.
-  dconf load '/org/gnome/gedit/preferences/' <<END
-[editor]
-highlight-current-line=true
-display-right-margin=true
-display-overview-map=false
-bracket-matching=true
-tabs-size=uint32 2
-display-line-numbers=true
-insert-spaces=true
-right-margin-position=uint32 100
-background-pattern='none'
-wrap-last-split-mode='word'
-auto-indent=true
-
-[ui]
-show-tabs-mode='auto'
-side-panel-visible=true
-END
+  if [[ "${DISPLAY+X}" == "" ]]; then
+    export DISPLAY=:0
+  fi
+  if ! xprop -root &>/dev/null; then
+    # No X server at $DISPLAY.
+    return
+  fi
+  dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
 }
 
 umask g-w,o-w
@@ -151,6 +163,7 @@ install_ohmyzsh_extension theme \
 
 fix_clock
 fix_shm
+fix_dbus
 
 set_preferences
 
