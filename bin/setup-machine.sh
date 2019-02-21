@@ -112,7 +112,10 @@ function install_font() {
 
 # Set preferences for various applications.
 function set_preferences() {
-  gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
+  if [[ $WSL == 0 ]]; then
+    # It doesn't work on WSL.
+    gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
+  fi
   # These are obtained by running 'dconf dump /org/gnome/gedit/preferences/'.
   dconf load '/org/gnome/gedit/preferences/' <<END
 [editor]
