@@ -154,6 +154,11 @@ function set_preferences() {
   dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
 }
 
+if [[ "$(id -u)" == 0 ]]; then
+  echo "setup-machine.sh: please run as non-root" >&2
+  exit 1
+fi
+
 umask g-w,o-w
 
 install_packages

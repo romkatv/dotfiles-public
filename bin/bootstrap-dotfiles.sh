@@ -79,5 +79,10 @@ function clone_repo() {
   trap - INT TERM EXIT
 }
 
+if [[ "$(id -u)" == 0 ]]; then
+  echo "bootstrap-dotfiles.sh: please run as non-root" >&2
+  exit 1
+fi
+
 clone_repo dotfiles-public
 clone_repo dotfiles-private
