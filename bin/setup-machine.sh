@@ -133,6 +133,11 @@ function fix_dbus() {
   sudo dbus-uuidgen --ensure
 }
 
+function fix_gcc() {
+  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8
+  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
+}
+
 # Set preferences for various applications.
 function set_preferences() {
   if [[ $WSL == 0 ]]; then
@@ -164,6 +169,7 @@ install_ohmyzsh_extension theme \
 fix_clock
 fix_shm
 fix_dbus
+fix_gcc
 
 set_preferences
 
