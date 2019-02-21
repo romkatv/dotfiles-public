@@ -27,6 +27,7 @@ function install_packages() {
     nano
     p7zip-full
     p7zip-rar
+    tree
     unoconv
     unrar
     wget
