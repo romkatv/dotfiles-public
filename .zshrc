@@ -87,19 +87,6 @@ setopt GLOB_DOTS             # glob matches files starting with dot; `*` becomes
 
 unsetopt BG_NICE             # don't nice background jobs; not useful and doesn't work on WSL
 
-# Colored man pages (colors are shit; could use better ones).
-function man() {
-  env \
-    LESS_TERMCAP_mb=$'\e[1;31m'    \
-    LESS_TERMCAP_md=$'\e[1;31m'    \
-    LESS_TERMCAP_me=$'\e[0m'       \
-    LESS_TERMCAP_se=$'\e[0m'       \
-    LESS_TERMCAP_so=$'\e[1;44;33m' \
-    LESS_TERMCAP_ue=$'\e[0m'       \
-    LESS_TERMCAP_us=$'\e[1;36m'    \
-    man $*
-}
-
 function chpwd() ls  # run `ls` after every `cd`
 
 function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
