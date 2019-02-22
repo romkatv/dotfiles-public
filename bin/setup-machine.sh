@@ -40,6 +40,7 @@ function install_packages() {
     gawk
     gedit
     git
+    htop
     jq
     meld
     nano
@@ -56,7 +57,7 @@ function install_packages() {
   if [[ "$WSL" == 1 ]]; then
     PACKAGES+=(dbus-x11)
   else
-    PACKAGES+=(gnome-tweak-tool unoconv)
+    PACKAGES+=(gnome-tweak-tool iotop unoconv)
   fi
 
   sudo apt update
