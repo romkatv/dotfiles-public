@@ -20,4 +20,4 @@ for f; do
   args+=$(wslpath -w $f)
 done
 
-print -r -- "$WINDOWS_EDITOR" $args
+"$WINDOWS_EDITOR" $args
