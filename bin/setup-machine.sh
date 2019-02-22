@@ -152,7 +152,7 @@ function set_preferences() {
     # No X server at $DISPLAY.
     return
   fi
-  dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
+  dbus-launch dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
 }
 
 if [[ "$(id -u)" == 0 ]]; then
