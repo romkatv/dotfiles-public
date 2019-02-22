@@ -46,10 +46,9 @@ function install_packages() {
     p7zip-full
     p7zip-rar
     tree
-    unoconv
     unrar
     wget
-    x11-xserver-utils
+    x11-utils
     xsel
     zsh
   )
@@ -57,7 +56,7 @@ function install_packages() {
   if [[ "$WSL" == 1 ]]; then
     PACKAGES+=(dbus-x11)
   else
-    PACKAGES+=(gnome-tweak-tool)
+    PACKAGES+=(gnome-tweak-tool unoconv)
   fi
 
   sudo apt update
