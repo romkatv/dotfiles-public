@@ -113,19 +113,24 @@ function fix_shm() {
 # Install a decent monospace font.
 function install_font() {
   if [[ $WSL == 1 ]]; then
-    local fontdir="$HOME/.local/share/fonts/NerdFonts"
-    local font="Meslo LG L DZ Regular Nerd Font Complete Mono Windows Compatible.ttf"
-    local reg="register-cmd-font.reg"
-    local tmpdir
-    tmpdir=$(wslpath $(cmd.exe /c "echo %TMP%" | sed 's/\r$//'))
-    cp -f "$fontdir/$font" "$fontdir/$reg" "$tmpdir/"
-    # This will open the font in a separate window where the user must click "Install".
-    cmd.exe /C "$(wslpath -w "$tmpdir/$font")"
-    # This will ask the user for permissions to modify registry.
-    cmd.exe /C "$(wslpath -w "$tmpdir/$reg")"
-    # If everything went well, the font will appear in the list of True Type fonts
-    # in Windows Command Prompt' Properties after a reboot. The user will have to
-    # manually switch to "MesloLGLDZ NF" there.
+    local SRC_DIR="$HOME/.local/share/fonts/NerdFonts"
+    local FILE="Meslo LG L DZ Regular Nerd Font Complete Mono Windows Compatible.ttf"
+    local DST_DIR
+    DST_DIR=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" | sed 's/\r$//'))
+    if ! test -f "$DST_DIR/$FILE"; then
+      cp -f "$SRC_DIR/$FILE" "$DST_DIR/"
+    fi
+    local WIN_PATH
+    WIN_PATH=$(wslpath -w "$DST_DIR/$FILE")
+    # Install fond for the current user. It'll appear in "Font settings".
+    reg.exe add \
+      "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts"                   \
+      /v "Meslo LG L DZ Regular Nerd Font Complete Mono Windows Compatible (TrueType)" \
+      /t REG_SZ /d "$WIN_PATH" /f
+    # Install font for the use with Windows Command Prompt. Requires reboot.
+    reg.exe add \
+      "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Console\\TrueTypeFont" \
+      /v 1337 /t REG_SZ /d "MesloLGLDZ NF" /f
   fi
 }
 
