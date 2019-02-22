@@ -49,6 +49,7 @@ source $ZSH/oh-my-zsh.sh
 zle_highlight=(default:bold)  # bold prompt
 
 alias clang-format='clang-format -style=file'
+alias less='less --LONG-PROMPT --tabs=4'
 alias ls='ls --group-directories-first --color=tty'
 alias gedit='gedit &>/dev/null'
 
