@@ -12,12 +12,20 @@ function get_repo_uri() {
 }
 
 function list_files() {
+  set -eE
   local repo=$1
   local tmp
   tmp=$(mktemp -d)
   git clone "$(get_repo_uri "$repo")" "$tmp"
+  pushd "$tmp" &>/dev/null
+  if ! git rev-parse --verify master &>/dev/null; then
+    git checkout -b master
+    git commit -m 'create master' --allow-empty
+    git push -u origin master
+  fi
   local files
-  files=$(git --git-dir="$tmp"/.git --work-tree="$tmp" ls-tree -r --name-only master)
+  files=$(git ls-tree -r --name-only master)
+  popd &>/dev/null
   rm -rf "$tmp"
   echo "$files"
 }
