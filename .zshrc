@@ -69,8 +69,7 @@ bindkey '^[[3;5~' kill-word           # ctrl+del       -- delete next word
 bindkey '^J'      backward-kill-line  # ctrl+j         -- delete everything before cursor
 bindkey '^Z'      undo                # ctrl+z         -- undo
 bindkey '^Y'      redo                # ctrl+y         -- redo
-
-# TODO: Define a set-local-history zle binding.
+bindkey '^P'      set-local-history   # ctrl+m         -- toggle between shared and local history
 
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000000000
