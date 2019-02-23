@@ -52,6 +52,8 @@ alias clang-format='clang-format -style=file'
 alias less='less --LONG-PROMPT --tabs=4'
 alias ls='ls --group-directories-first --color=tty'
 alias gedit='gedit &>/dev/null'
+alias d2u=`dos2unix`
+alias u2d=`unix2dos`
 
 # If you want some random config file to be versioned in the dotfiles-public git repo, type
 # `dotfiles-public add -f <random-file>`. Use `commit`, `push`, etc., as with normal git.
