@@ -110,27 +110,29 @@ function fix_shm() {
   '
 }
 
-# Install a decent monospace font.
-function install_font() {
-  if [[ $WSL == 1 ]]; then
-    local SRC_DIR="$HOME/.local/share/fonts/NerdFonts"
-    local FILE="Meslo LG L DZ Regular Nerd Font Complete Mono Windows Compatible.ttf"
+function win_install_fonts() {
+  for SRC in "$@"; do
+    local FILE=$(basename "$SRC")
     local DST_DIR
     DST_DIR=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" | sed 's/\r$//'))
-    if ! test -f "$DST_DIR/$FILE"; then
-      cp -f "$SRC_DIR/$FILE" "$DST_DIR/"
-    fi
+    test -f "$DST_DIR/$FILE" || cp -f "$SRC" "$DST_DIR/"
     local WIN_PATH
     WIN_PATH=$(wslpath -w "$DST_DIR/$FILE")
     # Install fond for the current user. It'll appear in "Font settings".
     reg.exe add \
-      "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts"                   \
-      /v "Meslo LG L DZ Regular Nerd Font Complete Mono Windows Compatible (TrueType)" \
-      /t REG_SZ /d "$WIN_PATH" /f
+      "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" \
+      /v "${FILE%.*} (TrueType)"  /t REG_SZ /d "$WIN_PATH" /f
     # Install font for the use with Windows Command Prompt. Requires reboot.
     reg.exe add \
       "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Console\\TrueTypeFont" \
       /v 1337 /t REG_SZ /d "MesloLGLDZ NF" /f
+  done
+}
+
+# Install a decent monospace font.
+function install_fonts() {
+  if [[ $WSL == 1 ]]; then
+    win_install_fonts "$HOME"/.local/share/fonts/NerdFonts/*"Windows Compatible.ttf"
   fi
 }
 
@@ -169,7 +171,7 @@ umask g-w,o-w
 
 install_packages
 install_vscode
-install_font
+install_fonts
 install_ohmyzsh
 
 install_ohmyzsh_extension plugin \
