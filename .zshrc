@@ -7,7 +7,7 @@ POWERLEVEL9K_MODE=nerdfont-complete                   # use exotic symbols
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true                   # user commands on new line
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0       # always show execution time
 POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt            # user-defined custom_rprompt()
-POWERLEVEL9K_ROOT_ICON=\\uF09C                        # unlocked lock icon
+POWERLEVEL9K_ROOT_ICON=\\uF09C                        # unlocked lock glyph
 POWERLEVEL9K_TIME_BACKGROUND=magenta
 POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=blue
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=grey
@@ -16,8 +16,8 @@ POWERLEVEL9K_STATUS_OK_BACKGROUND=grey37
 POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=grey37
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-  root_indicator # display an unlocked lock icon when root
-  dir_writable   # display a locked lock icon when the current dir isn't writable
+  root_indicator # display an unlocked lock glyph when root
+  dir_writable   # display a locked lock glyph when the current dir isn't writable
   dir            # current dir
   vcs            # git status if inside a git repo
 )
@@ -121,7 +121,7 @@ function up-line-or-beginning-search-local() {
 function down-line-or-beginning-search-local() {
   emulate -L zsh
   local LAST=$LASTWIDGET
-  zle set-local-history 1
+  zle .set-local-history 1
   function impl() {
     if [[ ${+NUMERIC} -eq 0 && ( $LAST = $__local_searching || $RBUFFER != *$'\n'* ) ]]; then
       [[ $LAST = $__local_searching ]] && CURSOR=$__local_savecursor
@@ -139,7 +139,7 @@ function down-line-or-beginning-search-local() {
     zle .down-line-or-history
   }
   impl
-  zle set-local-history 0
+  zle .set-local-history 0
 }
 
 zle -N up-line-or-beginning-search-local
