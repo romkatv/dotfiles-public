@@ -122,11 +122,12 @@ function win_install_fonts() {
     reg.exe add \
       "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" \
       /v "${FILE%.*} (TrueType)"  /t REG_SZ /d "$WIN_PATH" /f
-    # Install font for the use with Windows Command Prompt. Requires reboot.
-    reg.exe add \
-      "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Console\\TrueTypeFont" \
-      /v 1337 /t REG_SZ /d "MesloLGLDZ NF" /f
   done
+  # Install font for the use with Windows Command Prompt. Requires reboot.
+  reg.exe add \
+    "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Console\\TrueTypeFont" \
+    /v 1337 /t REG_SZ /d "MesloLGLDZ NF" /f
+
 }
 
 # Install a decent monospace font.
