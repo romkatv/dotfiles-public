@@ -64,17 +64,98 @@ alias c='x && v'               # copy to clipboard
 
 if [[ $WSL == 1 ]]; then
   # Prints Windows environment variable $1.
-  function win_env() cmd.exe /c "echo %$1%" | sed 's/\r$//'
+  function win_env() {
+    emulate -L zsh
+    cmd.exe /c "echo %$1%" | sed 's/\r$//'
+  }
 fi
 
-stty susp '^B'  # ctrl+b instead of ctrl+z to suspend
+function chpwd() ls  # automatically run `ls` after every `cd`
 
-bindkey '^H'      backward-kill-word  # ctrl+backspace -- delete previous word
-bindkey '^[[3;5~' kill-word           # ctrl+del       -- delete next word
-bindkey '^J'      backward-kill-line  # ctrl+j         -- delete everything before cursor
-bindkey '^Z'      undo                # ctrl+z         -- undo
-bindkey '^Y'      redo                # ctrl+y         -- redo
-bindkey '^P'      set-local-history   # ctrl+p         -- toggle between shared and local history
+function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
+
+typeset -g __local_searching __local_savecursor
+
+# This zle widget replaces the standard widget bound to Up (up-line-or-beginning-search). The
+# original widget is bound to Ctrl+Up. The only difference between the two is the history they use.
+# The standard widget uses global history while our replacement uses local history.
+#
+# Ideally, this function would be implemented like this:
+#
+#   zle .set-local-history 1
+#   zle .up-line-or-beginning-search
+#   zle .set-local-history 0
+#
+# This doesn't work though. If you type "foo bar" and press Up once, you'll get the last command
+# from local history that starts with "foo bar", such as "foo bar baz". This is great. However, if
+# you press Up again, you'll get the previous command from local history that starts with
+# "foo bar baz" rather than with "foo bar". This is brokarama.
+#
+# We can attempt to fix this by replacing "up-line-or-beginning-search" with "up-line-or-search" but
+# then we'll be cycling through commands that start with "foo" rather than "foo bar". This is
+# craporama.
+#
+# To solve this problem I copied and modified the definition of down-line-or-beginning-search from
+# https://github.com/zsh-users/zsh/blob/master/Functions/Zle/down-line-or-beginning-search. God
+# bless Open Source.
+function up-line-or-beginning-search-local() {
+  emulate -L zsh
+  local LAST=$LASTWIDGET
+  zle .set-local-history 1
+  if [[ $LBUFFER == *$'\n'* ]]; then
+    zle .up-line-or-history
+    __local_searching=''
+  elif [[ -n $PREBUFFER ]] && zstyle -t ':zle:up-line-or-beginning-search' edit-buffer; then
+    zle .push-line-or-edit
+  else
+    [[ $LAST = $__local_searching ]] && CURSOR=$__local_savecursor
+    __local_savecursor=$CURSOR
+    __local_searching=$WIDGET
+    zle .history-beginning-search-backward
+    zstyle -T ':zle:up-line-or-beginning-search' leave-cursor && zle .end-of-line
+  fi
+  builtin zle set-local-history 0
+}
+
+# Same as above but for Down.
+function down-line-or-beginning-search-local() {
+  emulate -L zsh
+  local LAST=$LASTWIDGET
+  zle set-local-history 1
+  function impl() {
+    if [[ ${+NUMERIC} -eq 0 && ( $LAST = $__local_searching || $RBUFFER != *$'\n'* ) ]]; then
+      [[ $LAST = $__local_searching ]] && CURSOR=$__local_savecursor
+      __local_searching=$WIDGET
+      __local_savecursor=$CURSOR
+      if zle .history-beginning-search-forward; then
+        if [[ $RBUFFER != *$'\n'* ]]; then
+          zstyle -T ':zle:down-line-or-beginning-search' leave-cursor && zle .end-of-line
+        fi
+        return
+      fi
+      [[ $RBUFFER = *$'\n'* ]] || return
+    fi
+    __local_searching=''
+    zle .down-line-or-history
+  }
+  impl
+  zle set-local-history 0
+}
+
+zle -N up-line-or-beginning-search-local
+zle -N down-line-or-beginning-search-local
+
+bindkey '^H'      backward-kill-word                  # ctrl+bs   delete previous word
+bindkey '^[[3;5~' kill-word                           # ctrl+del  delete next word
+bindkey '^J'      backward-kill-line                  # ctrl+j    delete everything before cursor
+bindkey '^Z'      undo                                # ctrl+z    undo
+bindkey '^Y'      redo                                # ctrl+y    redo
+bindkey '^[OA'    up-line-or-beginning-search-local   # ctrl+up   previous command in local history
+bindkey '^[OB'    down-line-or-beginning-search-local # ctrl+down next command in local history
+bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up   previous command in global history
+bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down next command in global history
+
+stty susp '^B'  # ctrl+b instead of ctrl+z to suspend (ctrl+z is undo)
 
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000000000
@@ -91,10 +172,6 @@ setopt NOBANGHIST            # disable old history syntax
 setopt GLOB_DOTS             # glob matches files starting with dot; `*` becomes `*(D)`
 
 unsetopt BG_NICE             # don't nice background jobs; not useful and doesn't work on WSL
-
-function chpwd() ls  # run `ls` after every `cd`
-
-function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
 
 if [[ -f $HOME/mkport/mkport-env.zsh ]]; then
   source $HOME/mkport/mkport-env.zsh
