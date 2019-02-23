@@ -74,7 +74,7 @@ bindkey '^[[3;5~' kill-word           # ctrl+del       -- delete next word
 bindkey '^J'      backward-kill-line  # ctrl+j         -- delete everything before cursor
 bindkey '^Z'      undo                # ctrl+z         -- undo
 bindkey '^Y'      redo                # ctrl+y         -- redo
-bindkey '^P'      set-local-history   # ctrl+m         -- toggle between shared and local history
+bindkey '^P'      set-local-history   # ctrl+p         -- toggle between shared and local history
 
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000000000
