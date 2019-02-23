@@ -111,10 +111,11 @@ function fix_shm() {
 }
 
 function win_install_fonts() {
+  local DST_DIR
+  DST_DIR=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" | sed 's/\r$//'))
+  mkdir -p "$DST_DIR"
   for SRC in "$@"; do
     local FILE=$(basename "$SRC")
-    local DST_DIR
-    DST_DIR=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" | sed 's/\r$//'))
     test -f "$DST_DIR/$FILE" || cp -f "$SRC" "$DST_DIR/"
     local WIN_PATH
     WIN_PATH=$(wslpath -w "$DST_DIR/$FILE")
