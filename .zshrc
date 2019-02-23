@@ -62,6 +62,11 @@ alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
 alias c='x && v'               # copy to clipboard
 
+if [[ $WSL == 1 ]]; then
+  # Prints Windows environment variable $1.
+  function win_env() cmd.exe /c "echo %$1%" | sed 's/\r$//'
+fi
+
 stty susp '^B'  # ctrl+b instead of ctrl+z to suspend
 
 bindkey '^H'      backward-kill-word  # ctrl+backspace -- delete previous word
