@@ -40,7 +40,6 @@ ENABLE_CORRECTION=true        # zsh: correct 'sl' to 'ls' [nyae]?
 COMPLETION_WAITING_DOTS=true  # show "..." while completing
 
 plugins=(
-  git                      # not sure what it does
   zsh-syntax-highlighting  # syntax highlighting for prompt
   zsh-autosuggestions      # suggests commands as you type, based on command history (grey text)
   command-not-found        # use ubuntu's command-not-found on unrecognized command
