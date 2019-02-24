@@ -147,7 +147,8 @@ if (( WSL )); then
   }
 fi
 
-function chpwd() ls  # automatically run `ls` after every `cd`
+function _chpwd_hook_ls() ls  # automatically run `ls` after every `cd`
+add-zsh-hook chpwd _chpwd_hook_ls
 
 function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
 
