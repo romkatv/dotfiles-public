@@ -4,12 +4,15 @@ export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=powerlevel9k/powerlevel9k
 
 POWERLEVEL9K_MODE=nerdfont-complete                   # use exotic symbols
+POWERLEVEL9K_USE_CACHE=true
+POWERLEVEL9K_MAX_CACHE_SIZE=10000
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true                   # user commands on new line
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=1       # show execution time if >= 1s
+POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0       # show execution time
 POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt            # user-defined custom_rprompt()
 POWERLEVEL9K_ROOT_ICON=\\uF09C                        # unlocked lock glyph
 POWERLEVEL9K_TIME_BACKGROUND=magenta
 POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=blue
+POWERLEVEL9K_CUSTOM_RPROMPT_ICON=\\uF005              # star glyph
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=grey
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=black
 POWERLEVEL9K_STATUS_OK_BACKGROUND=grey53
@@ -26,8 +29,8 @@ POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
   status                  # status code of the last command
   command_execution_time  # execution time of the last command
-  # background_jobs       # the number of background jobs (slow)
-  # time                  # current time (slow)
+  background_jobs         # the number of background jobs
+  time                    # current time
   custom_rprompt          # the results of `custom_rprompt` (can be redefined by the user)
 )
 
