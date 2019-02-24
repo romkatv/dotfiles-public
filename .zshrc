@@ -5,28 +5,29 @@ ZSH_THEME=powerlevel9k/powerlevel9k
 
 POWERLEVEL9K_MODE=nerdfont-complete                   # use exotic symbols
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true                   # user commands on new line
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0       # always show execution time
+POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=1       # show execution time if >= 1s
 POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt            # user-defined custom_rprompt()
 POWERLEVEL9K_ROOT_ICON=\\uF09C                        # unlocked lock glyph
 POWERLEVEL9K_TIME_BACKGROUND=magenta
 POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=blue
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=grey
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=black
-POWERLEVEL9K_STATUS_OK_BACKGROUND=grey37
-POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=grey37
+POWERLEVEL9K_STATUS_OK_BACKGROUND=grey53
+POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=orange1
+POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=black
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   root_indicator # display an unlocked lock glyph when root
   dir_writable   # display a locked lock glyph when the current dir isn't writable
   dir            # current dir
-  vcs            # git status if inside a git repo
+  # vcs          # git status if inside a git repo (slow)
 )
 
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
   status                  # status code of the last command
   command_execution_time  # execution time of the last command
-  background_jobs         # the number of background jobs
-  time                    # current time
+  # background_jobs       # the number of background jobs (slow)
+  # time                  # current time (slow)
   custom_rprompt          # the results of `custom_rprompt` (can be redefined by the user)
 )
 
@@ -64,11 +65,11 @@ alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
 alias c='x && v'               # copy to clipboard
 
-if [[ $WSL == 1 ]]; then
+if (( WSL )); then
   # Prints Windows environment variable $1.
   function win_env() {
     emulate -L zsh
-    cmd.exe /c "echo %$1%" | sed 's/\r$//'
+    echo -E ${$(cmd.exe /c "echo %$1%")%$'\r'}
   }
 fi
 
@@ -172,8 +173,15 @@ setopt EXTENDEDGLOB          # extended glob support: ^*.cc(.) for all regular f
 setopt NOEQUALS              # disable =foo being equivalent to $(which foo)
 setopt NOBANGHIST            # disable old history syntax
 setopt GLOB_DOTS             # glob matches files starting with dot; `*` becomes `*(D)`
+setopt MULTIOS               # allow multiple redirections for the same fd
 
 unsetopt BG_NICE             # don't nice background jobs; not useful and doesn't work on WSL
+
+if (( WSL )); then
+  # Place temporary files created by `=(command)` in the Windows temp directory.
+  # This makes it easy to pass file arguments to native Windows apps.
+  TMPPREFIX=$WIN_TMPDIR/zsh
+fi
 
 if [[ -f $HOME/mkport/mkport-env.zsh ]]; then
   source $HOME/mkport/mkport-env.zsh
