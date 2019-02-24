@@ -7,7 +7,7 @@ export GOPATH=$HOME/go
 if [[ $WSL == 1 ]]; then
   export DISPLAY=:0
   export WINDOWS_EDITOR='/mnt/c/Program Files/Notepad++/notepad++.exe'
-  export WIN_TMPDIR=$(wslpath ${$(cmd.exe /c "echo %TMP%")%$'\r'})
+  export WIN_TMPDIR=$(wslpath ${$(/mnt/c/Windows/System32/cmd.exe /c "echo %TMP%")%$'\r'})
 fi
 
 umask 0002

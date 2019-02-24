@@ -143,7 +143,7 @@ if (( WSL )); then
   # Prints Windows environment variable $1.
   function win_env() {
     emulate -L zsh
-    echo -E ${$(cmd.exe /c "echo %$1%")%$'\r'}
+    echo -E ${$(/mnt/c/Windows/System32/cmd.exe /c "echo %$1%")%$'\r'}
   }
 fi
 
