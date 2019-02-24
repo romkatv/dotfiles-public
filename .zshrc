@@ -125,7 +125,7 @@ zle_highlight=(default:bold)  # bold prompt
 
 alias clang-format='clang-format -style=file'
 alias less='less --LONG-PROMPT --tabs=4'
-alias ls='ls --group-directories-first --color=tty'
+alias ls='ls --group-directories-first --color=auto'
 alias gedit='gedit &>/dev/null'
 alias d2u='dos2unix'
 alias u2d='unix2dos'
