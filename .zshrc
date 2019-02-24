@@ -41,44 +41,12 @@ COMPLETION_WAITING_DOTS=true  # show "..." while completing
 
 plugins=(
   git                      # not sure what it does
-  zsh-syntax-highlighting  # not sure what it does
+  zsh-syntax-highlighting  # syntax highlighting for prompt
   zsh-autosuggestions      # suggests commands as you type, based on command history (grey text)
   command-not-found        # use ubuntu's command-not-found on unrecognized command
   dirhistory               # alt-left and alt-right to navigate dir history; alt-up for `cd ..`
   extract                  # `extract <archive>` command
 )
-
-source $ZSH/oh-my-zsh.sh
-
-zle_highlight=(default:bold)  # bold prompt
-
-alias clang-format='clang-format -style=file'
-alias less='less --LONG-PROMPT --tabs=4'
-alias ls='ls --group-directories-first --color=tty'
-alias gedit='gedit &>/dev/null'
-alias d2u='dos2unix'
-alias u2d='unix2dos'
-
-# If you want some random config file to be versioned in the dotfiles-public git repo, type
-# `dotfiles-public add -f <random-file>`. Use `commit`, `push`, etc., as with normal git.
-alias dotfiles-public='git --git-dir=$HOME/.dotfiles-public/.git --work-tree=$HOME'
-alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$HOME'
-
-alias x='xsel --clipboard -i'  # cut to clipboard
-alias v='xsel --clipboard -o'  # paste from clipboard
-alias c='x && v'               # copy to clipboard
-
-if (( WSL )); then
-  # Prints Windows environment variable $1.
-  function win_env() {
-    emulate -L zsh
-    echo -E ${$(cmd.exe /c "echo %$1%")%$'\r'}
-  }
-fi
-
-function chpwd() ls  # automatically run `ls` after every `cd`
-
-function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
 
 typeset -g __local_searching __local_savecursor
 
@@ -150,6 +118,38 @@ function down-line-or-beginning-search-local() {
 
 zle -N up-line-or-beginning-search-local
 zle -N down-line-or-beginning-search-local
+
+source $ZSH/oh-my-zsh.sh
+
+zle_highlight=(default:bold)  # bold prompt
+
+alias clang-format='clang-format -style=file'
+alias less='less --LONG-PROMPT --tabs=4'
+alias ls='ls --group-directories-first --color=tty'
+alias gedit='gedit &>/dev/null'
+alias d2u='dos2unix'
+alias u2d='unix2dos'
+
+# If you want some random config file to be versioned in the dotfiles-public git repo, type
+# `dotfiles-public add -f <random-file>`. Use `commit`, `push`, etc., as with normal git.
+alias dotfiles-public='git --git-dir=$HOME/.dotfiles-public/.git --work-tree=$HOME'
+alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$HOME'
+
+alias x='xsel --clipboard -i'  # cut to clipboard
+alias v='xsel --clipboard -o'  # paste from clipboard
+alias c='x && v'               # copy to clipboard
+
+if (( WSL )); then
+  # Prints Windows environment variable $1.
+  function win_env() {
+    emulate -L zsh
+    echo -E ${$(cmd.exe /c "echo %$1%")%$'\r'}
+  }
+fi
+
+function chpwd() ls  # automatically run `ls` after every `cd`
+
+function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
 
 bindkey '^H'      backward-kill-word                  # ctrl+bs   delete previous word
 bindkey '^[[3;5~' kill-word                           # ctrl+del  delete next word

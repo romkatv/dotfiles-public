@@ -79,8 +79,10 @@ function install_ohmyzsh() {
 
 # Install oh-my-zsh plugin or theme.
 function install_ohmyzsh_extension() {
-  test ! -d "$HOME/.oh-my-zsh/custom/${1}s/$2" || return 0
-  git clone "$3" "$HOME/.oh-my-zsh/custom/${1}s/$2"
+  local repo="$HOME/.oh-my-zsh/custom/${1}s/$2"
+  test ! -d "$repo" || return 0
+  shift 2
+  git clone "$@" "$repo"
 }
 
 # Install Visual Studio Code.
@@ -177,9 +179,11 @@ install_fonts
 install_ohmyzsh
 
 install_ohmyzsh_extension plugin \
+  zsh-syntax-highlighting https://github.com/zsh-users/zsh-syntax-highlighting.git
+install_ohmyzsh_extension plugin \
   zsh-autosuggestions https://github.com/zsh-users/zsh-autosuggestions.git
 install_ohmyzsh_extension theme \
-  powerlevel9k https://github.com/bhilburn/powerlevel9k.git
+  powerlevel9k -b git@github.com:romkatv/powerlevel9k.git
 
 fix_clock
 fix_shm
