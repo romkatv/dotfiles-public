@@ -188,7 +188,7 @@ install_ohmyzsh
 install_ohmyzsh_extension plugin \
   zsh-syntax-highlighting https://github.com/zsh-users/zsh-syntax-highlighting.git
 install_ohmyzsh_extension plugin \
-  zsh-autosuggestions https://github.com/zsh-users/zsh-autosuggestions.git
+  zsh-autosuggestions -b faster-counts git@github.com:romkatv/zsh-autosuggestions.git
 install_ohmyzsh_extension theme \
   powerlevel9k -b caching git@github.com:romkatv/powerlevel9k.git
 
