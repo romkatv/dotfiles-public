@@ -121,6 +121,11 @@ zle -N down-line-or-beginning-search-local
 
 source $ZSH/oh-my-zsh.sh
 
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
+  up-line-or-beginning-search-local
+  down-line-or-beginning-search-local
+)
+
 zle_highlight=(default:bold)  # bold prompt
 
 alias clang-format='clang-format -style=file'
