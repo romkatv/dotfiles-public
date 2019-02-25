@@ -63,6 +63,7 @@ function install_packages() {
   sudo apt update
   sudo apt upgrade -y
   sudo apt install -y "${PACKAGES[@]}"
+  sudo apt autoremove -y
 }
 
 # If this user's login shell is not already "zsh", attempt to switch.
@@ -73,16 +74,17 @@ function change_shell() {
 
 # Install oh-my-zsh.
 function install_ohmyzsh() {
-  test ! -d "$HOME"/.oh-my-zsh || return 0
-  git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git "$HOME"/.oh-my-zsh
+  local REPO="$HOME"/.oh-my-zsh
+  [[ -d "$REPO" ]] || git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git "$REPO"
+  git --git-dir="$REPO"/.git --work-tree="$REPO" pull
 }
 
 # Install oh-my-zsh plugin or theme.
 function install_ohmyzsh_extension() {
-  local repo="$HOME/.oh-my-zsh/custom/${1}s/$2"
-  test ! -d "$repo" || return 0
+  local REPO="$HOME/.oh-my-zsh/custom/${1}s/$2"
   shift 2
-  git clone "$@" "$repo"
+  [[ -d "$REPO" ]] || git clone "$@" "$REPO"
+  git --git-dir="$REPO"/.git --work-tree="$REPO" pull
 }
 
 # Install Visual Studio Code.
@@ -150,6 +152,11 @@ function fix_gcc() {
   sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
 }
 
+function with_dbus() {
+  [[ -z "${DBUS_SESSION_BUS_ADDRESS+X}" ]] && set -- dbus-launch "$@"
+  "$@"
+}
+
 # Set preferences for various applications.
 function set_preferences() {
   if [[ $WSL == 0 ]]; then
@@ -163,7 +170,7 @@ function set_preferences() {
     # No X server at $DISPLAY.
     return
   fi
-  dbus-launch dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
+  with_dbus dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
 }
 
 if [[ "$(id -u)" == 0 ]]; then
