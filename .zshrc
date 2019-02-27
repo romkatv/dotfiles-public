@@ -19,11 +19,15 @@ POWERLEVEL9K_STATUS_OK_BACKGROUND=grey53
 POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=orange1
 POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=black
 
+# Enable alternative implementation for the vcs prompt. It's much faster but it only supports git.
+# If we are in a repo with over 1k files, don't scan for dirty files.
+POWERLEVEL9K_VCS_STATUS_COMMAND="$HOME/gitstatus/gitstatus --dirty-max-index-size=1024"
+
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   root_indicator # display an unlocked lock glyph when root
   dir_writable   # display a locked lock glyph when the current dir isn't writable
   dir            # current dir
-  # vcs          # git status if inside a git repo (slow)
+  vcs            # git status if inside a git repo
 )
 
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
@@ -40,7 +44,6 @@ ENABLE_CORRECTION=true        # zsh: correct 'sl' to 'ls' [nyae]?
 COMPLETION_WAITING_DOTS=true  # show "..." while completing
 
 plugins=(
-  gitfast                  # alternative git completion from git.git folks; fast and up-to-date
   zsh-syntax-highlighting  # syntax highlighting for prompt
   zsh-autosuggestions      # suggests commands as you type, based on command history (grey text)
   command-not-found        # use ubuntu's command-not-found on unrecognized command
