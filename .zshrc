@@ -21,7 +21,7 @@ POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=black
 
 # Enable alternative implementation for the vcs prompt. It's much faster but it only supports git.
 # If we are in a repo with over 1k files, don't scan for dirty files.
-POWERLEVEL9K_VCS_STATUS_COMMAND="$HOME/gitstatus/gitstatus --dirty-max-index-size=1024"
+POWERLEVEL9K_VCS_STATUS_COMMAND="$HOME/bin/gitstatus --dirty-max-index-size=4096"
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   root_indicator # display an unlocked lock glyph when root
