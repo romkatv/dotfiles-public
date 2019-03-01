@@ -45,6 +45,8 @@ ZSH_DISABLE_COMPFIX=true      # don't complain about permissions when completing
 ENABLE_CORRECTION=true        # zsh: correct 'sl' to 'ls' [nyae]?
 COMPLETION_WAITING_DOTS=true  # show "..." while completing
 
+(( WSL )) && GITSTATUS_DIRTY_MAX_INDEX_SIZE=4096
+
 plugins=(
   zsh-syntax-highlighting  # syntax highlighting for prompt
   zsh-autosuggestions      # suggests commands as you type, based on command history (grey text)
