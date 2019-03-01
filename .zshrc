@@ -1,32 +1,5 @@
 export ZSH=$HOME/.oh-my-zsh
 
-function _gitstatus_create_fifo() {
-  local fifo
-  fifo=$(mktemp -u gitstatus.XXXXXXXXXX) &&
-    mkfifo $fifo &&
-    eval "exec {$1}<>$fifo" &&
-    rm $fifo
-}
-
-_gitstatus_create_fifo _GITSTATUS_REQ_FD
-_gitstatus_create_fifo _GITSTATUS_RESP_FD
-
-unset -f _gitstatus_create_fifo
-
-if [[ -n $_GITSTATUS_REQ_FD && -n $_GITSTATUS_RESP_FD ]]; then
-  $HOME/bin/gitstatus \
-    --dirty-max-index-size=-1 --parent-pid=$$ \
-    <&$_GITSTATUS_REQ_FD >&$_GITSTATUS_RESP_FD 2>/tmp/gitstatus.$$.log &!
-
-  function _gitstatus_query() {
-    <<<$PWD >&$_GITSTATUS_REQ_FD
-    read line <&$_GITSTATUS_RESP_FD
-    echo -nE $line
-  }
-else
-  function _gitstatus_query() false
-fi
-
 # See https://github.com/bhilburn/powerlevel9k for configuration options.
 ZSH_THEME=powerlevel9k/powerlevel9k
 
@@ -50,7 +23,7 @@ POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=orange1
 POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=black
 
 # Enable alternative implementation for the vcs prompt. It's much faster but it only supports git.
-POWERLEVEL9K_VCS_STATUS_COMMAND="_gitstatus_query"
+VCS_STATUS_COMMAND=gitstatus_query_dir
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   root_indicator # display an unlocked lock glyph when root
@@ -78,6 +51,7 @@ plugins=(
   command-not-found        # use ubuntu's command-not-found on unrecognized command
   dirhistory               # alt-left and alt-right to navigate dir history; alt-up for `cd ..`
   extract                  # `extract <archive>` command
+  gitstatus                # fast git info rendering in Powerlevel9k prompt
 )
 
 typeset -g __local_searching __local_savecursor
