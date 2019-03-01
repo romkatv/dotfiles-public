@@ -1,7 +1,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # See https://github.com/bhilburn/powerlevel9k for configuration options.
-ZSH_THEME=powerlevel9k/powerlevel9k
+ZSH_THEME=powerlevel10k/powerlevel10k
 
 POWERLEVEL9K_MODE=nerdfont-complete                   # use exotic symbols
 POWERLEVEL9K_USE_CACHE=true                           # reduce prompt latency by >10x

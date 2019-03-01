@@ -192,7 +192,7 @@ install_ohmyzsh_extension plugin \
 install_ohmyzsh_extension plugin \
   zsh-autosuggestions -b faster-counts git@github.com:romkatv/zsh-autosuggestions.git
 install_ohmyzsh_extension theme \
-  powerlevel9k -b caching git@github.com:romkatv/powerlevel9k.git
+  powerlevel10k git@github.com:romkatv/powerlevel10k.git
 
 fix_clock
 fix_shm
