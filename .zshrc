@@ -23,7 +23,7 @@ POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=orange1
 POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=black
 
 # Enable alternative implementation for the vcs prompt. It's much faster but it only supports git.
-VCS_STATUS_COMMAND=gitstatus_query_dir
+POWERLEVEL9K_VCS_STATUS_COMMAND=gitstatus_query_dir
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   root_indicator # display an unlocked lock glyph when root
