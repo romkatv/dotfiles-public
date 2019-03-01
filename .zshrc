@@ -14,7 +14,7 @@ _gitstatus_create_fifo _GITSTATUS_RESP_FD
 unset -f _gitstatus_create_fifo
 
 if [[ -n $_GITSTATUS_REQ_FD && -n $_GITSTATUS_RESP_FD ]]; then
-  $HOME/gitstatus/gitstatus \
+  $HOME/bin/gitstatus \
     --dirty-max-index-size=-1 --parent-pid=$$ \
     <&$_GITSTATUS_REQ_FD >&$_GITSTATUS_RESP_FD 2>/tmp/gitstatus.$$.log &!
 
