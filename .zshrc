@@ -4,7 +4,6 @@ export ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=powerlevel10k/powerlevel10k
 
 POWERLEVEL9K_MODE=nerdfont-complete                   # use exotic symbols
-POWERLEVEL9K_USE_CACHE=true                           # reduce prompt latency by >10x
 POWERLEVEL9K_MAX_CACHE_SIZE=10000                     # clear in-memory cache when it grows too big
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true                   # user commands on new line
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0       # show execution time
