@@ -21,6 +21,10 @@ POWERLEVEL9K_STATUS_OK_BACKGROUND=grey53
 POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=orange1
 POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=black
 
+POWERLEVEL9K_GITSTATUS_DIR=~/.oh-my-zsh/custom/plugins/gitstatus
+
+(( WSL )) && POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=4096
+
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   root_indicator # display an unlocked lock glyph when root
   dir_writable   # display a locked lock glyph when the current dir isn't writable
@@ -41,8 +45,6 @@ ZSH_DISABLE_COMPFIX=true      # don't complain about permissions when completing
 ENABLE_CORRECTION=true        # zsh: correct 'sl' to 'ls' [nyae]?
 COMPLETION_WAITING_DOTS=true  # show "..." while completing
 
-(( WSL )) && GITSTATUS_DIRTY_MAX_INDEX_SIZE=4096
-
 plugins=(
   zsh-prompt-benchmark     # function zsh_prompt_benchmark to benchmark prompt
   zsh-syntax-highlighting  # syntax highlighting for prompt
@@ -50,7 +52,6 @@ plugins=(
   command-not-found        # use ubuntu's command-not-found on unrecognized command
   dirhistory               # alt-left and alt-right to navigate dir history; alt-up for `cd ..`
   extract                  # `extract <archive>` command
-  gitstatus                # fast git info rendering in Powerlevel9k prompt
 )
 
 typeset -g __local_searching __local_savecursor

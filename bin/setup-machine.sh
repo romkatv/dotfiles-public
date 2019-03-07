@@ -186,8 +186,6 @@ install_fonts
 install_ohmyzsh
 
 install_ohmyzsh_extension plugin \
-  gitstatus git@github.com:romkatv/gitstatus.git
-install_ohmyzsh_extension plugin \
   zsh-prompt-benchmark git@github.com:romkatv/zsh-prompt-benchmark.git
 install_ohmyzsh_extension plugin \
   zsh-syntax-highlighting https://github.com/zsh-users/zsh-syntax-highlighting.git
