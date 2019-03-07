@@ -52,6 +52,7 @@ plugins=(
   command-not-found        # use ubuntu's command-not-found on unrecognized command
   dirhistory               # alt-left and alt-right to navigate dir history; alt-up for `cd ..`
   extract                  # `extract <archive>` command
+  z                        # `z` command to cd into commonly used directories
 )
 
 typeset -g __local_searching __local_savecursor
@@ -135,9 +136,8 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
 zle_highlight=(default:bold)  # bold prompt
 
 alias clang-format='clang-format -style=file'
-alias less='less --LONG-PROMPT --tabs=4'
 alias ls='ls --group-directories-first --color=auto'
-alias gedit='gedit &>/dev/null'
+alias gedit='gedit &>/dev/null'                       # suppress useless warnings
 alias d2u='dos2unix'
 alias u2d='unix2dos'
 
@@ -158,10 +158,12 @@ if (( WSL )); then
   }
 fi
 
-function _chpwd_hook_ls() ls  # automatically run `ls` after every `cd`
+# Automatically run `ls` after every `cd`.
+function _chpwd_hook_ls() ls
+autoload -Uz add-zsh-hook
 add-zsh-hook chpwd _chpwd_hook_ls
 
-function custom_rprompt() {}  # users can redefine this; its output is shown in RPROMPT
+function custom_rprompt() {}  # redefine this to show stuff in RPROMPT
 
 bindkey '^H'      backward-kill-word                  # ctrl+bs   delete previous word
 bindkey '^[[3;5~' kill-word                           # ctrl+del  delete next word
@@ -183,9 +185,8 @@ HISTFILESIZE=1000000000
 setopt HIST_IGNORE_SPACE     # don't add commands starting with space to history
 setopt HIST_VERIFY           # if a cmd triggers history expansion, show it instead of running
 setopt HIST_REDUCE_BLANKS    # remove junk whitespace from commands before adding to history
-setopt EXTENDEDGLOB          # extended glob support: ^*.cc(.) for all regular files but *.cc
-setopt NOEQUALS              # disable =foo being equivalent to $(which foo)
-setopt NOBANGHIST            # disable old history syntax
+setopt EXTENDED_GLOB         # (#qx) glob qualifier and more
+setopt NO_BANG_HIST          # disable old history syntax
 setopt GLOB_DOTS             # glob matches files starting with dot; `*` becomes `*(D)`
 setopt MULTIOS               # allow multiple redirections for the same fd
 
@@ -196,6 +197,15 @@ if (( WSL )); then
   # This makes it easy to pass file arguments to native Windows apps.
   TMPPREFIX=$WIN_TMPDIR/zsh
 fi
+
+# This affects every invocation of `less`.
+#
+#   -R   color
+#   -F   exit if there is less than one page of content
+#   -X   keep content on screen after exit
+#   -M   show more info at the bottom prompt line
+#   -x4  tabs are 4 instead of 8
+export LESS=-RFXMx4
 
 if [[ -f $HOME/mkport/mkport-env.zsh ]]; then
   source $HOME/mkport/mkport-env.zsh

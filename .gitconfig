@@ -5,3 +5,5 @@
 	tool = meld
 [merge]
 	tool = meld
+[difftool]
+	prompt = false
