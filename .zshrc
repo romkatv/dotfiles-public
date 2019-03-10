@@ -25,7 +25,7 @@ GITSTATUS_ENABLE_LOGGING=1
 # GITSTATUS_DAEMON=/home/romka/.oh-my-zsh/custom/plugins/gitstatus/gitstatusd
 # POWERLEVEL9K_GITSTATUS_DIR=~/.oh-my-zsh/custom/plugins/gitstatus
 
-(( WSL )) && POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=4096
+# (( WSL )) && POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=4096
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
   root_indicator # display an unlocked lock glyph when root
