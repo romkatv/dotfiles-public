@@ -18,5 +18,6 @@
     ],
     "terminal.integrated.rendererType": "canvas",
     "C_Cpp.default.intelliSenseMode": "gcc-x64",
-    "workbench.editor.tabSizing": "shrink"
+    "workbench.editor.tabSizing": "shrink",
+    "window.zoomLevel": 0
 }
