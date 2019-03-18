@@ -9,11 +9,12 @@ POWERLEVEL9K_PROMPT_ON_NEWLINE=true                   # user commands on new lin
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0       # show execution time
 POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt            # user-defined custom_rprompt()
 
-POWERLEVEL9K_ROOT_ICON=\\uF09C                        # unlocked lock glyph
-POWERLEVEL9K_TIME_ICON=\\uF017                        # clock glyph
-POWERLEVEL9K_CUSTOM_RPROMPT_ICON=\\uF005              # star glyph
+POWERLEVEL9K_ROOT_ICON=\\uF09C                        # unlocked lock
+POWERLEVEL9K_TIME_ICON=\\uF017                        # clock
+POWERLEVEL9K_CUSTOM_RPROMPT_ICON=\\uF005              # star
+POWERLEVEL9K_BACKGROUND_JOBS_ICON=\\uF013             # gear
 
-(( WSL )) || POWERLEVEL9K_EXPERIMENTAL_TIME_REALTIME=true
+# (( WSL )) || POWERLEVEL9K_EXPERIMENTAL_TIME_REALTIME=true
 POWERLEVEL9K_TIME_BACKGROUND=magenta
 POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=blue
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=grey
@@ -174,8 +175,8 @@ bindkey '^[[3;5~' kill-word                           # ctrl+del  delete next wo
 bindkey '^J'      backward-kill-line                  # ctrl+j    delete everything before cursor
 bindkey '^Z'      undo                                # ctrl+z    undo
 bindkey '^Y'      redo                                # ctrl+y    redo
-bindkey '^[OA'    up-line-or-beginning-search-local   # ctrl+up   previous command in local history
-bindkey '^[OB'    down-line-or-beginning-search-local # ctrl+down next command in local history
+bindkey '^[OA'    up-line-or-beginning-search-local   # up        previous command in local history
+bindkey '^[OB'    down-line-or-beginning-search-local # down      next command in local history
 bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up   previous command in global history
 bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down next command in global history
 
