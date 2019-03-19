@@ -3,38 +3,6 @@ export ZSH=$HOME/.oh-my-zsh
 # See https://github.com/bhilburn/powerlevel9k for configuration options.
 ZSH_THEME=powerlevel10k/powerlevel10k
 
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-#   root_indicator # display an unlocked lock glyph when root
-#   dir_writable   # display a locked lock glyph when the current dir isn't writable
-#   simple_dir     # current dir
-#   vcs            # git status if inside a git repo
-# )
-#
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-#   status                  # status code of the last command
-#   command_execution_time  # execution time of the last command
-#   background_jobs         # the number of background jobs
-#   time                    # current time
-#   custom_rprompt          # the results of `custom_rprompt` (can be redefined by the user)
-# )
-#
-# POWERLEVEL9K_MODE=nerdfont-complete                   # use exotic symbols
-# POWERLEVEL9K_MAX_CACHE_SIZE=10000                     # clear in-memory cache when it grows too big
-# POWERLEVEL9K_PROMPT_ON_NEWLINE=true                   # user commands on new line
-# POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0       # show execution time
-# POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt            # user-defined custom_rprompt()
-# POWERLEVEL9K_ROOT_ICON=\\uF09C                        # unlocked lock
-# POWERLEVEL9K_TIME_ICON=\\uF017                        # clock
-# POWERLEVEL9K_CUSTOM_RPROMPT_ICON=\\uF005              # star
-# POWERLEVEL9K_BACKGROUND_JOBS_ICON=\\uF013             # gear
-# POWERLEVEL9K_TIME_BACKGROUND=magenta
-# POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=blue
-# POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=grey
-# POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=black
-# POWERLEVEL9K_STATUS_OK_BACKGROUND=grey53
-# POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=orange1
-# POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND=black
-
 POWERLEVEL9K_MODE=nerdfont-complete
 
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
