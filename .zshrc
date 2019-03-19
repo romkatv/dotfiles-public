@@ -3,8 +3,6 @@ export ZSH=$HOME/.oh-my-zsh
 # See https://github.com/bhilburn/powerlevel9k for configuration options.
 ZSH_THEME=powerlevel10k/powerlevel10k
 
-POWERLEVEL9K_MODE=nerdfont-complete
-
 POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
     dir_writable dir vcs)
 
@@ -18,6 +16,7 @@ POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR=
 POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR=' '
 POWERLEVEL9K_WHITESPACE_BETWEEN_RIGHT_SEGMENTS=
 
+POWERLEVEL9K_DIR_LOCK_ICON=$'\uF023'
 POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_BACKGROUND=none
 POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_VISUAL_IDENTIFIER_COLOR=003
 
@@ -60,6 +59,7 @@ POWERLEVEL9K_VCS_GIT_GITHUB_ICON=
 POWERLEVEL9K_VCS_GIT_BITBUCKET_ICON=
 POWERLEVEL9K_VCS_GIT_GITLAB_ICON=
 POWERLEVEL9K_VCS_BRANCH_ICON=
+POWERLEVEL9K_VCS_COMMIT_ICON=$'\uE729 '
 POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
 POWERLEVEL9K_VCS_UNSTAGED_ICON='!'
 POWERLEVEL9K_VCS_STAGED_ICON='+'
@@ -97,6 +97,8 @@ POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 POWERLEVEL9K_RPROMPT_ON_NEWLINE=false
 POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=
 POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=$'%(?.%F{002}\u276F%f.%F{009}\u276F%f) '
+
+function custom_rprompt() {}  # redefine this to show stuff in RPROMPT
 
 # GITSTATUS_ENABLE_LOGGING=1
 # POWERLEVEL9K_DISABLE_GITSTATUS=true
@@ -227,11 +229,6 @@ fi
 # function _chpwd_hook_ls() ls
 # autoload -Uz add-zsh-hook
 # add-zsh-hook chpwd _chpwd_hook_ls
-
-function custom_rprompt() {
-  echo hello
-}
-# redefine this to show stuff in RPROMPT
 
 bindkey '^H'      backward-kill-word                  # ctrl+bs   delete previous word
 bindkey '^[[3;5~' kill-word                           # ctrl+del  delete next word
