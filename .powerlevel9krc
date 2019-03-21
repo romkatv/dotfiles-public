@@ -1,74 +1,210 @@
-typeset -ga POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-    dir_writable dir vcs)
+# Original location: https://github.com/romkatv/dotfiles-public/blob/master/.powerlevel9krc.
+# If you copy this file, keep the link to the original and this sentence intact; feel free to
+# change everything else.
+#
+# This file defines configuration options for Powerlevel10k ZSH theme that will make your prompt
+# lightweight and sleek, unlike the default bulky look. You can also use it with Powerlevel9k -- a
+# great choice if you need an excuse to have a cup of coffee after every command you type.
+#
+# This is how it looks:
+# https://user-images.githubusercontent.com/1282067/54747023-01f9b900-4bce-11e9-9442-2b46bc2d9271.png.
+#
+#                         PHILOSOPHY
+#
+# This configuration is made for people who care about style and value clear UI without redundancy
+# and tacky ornaments that serve no function.
+#
+#   * No overwhelming background that steals attention from real content on your screen.
+#   * No redundant icons. A clock icon next to the current time adds zero information. This is your
+#     personal prompt -- you don't need to an icon to remind you that the segment on the right shows
+#     current time.
+#   * No separators between prompt segments. Different foreground colors are enough to keep them
+#     visually distinct.
+#   * Bright colors for important things, low-contrast colors for everything else.
+#   * No needless color switching. The number of stashes you have in a git repository is always
+#     green. Since its meaning is the same in a clean and in a dirty repository, it doesn't change
+#     color.
+#
+#                         LEFT PROMPT
+#
+#   * Your current directory is bright blue when under $HOME and brownish everywhere else.
+#   * A lock icon is shown on the far left if you cannot write to the current directory.
+#   * The `❯` on the prompt line is green if the last command has succeeded and red otherwise.
+#   * Git prompt colors:
+#     * Grey: prompt is refreshing in the background (happens only in large repositories).
+#     * Green: clean (no stated or unstaged changes and no untracked files).
+#     * Yellow: dirty (some stated or unstaged changes).
+#     * Teal: some untracked files but otherwise clean (no staged or unstaged changes).
+#   * Git prompt icons:
+#     * '+' (yellow): staged changes.
+#     * '!' (yellow): unstaged changes.
+#     * '?' (teal): untracked files.
+#     * '↑42' (green): 42 commits ahead of remote.
+#     * '↓42' (green): 42 commits behind remote.
+#     * '*42' (green): 42 stashes.
+#
+#                        RIGHT PROMPT
+#
+#   * Current time on the far right.
+#   * Last command execution time (in seconds).
+#   * Error code with an optional signal name of the last command if it failed, in red.
+#   * A gear icon if you have background jobs.
+#   * An unlocked lock icon if you are root.
+#   * If you type `custom_rprompt() { echo 'message' }`, you'll get 'message' shown on the right.
+#     Useful to integrate with your scripts that change some sort of state/environment.
+#
+#                       INSTALLATION
+#
+# 1. Copy this file to your home directory.
+#
+#    ( cd && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-public/master/.powerlevel9krc )
+#
+# 2. Source the file from ~/.zshrc.
+#
+#    echo 'source ~/.powerlevel9krc' >>! ~/.zshrc
+#
+# 3. Enable Powerlevel10k ZSH theme.
+#
+#    git clone https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+#    echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc
+#
+# 4. Disable your current theme if you have one. You'll probably need to edit your ~/.zshrc.
+#    If you are using a plugin manager, see https://github.com/romkatv/powerlevel10k/ or your plugin
+#    manager's documentation for details.
+#
+#                       CONFIGURATION
+#
+# When sourcing ~/.powerlevel9krc, you can pass it an argument.
+#
+#   * fancy: use unicode characters in the prompt (requires a capable font).
+#   * portable: use only ascii characters in the prompt.
+#   * auto (default): portable in an ssh session or when DISPLAY isn't set; fancy otherwise.
+#
+# To configure what gets shown in the prompt, edit ~/powerlevel9krc. See
+# https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration.
+#
+# You can use this script to choose colors:
+#
+#   for ((i = 0; i != 256; ++i)); do print -P "%F{${(l:3::0:)i}}${(l:3::0:)i} TEST%f"; done
 
-typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-    status command_execution_time root_indicator background_jobs custom_rprompt time)
+if test -z "${ZSH_VERSION}"; then
+  echo "powerlevel9krc: unsupported shell; try zsh instead" >&2
+  return 1
+  exit 1
+fi
 
-typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-typeset -g POWERLEVEL9K_RPROMPT_ON_NEWLINE=false
-typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=
-typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=$'%(?.%F{002}\u276F%f.%F{009}\u276F%f) '
+() {
+  emulate -L zsh && setopt no_unset pipe_fail
 
-typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SEGMENT_SEPARATOR=
-typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SUBSEGMENT_SEPARATOR=' '
-typeset -g POWERLEVEL9K_WHITESPACE_BETWEEN_{LEFT,RIGHT}_SEGMENTS=
+  if (( ARGC > 1 )); then
+    echo -E "Usage: source ~/.powerlevel9krc [fancy|portable|auto]" >&2
+    return 1
+  fi
 
-typeset -g POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_BACKGROUND=none
-typeset -g POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_VISUAL_IDENTIFIER_COLOR=003
-typeset -g POWERLEVEL9K_DIR_LOCK_ICON=$'\uF023'
+  local mode=${1:-auto}
+  if [[ $mode == auto ]]; then
+    if [[ -n ${SSH_CLIENT-} || -n ${SSH_TTY-} || -z ${DISPLAY-} ]]; then
+      mode=portable
+    else
+      mode=fancy
+    fi
+  fi
 
-typeset -g POWERLEVEL9K_DIR_{ETC,HOME,HOME_SUBFOLDER,DEFAULT}_BACKGROUND=none
-typeset -g POWERLEVEL9K_DIR_{ETC,DEFAULT}_FOREGROUND=209
-typeset -g POWERLEVEL9K_DIR_{HOME,HOME_SUBFOLDER}_FOREGROUND=039
-typeset -g POWERLEVEL9K_{ETC,FOLDER,HOME,HOME_SUB}_ICON=
+  case $mode in
+    portable)
+      local p='>'
+      local lock='X'
+      local incoming='<'
+      local outgoing='>'
+      local root='#'
+      local jobs='%%'
+      ;;
+    fancy)
+      local p=$'\u276F'
+      local lock=$'\uF023'
+      local incoming=$'\u2193'
+      local outgoing=$'\u2191'
+      local root=$'\uF09C'
+      local jobs=$'\uF013'
+      ;;
+    *)
+      echo -E "powerlevel9krc: invalid MODE: ${(q-)mode}" >&2
+      return 1
+      ;;
+  esac
 
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED,LOADING}_BACKGROUND=none
-typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=076
-typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=014
-typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=011
-typeset -g POWERLEVEL9K_VCS_LOADING_FOREGROUND=244
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_UNTRACKEDFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_UNSTAGEDFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_MODIFIED_FOREGROUND
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_STAGEDFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_MODIFIED_FOREGROUND
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_INCOMING_CHANGESFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_CLEAN_FOREGROUND
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_OUTGOING_CHANGESFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_CLEAN_FOREGROUND
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_STASHFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_CLEAN_FOREGROUND
-typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_ACTIONFORMAT_FOREGROUND=001
-typeset -g POWERLEVEL9K_VCS_LOADING_ACTIONFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_LOADING_FOREGROUND
-typeset -g typeset POWERLEVEL9K_VCS_{GIT,GIT_GITHUB,GIT_BITBUCKET,GIT_GITLAB,BRANCH}_ICON=
-typeset -g POWERLEVEL9K_VCS_COMMIT_ICON=$'\uE729 '
-typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
-typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='!'
-typeset -g POWERLEVEL9K_VCS_STAGED_ICON='+'
-typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON=$'\u2193'
-typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON=$'\u2191'
-typeset -g POWERLEVEL9K_VCS_STASH_ICON='*'
-typeset -g POWERLEVEL9K_VCS_HIDE_TAGS=true
+  typeset -ga POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+      dir_writable dir vcs)
 
-typeset -g POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND=none
-typeset -g POWERLEVEL9K_ROOT_ICON=$'\uF09C'
+  typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+      status command_execution_time root_indicator background_jobs custom_rprompt time)
 
-typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
-typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=none
-typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_COLOR=002
-typeset -g POWERLEVEL9K_BACKGROUND_JOBS_ICON=$'\uF013'
+  typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+  typeset -g POWERLEVEL9K_RPROMPT_ON_NEWLINE=false
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%(?.%F{002}${p}%f.%F{009}${p}%f) "
 
-typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
-typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=none
-typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=101
-typeset -g POWERLEVEL9K_EXECUTION_TIME_ICON=
+  typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SEGMENT_SEPARATOR=
+  typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SUBSEGMENT_SEPARATOR=' '
+  typeset -g POWERLEVEL9K_WHITESPACE_BETWEEN_{LEFT,RIGHT}_SEGMENTS=
 
-typeset -g POWERLEVEL9K_TIME_BACKGROUND=none
-typeset -g POWERLEVEL9K_TIME_FOREGROUND=244
-typeset -g POWERLEVEL9K_TIME_ICON=
+  typeset -g POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_BACKGROUND=none
+  typeset -g POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_VISUAL_IDENTIFIER_COLOR=003
+  typeset -g POWERLEVEL9K_DIR_LOCK_ICON=$lock
 
-typeset -g POWERLEVEL9K_STATUS_OK=false
-typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=none
-typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=009
-typeset -g POWERLEVEL9K_CARRIAGE_RETURN_ICON=
+  typeset -g POWERLEVEL9K_DIR_{ETC,HOME,HOME_SUBFOLDER,DEFAULT}_BACKGROUND=none
+  typeset -g POWERLEVEL9K_DIR_{ETC,DEFAULT}_FOREGROUND=209
+  typeset -g POWERLEVEL9K_DIR_{HOME,HOME_SUBFOLDER}_FOREGROUND=039
+  typeset -g POWERLEVEL9K_{ETC,FOLDER,HOME,HOME_SUB}_ICON=
 
-typeset -g POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt
-typeset -g POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=none
-typeset -g POWERLEVEL9K_CUSTOM_RPROMPT_FOREGROUND=012
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED,LOADING}_BACKGROUND=none
+  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=076
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=014
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=011
+  typeset -g POWERLEVEL9K_VCS_LOADING_FOREGROUND=244
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_UNTRACKEDFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_UNSTAGEDFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_MODIFIED_FOREGROUND
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_STAGEDFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_MODIFIED_FOREGROUND
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_INCOMING_CHANGESFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_CLEAN_FOREGROUND
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_OUTGOING_CHANGESFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_CLEAN_FOREGROUND
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_STASHFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_CLEAN_FOREGROUND
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_ACTIONFORMAT_FOREGROUND=001
+  typeset -g POWERLEVEL9K_VCS_LOADING_ACTIONFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_LOADING_FOREGROUND
+  typeset -g POWERLEVEL9K_VCS_{GIT,GIT_GITHUB,GIT_BITBUCKET,GIT_GITLAB,BRANCH}_ICON=
+  typeset -g POWERLEVEL9K_VCS_COMMIT_ICON='@'
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
+  typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='!'
+  typeset -g POWERLEVEL9K_VCS_STAGED_ICON='+'
+  typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON=$incoming
+  typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON=$outgoing
+  typeset -g POWERLEVEL9K_VCS_STASH_ICON='*'
+  typeset -g POWERLEVEL9K_VCS_HIDE_TAGS=true
 
-function custom_rprompt() {}  # redefine this to show stuff in custom_rprompt segment
+  typeset -g POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND=none
+  typeset -g POWERLEVEL9K_ROOT_ICON=$root
+
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=none
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_COLOR=002
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_ICON=$jobs
+
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND=none
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=101
+  typeset -g POWERLEVEL9K_EXECUTION_TIME_ICON=
+
+  typeset -g POWERLEVEL9K_TIME_BACKGROUND=none
+  typeset -g POWERLEVEL9K_TIME_FOREGROUND=244
+  typeset -g POWERLEVEL9K_TIME_ICON=
+
+  typeset -g POWERLEVEL9K_STATUS_OK=false
+  typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=none
+  typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=009
+  typeset -g POWERLEVEL9K_CARRIAGE_RETURN_ICON=
+
+  typeset -g POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt
+  typeset -g POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=none
+  typeset -g POWERLEVEL9K_CUSTOM_RPROMPT_FOREGROUND=012
+
+  function custom_rprompt() {}  # redefine this to show stuff in custom_rprompt segment
+} "$@"
