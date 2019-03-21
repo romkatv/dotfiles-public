@@ -46,6 +46,7 @@ function install_packages() {
     nano
     p7zip-full
     p7zip-rar
+    perl
     tree
     unrar
     wget
