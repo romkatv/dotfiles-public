@@ -89,9 +89,10 @@
 # https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration for
 # configuration options. Prompt configuration is a deeply personal affair, so take your time to
 # craft the right prompt just for you. The stock configuration is merely a starting point, a source
-# of inspiration, a frame for your own creation. Mercilessly slash everything of little value to you
-# and boldly mold prompt pieces to ensure a perfect fit to your workflow and aesthetic preferences.
-# Take full advantage of powerlevel over 9k!
+# of inspiration, a frame for your own creation. Mercilessly slash everything of little value to
+# you. Don't care how long commands take to execute? Get rid of command_execution_time segment!
+# Boldly mold prompt pieces useful to you to ensure a perfect fit to your workflow and aesthetic
+# preferences. Take full advantage of powerlevel over 9k!
 #
 # Remember that colors looks differently in different terminals. Use this script to choose what
 # works best for you.
