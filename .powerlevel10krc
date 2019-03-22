@@ -11,13 +11,13 @@
 #
 #                         PHILOSOPHY
 #
-# This configuration is made for people who care about style and value clear UI without redundancy
+# This configuration is made for those who care about style and value clear UI without redundancy
 # and tacky ornaments that serve no function.
 #
 #   * No overwhelming background that steals attention from real content on your screen.
-#   * No redundant icons. A clock icon next to the current time adds zero information. This is your
-#     personal prompt -- you don't need to an icon to remind you that the segment on the right shows
-#     current time.
+#   * No redundant icons. A clock icon next to the current time takes space without conveying any
+#     information. This is your personal prompt -- you don't need an icon to remind you that the
+#     segment on the right shows current time.
 #   * No separators between prompt segments. Different foreground colors are enough to keep them
 #     visually distinct.
 #   * Bright colors for important things, low-contrast colors for everything else.
@@ -99,6 +99,10 @@
 # Keep in mind that some prompt segments can appear and disappear depending on the state of your
 # environment. Make sure colors work well in every situation. Most importantly, neighboring segments
 # should always have distinct colors.
+#
+#                       ATTRIBUTION
+#
+# This configuration was inspired by https://github.com/iboyperson/p9k-theme-pastel.
 
 if test -z "${ZSH_VERSION}"; then
   echo "powerlevel10krc: unsupported shell; try zsh instead" >&2
