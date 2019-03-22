@@ -85,7 +85,7 @@
 #   * portable: use only ascii characters in the prompt.
 #   * auto (default): portable in an SSH session or when DISPLAY isn't set; fancy otherwise.
 #
-# To configure what gets shown in the prompt, edit ~/purepower. See
+# To configure what gets shown in the prompt, edit ~/.purepower. See
 # https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration for
 # configuration options. Prompt configuration is a deeply personal affair, so take your time to
 # craft the right prompt just for you. The stock configuration is merely a starting point, a source
