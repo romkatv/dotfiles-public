@@ -3,8 +3,7 @@
 # to change everything else.
 #
 # This file defines configuration options for Powerlevel10k ZSH theme that will make your prompt
-# lightweight and sleek, unlike the default bulky look. You can also use it with Powerlevel9k -- a
-# great choice if you need an excuse to have a cup of coffee after every command you type.
+# lightweight and sleek, unlike the default bulky look.
 #
 # This is how it looks:
 # https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/purepower.png.
