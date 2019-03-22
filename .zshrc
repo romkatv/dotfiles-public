@@ -25,7 +25,7 @@ plugins=(
 )
 
 source $HOME/bin/local-history.zsh
-source $HOME/.powerlevel10krc
+source $HOME/.purepower
 source $ZSH/oh-my-zsh.sh
 
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
