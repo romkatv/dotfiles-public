@@ -162,6 +162,10 @@ fi
   typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
       status command_execution_time root_indicator background_jobs custom_rprompt time)
 
+  # If you are using Powerlevel9k, this won't work because Powerlevel9k doesn't do parameter
+  # expansion on POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX. You can replace the next two lines with
+  # `local p=$vi_insert` to get a working prompt but it won't show you keymap status like
+  # Powerlevel10k.
   local p="\${\${\${KEYMAP:-0}:#vicmd}:+${${vi_insert//\\/\\\\}//\}/\\\}}}"
   p+="\${\${\$((!\${#\${KEYMAP:-0}:#vicmd})):#0}:+${${vi_cmd//\\/\\\\}//\}/\\\}}}"
   typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%(?.%F{002}${p}%f.%F{009}${p}%f) "
