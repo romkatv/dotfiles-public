@@ -7,7 +7,7 @@
 # great choice if you need an excuse to have a cup of coffee after every command you type.
 #
 # This is how it looks:
-# https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/p10k-prompt.png.
+# https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/pure-power.png.
 #
 #                         PHILOSOPHY
 #
@@ -29,7 +29,8 @@
 #
 #   * Your current directory is bright blue when under $HOME and brownish everywhere else.
 #   * A lock icon is shown on the far left if you cannot write to the current directory.
-#   * The `❯` on the prompt line is green if the last command has succeeded and red otherwise.
+#   * The prompt symbol on the left is '❮' when vicmd keymap is active and '❯' otherwise. It's green
+#     if the last command has succeeded and red if it has failed.
 #   * Git prompt colors:
 #     * Grey: prompt is refreshing in the background (happens only in large repositories).
 #     * Green: clean (no stated or unstaged changes and no untracked files).
@@ -43,8 +44,8 @@
 #     * '+' (yellow): staged changes.
 #     * '!' (yellow): unstaged changes.
 #     * '?' (teal): untracked files.
-#     * '↑42' (green): 42 commits ahead of remote.
-#     * '↓42' (green): 42 commits behind remote.
+#     * '⇡42' (green): 42 commits ahead of remote.
+#     * '⇣42' (green): 42 commits behind remote.
 #     * '*42' (green): 42 stashes.
 #
 #                        RIGHT PROMPT
@@ -102,7 +103,9 @@
 #
 #                       ATTRIBUTION
 #
-# This configuration was inspired by https://github.com/iboyperson/p9k-theme-pastel.
+# Visual design of this configuration borrows heavily from https://github.com/sindresorhus/pure.
+# Recretion of Pure look and feel in Powerlevel10k was inspired by
+# https://github.com/iboyperson/p9k-theme-pastel.
 
 if test -z "${ZSH_VERSION}"; then
   echo "powerlevel10krc: unsupported shell; try zsh instead" >&2
@@ -129,7 +132,8 @@ fi
 
   case $mode in
     portable)
-      local p='>'
+      local vi_insert='>'
+      local vi_cmd='<'
       local lock='X'
       local incoming='<'
       local outgoing='>'
@@ -137,10 +141,11 @@ fi
       local jobs='%%'
       ;;
     fancy)
-      local p=$'\u276F'
+      local vi_insert=$'\u276F'
+      local vi_cmd=$'\u276E'
       local lock=$'\uF023'
-      local incoming=$'\u2193'
-      local outgoing=$'\u2191'
+      local incoming=$'\u21E3'
+      local outgoing=$'\u21E1'
       local root=$'\uF09C'
       local jobs=$'\uF013'
       ;;
@@ -156,10 +161,12 @@ fi
   typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
       status command_execution_time root_indicator background_jobs custom_rprompt time)
 
+  local p="\${\${\${KEYMAP:-0}:#vicmd}:+${${vi_insert//\\/\\\\}//\}/\\\}}}"
+  p+="\${\${\$((!\${#\${KEYMAP:-0}:#vicmd})):#0}:+${${vi_cmd//\\/\\\\}//\}/\\\}}}"
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%(?.%F{002}${p}%f.%F{009}${p}%f) "
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=$'\n'
   typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
   typeset -g POWERLEVEL9K_RPROMPT_ON_NEWLINE=false
-  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=
-  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%(?.%F{002}${p}%f.%F{009}${p}%f) "
 
   typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SEGMENT_SEPARATOR=
   typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SUBSEGMENT_SEPARATOR=' '
@@ -190,9 +197,9 @@ fi
   typeset -g POWERLEVEL9K_VCS_{GIT,GIT_GITHUB,GIT_BITBUCKET,GIT_GITLAB,BRANCH}_ICON=
   typeset -g POWERLEVEL9K_VCS_REMOTE_BRANCH_ICON=$'\b|'
   typeset -g POWERLEVEL9K_VCS_COMMIT_ICON='@'
-  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
-  typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='!'
-  typeset -g POWERLEVEL9K_VCS_STAGED_ICON='+'
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON=$'\b?'
+  typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON=$'\b!'
+  typeset -g POWERLEVEL9K_VCS_STAGED_ICON=$'\b+'
   typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON=$incoming
   typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON=$outgoing
   typeset -g POWERLEVEL9K_VCS_STASH_ICON='*'

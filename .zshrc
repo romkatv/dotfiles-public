@@ -33,7 +33,7 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
   down-line-or-beginning-search-local
 )
 
-zle_highlight=(default:bold)  # bold prompt
+# zle_highlight=(default:bold)  # bold prompt
 
 alias clang-format='clang-format -style=file'
 alias ls='ls --group-directories-first --color=auto'
