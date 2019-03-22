@@ -89,17 +89,18 @@
 # https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration for
 # configuration options. Prompt configuration is a deeply personal affair, so take your time to
 # craft the right prompt just for you. The stock configuration is merely a starting point, a source
-# of inspiration, a frame for your own creation. Change it boldly to ensure a perfect fit to your
-# workflow and aesthetic preferences.
+# of inspiration, a frame for your own creation. Mercilessly slash everything of little value to you
+# and boldly mold prompt pieces to ensure a perfect fit to your workflow and aesthetic preferences.
+# Take full advantage of powerlevel over 9k!
 #
-# Colors looks differently in different terminals. Use this script to choose what works well for
-# you.
+# Remember that colors looks differently in different terminals. Use this script to choose what
+# works best for you.
 #
 #   for ((i = 0; i != 256; ++i)); do print -P "%F{${(l:3::0:)i}}${(l:3::0:)i} TEST%f"; done
 #
 # Keep in mind that some prompt segments can appear and disappear depending on the state of your
-# environment. Make sure colors work well in every situation. Most importantly, neighboring segments
-# should always have distinct colors.
+# environment. Make sure colors work well in every situation. Neighboring segments should always
+# have distinct colors.
 #
 #                       ATTRIBUTION
 #
