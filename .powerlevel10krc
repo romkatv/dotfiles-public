@@ -1,6 +1,6 @@
-# Original location: https://github.com/romkatv/dotfiles-public/blob/master/.powerlevel9krc.
-# If you copy this file, keep the link to the original and this sentence intact; feel free to
-# change everything else.
+# Original location: https://github.com/romkatv/dotfiles-public/blob/master/.powerlevel10krc.
+# If you copy this file, keep the link to the original and this sentence intact; you are encouraged
+# to change everything else.
 #
 # This file defines configuration options for Powerlevel10k ZSH theme that will make your prompt
 # lightweight and sleek, unlike the default bulky look. You can also use it with Powerlevel9k -- a
@@ -36,6 +36,9 @@
 #     * Yellow: dirty (some stated or unstaged changes).
 #     * Teal: some untracked files but otherwise clean (no staged or unstaged changes).
 #   * Git prompt icons:
+#     * '@12345678' (git prompt color): detached HEAD at commit 12345678.
+#     * 'my-feature' (git prompt color): on branch my-feature.
+#     * 'my-feature|master' (git prompt color): on branch my-feature tracking remote branch master.
 #     * '+' (yellow): staged changes.
 #     * '!' (yellow): unstaged changes.
 #     * '?' (teal): untracked files.
@@ -57,11 +60,11 @@
 #
 # 1. Copy this file to your home directory.
 #
-#    ( cd && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-public/master/.powerlevel9krc )
+#    ( cd && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-public/master/.powerlevel10krc )
 #
 # 2. Source the file from ~/.zshrc.
 #
-#    echo 'source ~/.powerlevel9krc' >>! ~/.zshrc
+#    echo 'source ~/.powerlevel10krc' >>! ~/.zshrc
 #
 # 3. Enable Powerlevel10k ZSH theme.
 #
@@ -74,21 +77,30 @@
 #
 #                       CONFIGURATION
 #
-# When sourcing ~/.powerlevel9krc, you can pass it an argument.
+# When sourcing ~/.powerlevel10krc, you can pass it an argument.
 #
 #   * fancy: use unicode characters in the prompt (requires a capable font).
 #   * portable: use only ascii characters in the prompt.
-#   * auto (default): portable in an ssh session or when DISPLAY isn't set; fancy otherwise.
+#   * auto (default): portable in an SSH session or when DISPLAY isn't set; fancy otherwise.
 #
-# To configure what gets shown in the prompt, edit ~/powerlevel9krc. See
-# https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration.
+# To configure what gets shown in the prompt, edit ~/powerlevel10krc. See
+# https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration for
+# configuration options. Prompt configuration is a deeply personal affair, so take your time to
+# craft the right prompt just for you. The stock configuration is merely a starting point, a source
+# of inspiration, a frame for your own creation. Change it boldly to ensure a perfect fit to your
+# workflow and aesthetic preferences.
 #
-# You can use this script to choose colors:
+# Colors looks differently in different terminals. Use this script to choose what works well for
+# you.
 #
 #   for ((i = 0; i != 256; ++i)); do print -P "%F{${(l:3::0:)i}}${(l:3::0:)i} TEST%f"; done
+#
+# Keep in mind that some prompt segments can appear and disappear depending on the state of your
+# environment. Make sure colors work well in every situation. Most importantly, neighboring segments
+# should always have distinct colors.
 
 if test -z "${ZSH_VERSION}"; then
-  echo "powerlevel9krc: unsupported shell; try zsh instead" >&2
+  echo "powerlevel10krc: unsupported shell; try zsh instead" >&2
   return 1
   exit 1
 fi
@@ -97,7 +109,7 @@ fi
   emulate -L zsh && setopt no_unset pipe_fail
 
   if (( ARGC > 1 )); then
-    echo -E "Usage: source ~/.powerlevel9krc [fancy|portable|auto]" >&2
+    echo -E "Usage: source ~/.powerlevel10krc [fancy|portable|auto]" >&2
     return 1
   fi
 
@@ -128,7 +140,7 @@ fi
       local jobs=$'\uF013'
       ;;
     *)
-      echo -E "powerlevel9krc: invalid MODE: ${(q-)mode}" >&2
+      echo -E "powerlevel10krc: invalid MODE: ${(q-)mode}" >&2
       return 1
       ;;
   esac
@@ -171,6 +183,7 @@ fi
   typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED}_ACTIONFORMAT_FOREGROUND=001
   typeset -g POWERLEVEL9K_VCS_LOADING_ACTIONFORMAT_FOREGROUND=$POWERLEVEL9K_VCS_LOADING_FOREGROUND
   typeset -g POWERLEVEL9K_VCS_{GIT,GIT_GITHUB,GIT_BITBUCKET,GIT_GITLAB,BRANCH}_ICON=
+  typeset -g POWERLEVEL9K_VCS_REMOTE_BRANCH_ICON=$'\b|'
   typeset -g POWERLEVEL9K_VCS_COMMIT_ICON='@'
   typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
   typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='!'
