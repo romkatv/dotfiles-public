@@ -1,4 +1,4 @@
-# Original location: https://github.com/romkatv/dotfiles-public/blob/master/.powerlevel10krc.
+# Original location: https://github.com/romkatv/dotfiles-public/blob/master/.purepower.
 # If you copy this file, keep the link to the original and this sentence intact; you are encouraged
 # to change everything else.
 #
@@ -7,7 +7,7 @@
 # great choice if you need an excuse to have a cup of coffee after every command you type.
 #
 # This is how it looks:
-# https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/pure-power.png.
+# https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/purepower.png.
 #
 #                         PHILOSOPHY
 #
@@ -62,11 +62,11 @@
 #
 # 1. Copy this file to your home directory.
 #
-#    ( cd && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-public/master/.powerlevel10krc )
+#    ( cd && curl -fsSLO https://raw.githubusercontent.com/romkatv/dotfiles-public/master/.purepower )
 #
 # 2. Source the file from ~/.zshrc.
 #
-#    echo 'source ~/.powerlevel10krc' >>! ~/.zshrc
+#    echo 'source ~/.purepower' >>! ~/.zshrc
 #
 # 3. Enable Powerlevel10k ZSH theme.
 #
@@ -79,13 +79,13 @@
 #
 #                       CONFIGURATION
 #
-# When sourcing ~/.powerlevel10krc, you can pass it an argument.
+# When sourcing ~/.purepower, you can pass it an argument.
 #
 #   * fancy: use unicode characters in the prompt (requires a capable font).
 #   * portable: use only ascii characters in the prompt.
 #   * auto (default): portable in an SSH session or when DISPLAY isn't set; fancy otherwise.
 #
-# To configure what gets shown in the prompt, edit ~/powerlevel10krc. See
+# To configure what gets shown in the prompt, edit ~/purepower. See
 # https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration for
 # configuration options. Prompt configuration is a deeply personal affair, so take your time to
 # craft the right prompt just for you. The stock configuration is merely a starting point, a source
@@ -109,7 +109,7 @@
 # https://github.com/iboyperson/p9k-theme-pastel.
 
 if test -z "${ZSH_VERSION}"; then
-  echo "powerlevel10krc: unsupported shell; try zsh instead" >&2
+  echo "purepower: unsupported shell; try zsh instead" >&2
   return 1
   exit 1
 fi
@@ -118,7 +118,7 @@ fi
   emulate -L zsh && setopt no_unset pipe_fail
 
   if (( ARGC > 1 )); then
-    echo -E "Usage: source ~/.powerlevel10krc [fancy|portable|auto]" >&2
+    echo -E "Usage: source ~/.purepower [fancy|portable|auto]" >&2
     return 1
   fi
 
@@ -151,7 +151,7 @@ fi
       local jobs=$'\uF013'
       ;;
     *)
-      echo -E "powerlevel10krc: invalid MODE: ${(q-)mode}" >&2
+      echo -E "purepower: invalid MODE: ${(q-)mode}" >&2
       return 1
       ;;
   esac
