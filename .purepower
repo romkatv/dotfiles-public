@@ -3,7 +3,8 @@
 # to change everything else.
 #
 # This file defines configuration options for Powerlevel10k ZSH theme that will make your prompt
-# lightweight and sleek, unlike the default bulky look.
+# lightweight and sleek, unlike the default bulky look. You can also use it with Powerlevel9k -- a
+# great choice if you need an excuse to have a cup of coffee after every command you type.
 #
 # This is how it'll look:
 # https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/purepower.png.
@@ -111,6 +112,12 @@
 # environment. Make sure colors work well in every situation. Neighboring segments should always
 # have distinct colors.
 #
+# If you are using Pure Power with Powerlevel9k rather than Powerlevel10k, you'll need to set
+# PURE_POWER_USE_P10K_EXTENSIONS=0 before sourcing ~/.purepower or you'll see gibberish in your left
+# prompt. This option will turn off vi keymap integration, so your prompt symbol will always be '❯'.
+# Your prompt will also be 10-100 times slower with Powerlevel9k. This is not the fault of Pure
+# Power. Powerlevel9k is slow with any styling.
+#
 #                       ATTRIBUTION
 #
 # Visual design of this configuration borrows heavily from https://github.com/sindresorhus/pure.
@@ -163,12 +170,13 @@ fi
   typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
       status command_execution_time root_indicator background_jobs custom_rprompt time)
 
-  # If you are using Powerlevel9k, this won't work because Powerlevel9k doesn't do parameter
-  # expansion on POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX. You can replace the next two lines with
-  # `local p=$vi_insert` to get a working prompt but it won't show you keymap status like
-  # Powerlevel10k.
-  local p="\${\${\${KEYMAP:-0}:#vicmd}:+${${vi_insert//\\/\\\\}//\}/\\\}}}"
-  p+="\${\${\$((!\${#\${KEYMAP:-0}:#vicmd})):#0}:+${${vi_cmd//\\/\\\\}//\}/\\\}}}"
+  if (( ${PURE_POWER_USE_P10K_EXTENSIONS:-1} )); then
+    local p="\${\${\${KEYMAP:-0}:#vicmd}:+${${vi_insert//\\/\\\\}//\}/\\\}}}"
+    p+="\${\${\$((!\${#\${KEYMAP:-0}:#vicmd})):#0}:+${${vi_cmd//\\/\\\\}//\}/\\\}}}"
+  else
+    p=$vi_insert
+  fi
+
   typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%(?.%F{002}${p}%f.%F{009}${p}%f) "
   typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=$'\n'
   typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
