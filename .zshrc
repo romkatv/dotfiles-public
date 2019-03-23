@@ -11,7 +11,7 @@ ZSH_THEME=powerlevel10k/powerlevel10k
 
 ZLE_REMOVE_SUFFIX_CHARS=      # don't eat the space when typing '|' after a tab completion
 ZSH_DISABLE_COMPFIX=true      # don't complain about permissions when completing
-ENABLE_CORRECTION=true        # zsh: correct 'sl' to 'ls' [nyae]?
+# ENABLE_CORRECTION=true      # zsh: correct 'sl' to 'ls' [nyae]?
 COMPLETION_WAITING_DOTS=true  # show "..." while completing
 
 plugins=(
