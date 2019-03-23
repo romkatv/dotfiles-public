@@ -78,11 +78,17 @@
 #
 #                       CONFIGURATION
 #
-# When sourcing ~/.purepower, you can pass it an argument.
+# You can set PURE_POWER_MODE before sourcing ~/.purepower to restrict the range of characters it
+# uses.
 #
-#   * fancy: use unicode characters in the prompt (requires a capable font).
-#   * portable: use only ascii characters in the prompt.
-#   * auto (default): portable in an SSH session or when DISPLAY isn't set; fancy otherwise.
+#   * PURE_POWER_MODE=fancy     use unicode characters in the prompt (default)
+#   * PURE_POWER_MODE=portable  use only ascii characters in the prompt
+#
+# You can switch mode on the fly by setting PURE_POWER_MODE and executing zsh. Useful when you end
+# up in an environment without a capable font and see gibberish on your screen.
+#
+#   PURE_POWER_MODE=portable exec zsh  # switch to portable mode
+#   PURE_POWER_MODE=fancy    exec zsh  # switch to fancy mode
 #
 # To configure what gets shown in the prompt, edit ~/.purepower. See
 # https://github.com/romkatv/powerlevel10k/blob/master/README.md#installation-and-configuration for
@@ -117,30 +123,13 @@ fi
 () {
   emulate -L zsh && setopt no_unset pipe_fail
 
-  if (( ARGC > 1 )); then
-    echo -E "Usage: source ~/.purepower [fancy|portable|auto]" >&2
+  if (( ARGC )); then
+    echo -E "Usage: source ~/.purepower" >&2
     return 1
   fi
 
-  local mode=${1:-auto}
-  if [[ $mode == auto ]]; then
-    if [[ -n ${SSH_CLIENT-} || -n ${SSH_TTY-} || -z ${DISPLAY-} ]]; then
-      mode=portable
-    else
-      mode=fancy
-    fi
-  fi
-
+  local mode=${PURE_POWER_MODE:-fancy}
   case $mode in
-    portable)
-      local vi_insert='>'
-      local vi_cmd='<'
-      local lock='X'
-      local incoming='<'
-      local outgoing='>'
-      local root='#'
-      local jobs='%%'
-      ;;
     fancy)
       local vi_insert=$'\u276F'
       local vi_cmd=$'\u276E'
@@ -151,8 +140,17 @@ fi
       local jobs=$'\uF013'
       ;;
     *)
-      echo -E "purepower: invalid MODE: ${(q-)mode}" >&2
-      return 1
+      if [[ $mode != portable ]]; then
+        echo -En "purepower: invalid mode: ${(qq)mode}; " >&2
+        echo -E  "valid options are 'fancy' and 'portable'; falling back to 'portable'" >&2
+      fi
+      local vi_insert='>'
+      local vi_cmd='<'
+      local lock='X'
+      local incoming='<'
+      local outgoing='>'
+      local root='#'
+      local jobs='%%'
       ;;
   esac
 
