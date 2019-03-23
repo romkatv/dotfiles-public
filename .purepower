@@ -8,6 +8,10 @@
 # This is how it'll look:
 # https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/purepower.png.
 #
+# Pure Power needs to be installed in addition to Powerlevel10k, not instead of it. Pure Power
+# defines a set of configuration parameters that affect the styling of Powerlevel10k; there is no
+# code in it.
+#
 #                         PHILOSOPHY
 #
 # This configuration is made for those who care about style and value clear UI without redundancy
@@ -67,14 +71,13 @@
 #
 #    echo 'source ~/.purepower' >>! ~/.zshrc
 #
-# 3. Enable Powerlevel10k ZSH theme.
+# 3. Enable Powerlevel10k ZSH theme. The easiest way is this:
 #
 #    git clone https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
 #    echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>! ~/.zshrc
 #
-# 4. Disable your current theme if you have one. You'll probably need to edit your ~/.zshrc.
-#    If you are using a plugin manager, see https://github.com/romkatv/powerlevel10k/ or your plugin
-#    manager's documentation for details.
+# If you are using a plugin manager, see https://github.com/romkatv/powerlevel10k for installation
+# options.
 #
 #                       CONFIGURATION
 #
