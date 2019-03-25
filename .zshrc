@@ -2,6 +2,16 @@ export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME=powerlevel10k/powerlevel10k
 
+plugins=(
+  zsh-prompt-benchmark     # function zsh_prompt_benchmark to benchmark prompt
+  zsh-syntax-highlighting  # syntax highlighting for prompt
+  zsh-autosuggestions      # suggests commands as you type, based on command history (grey text)
+  command-not-found        # use ubuntu's command-not-found on unrecognized command
+  dirhistory               # alt-left and alt-right to navigate dir history; alt-up for `cd ..`
+  extract                  # `extract <archive>` command
+  z                        # `z` command to cd into commonly used directories
+)
+
 # GITSTATUS_ENABLE_LOGGING=1
 # POWERLEVEL9K_DISABLE_GITSTATUS=true
 # GITSTATUS_DAEMON=~/.oh-my-zsh/custom/plugins/gitstatus/gitstatusd
@@ -13,25 +23,52 @@ ZLE_REMOVE_SUFFIX_CHARS=      # don't eat the space when typing '|' after a tab 
 ZSH_DISABLE_COMPFIX=true      # don't complain about permissions when completing
 # ENABLE_CORRECTION=true      # zsh: correct 'sl' to 'ls' [nyae]?
 COMPLETION_WAITING_DOTS=true  # show "..." while completing
+DISABLE_AUTO_UPDATE=true      # disable check for Oh My Zsh updates on startup
 
-plugins=(
-  zsh-prompt-benchmark     # function zsh_prompt_benchmark to benchmark prompt
-  zsh-syntax-highlighting  # syntax highlighting for prompt
-  zsh-autosuggestions      # suggests commands as you type, based on command history (grey text)
-  command-not-found        # use ubuntu's command-not-found on unrecognized command
-  dirhistory               # alt-left and alt-right to navigate dir history; alt-up for `cd ..`
-  extract                  # `extract <archive>` command
-  z                        # `z` command to cd into commonly used directories
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
+
+ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
+
+ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
+  end-of-line
+  vi-end-of-line
+  vi-add-eol
+  # forward-char     # my removal
+  # vi-forward-char  # my removal
+)
+
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
+	history-search-forward
+	history-search-backward
+	history-beginning-search-forward
+	history-beginning-search-backward
+	history-substring-search-up
+	history-substring-search-down
+	up-line-or-beginning-search
+	down-line-or-beginning-search
+	up-line-or-history
+	down-line-or-history
+	accept-line
+  up-line-or-beginning-search-local    # my addition
+  down-line-or-beginning-search-local  # my addition
+)
+
+ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
+  forward-word
+	emacs-forward-word
+	vi-forward-word
+	vi-forward-word-end
+	vi-forward-blank-word
+	vi-forward-blank-word-end
+	vi-find-next-char
+	vi-find-next-char-skip
+  forward-char               # my addition
+  vi-forward-char            # my addition
 )
 
 source $HOME/bin/local-history.zsh
 source $HOME/.purepower
 source $ZSH/oh-my-zsh.sh
-
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(
-  up-line-or-beginning-search-local
-  down-line-or-beginning-search-local
-)
 
 # zle_highlight=(default:bold)  # bold prompt
 
@@ -57,6 +94,20 @@ if (( WSL )); then
     echo -E ${$(/mnt/c/Windows/System32/cmd.exe /c "echo %$1%")%$'\r'}
   }
 fi
+
+# zsh-autosuggests wraps all widgets on every prompt, which takes ~12 ms.
+# We turn it off after making sure _zsh_autosuggest_start has run at least once.
+autoload -Uz add-zsh-hook
+typeset -gi _UNHOOK_ZSH_AUTOSUGGEST_COUNTER=0
+function _unhook_autosuggest() {
+  emulate -L zsh
+  if (( ++_UNHOOK_ZSH_AUTOSUGGEST_COUNTER == 2 )); then
+    add-zsh-hook -D precmd _zsh_autosuggest_start
+    add-zsh-hook -D precmd _unhook_autosuggest
+    unset _UNHOOK_ZSH_AUTOSUGGEST_COUNTER
+  fi
+}
+add-zsh-hook precmd _unhook_autosuggest
 
 # Automatically run `ls` after every `cd`.
 # function _chpwd_hook_ls() ls
