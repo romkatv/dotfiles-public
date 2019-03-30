@@ -139,6 +139,7 @@ setopt NO_BANG_HIST          # disable old history syntax
 setopt GLOB_DOTS             # glob matches files starting with dot; `*` becomes `*(D)`
 setopt MULTIOS               # allow multiple redirections for the same fd
 setopt NO_BG_NICE            # don't nice background jobs; not useful and doesn't work on WSL
+setopt INTERACTIVE_COMMENTS  # allow comments in command line
 
 # This affects every invocation of `less`.
 #
