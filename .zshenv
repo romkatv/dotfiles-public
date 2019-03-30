@@ -1,6 +1,5 @@
 export WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
-export PATH=$HOME/bin:$PATH:/usr/local/cuda/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+export PATH=$HOME/bin:${PATH#$HOME/bin:}
 export EDITOR=$HOME/bin/redit
 export GOPATH=$HOME/go
 
