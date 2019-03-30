@@ -9,6 +9,7 @@
 	prompt = false
 [core]
 	pager = diff-so-fancy | less -RFXMx4
+	untrackedCache = true
 [color]
 	ui = true
 [color "diff-highlight"]
