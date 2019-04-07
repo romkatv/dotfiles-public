@@ -121,7 +121,7 @@
 #                       ATTRIBUTION
 #
 # Visual design of this configuration borrows heavily from https://github.com/sindresorhus/pure.
-# Recretion of Pure look and feel in Powerlevel10k was inspired by
+# Recreation of Pure look and feel in Powerlevel10k was inspired by
 # https://github.com/iboyperson/p9k-theme-pastel.
 
 if test -z "${ZSH_VERSION}"; then
