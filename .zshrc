@@ -12,7 +12,8 @@ plugins=(
   z                        # `z` command to cd into commonly used directories
 )
 
-# GITSTATUS_ENABLE_LOGGING=1
+GITSTATUS_SEND_SIGWINCH=1
+GITSTATUS_ENABLE_LOGGING=1
 # POWERLEVEL9K_DISABLE_GITSTATUS=true
 # GITSTATUS_DAEMON=~/.oh-my-zsh/custom/plugins/gitstatus/gitstatusd
 # POWERLEVEL9K_GITSTATUS_DIR=~/.oh-my-zsh/custom/plugins/gitstatus
