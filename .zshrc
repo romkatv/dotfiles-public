@@ -52,6 +52,7 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
 	accept-line
   up-line-or-beginning-search-local    # my addition
   down-line-or-beginning-search-local  # my addition
+  my-expand-alias                      # my addition
 )
 
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
@@ -110,20 +111,25 @@ function _unhook_autosuggest() {
 }
 add-zsh-hook precmd _unhook_autosuggest
 
+# Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
+function my-expand-alias() { zle _expand_alias }
+zle -N my-expand-alias
+
 # Automatically run `ls` after every `cd`.
 # function _chpwd_hook_ls() ls
 # autoload -Uz add-zsh-hook
 # add-zsh-hook chpwd _chpwd_hook_ls
 
-bindkey '^H'      backward-kill-word                  # ctrl+bs   delete previous word
-bindkey '^[[3;5~' kill-word                           # ctrl+del  delete next word
-bindkey '^J'      backward-kill-line                  # ctrl+j    delete everything before cursor
-bindkey '^Z'      undo                                # ctrl+z    undo
-bindkey '^Y'      redo                                # ctrl+y    redo
-bindkey '^[OA'    up-line-or-beginning-search-local   # up        previous command in local history
-bindkey '^[OB'    down-line-or-beginning-search-local # down      next command in local history
-bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up   previous command in global history
-bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down next command in global history
+bindkey '^H'      backward-kill-word                  # ctrl+bs    delete previous word
+bindkey '^[[3;5~' kill-word                           # ctrl+del   delete next word
+bindkey '^J'      backward-kill-line                  # ctrl+j     delete everything before cursor
+bindkey '^Z'      undo                                # ctrl+z     undo
+bindkey '^Y'      redo                                # ctrl+y     redo
+bindkey '^[OA'    up-line-or-beginning-search-local   # up         previous command in local history
+bindkey '^[OB'    down-line-or-beginning-search-local # down       next command in local history
+bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
+bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
+bindkey '^ '      my-expand-alias                     # ctrl+space expand alias
 
 stty susp '^B'  # ctrl+b instead of ctrl+z to suspend (ctrl+z is undo)
 
