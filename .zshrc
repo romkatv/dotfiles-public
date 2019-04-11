@@ -68,7 +68,7 @@ ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   vi-forward-char            # my addition
 )
 
-source $HOME/bin/local-history.zsh
+source $HOME/dotfiles/local-history.zsh
 source $HOME/.purepower
 source $ZSH/oh-my-zsh.sh
 
