@@ -12,13 +12,9 @@ plugins=(
   z                        # `z` command to cd into commonly used directories
 )
 
-GITSTATUS_SEND_SIGWINCH=1
 GITSTATUS_ENABLE_LOGGING=1
-# POWERLEVEL9K_DISABLE_GITSTATUS=true
 # GITSTATUS_DAEMON=~/.oh-my-zsh/custom/plugins/gitstatus/gitstatusd
 # POWERLEVEL9K_GITSTATUS_DIR=~/.oh-my-zsh/custom/plugins/gitstatus
-# POWERLEVEL9K_VCS_MAX_SYNC_LATENCY_SECONDS=1
-# (( WSL )) && POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=4096
 
 ZLE_REMOVE_SUFFIX_CHARS=      # don't eat the space when typing '|' after a tab completion
 ZSH_DISABLE_COMPFIX=true      # don't complain about permissions when completing
@@ -39,17 +35,17 @@ ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
 )
 
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
-	history-search-forward
-	history-search-backward
-	history-beginning-search-forward
-	history-beginning-search-backward
-	history-substring-search-up
-	history-substring-search-down
-	up-line-or-beginning-search
-	down-line-or-beginning-search
-	up-line-or-history
-	down-line-or-history
-	accept-line
+  history-search-forward
+  history-search-backward
+  history-beginning-search-forward
+  history-beginning-search-backward
+  history-substring-search-up
+  history-substring-search-down
+  up-line-or-beginning-search
+  down-line-or-beginning-search
+  up-line-or-history
+  down-line-or-history
+  accept-line
   up-line-or-beginning-search-local    # my addition
   down-line-or-beginning-search-local  # my addition
   my-expand-alias                      # my addition
@@ -57,13 +53,13 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
 
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   forward-word
-	emacs-forward-word
-	vi-forward-word
-	vi-forward-word-end
-	vi-forward-blank-word
-	vi-forward-blank-word-end
-	vi-find-next-char
-	vi-find-next-char-skip
+  emacs-forward-word
+  vi-forward-word
+  vi-forward-word-end
+  vi-forward-blank-word
+  vi-forward-blank-word-end
+  vi-find-next-char
+  vi-find-next-char-skip
   forward-char               # my addition
   vi-forward-char            # my addition
 )
