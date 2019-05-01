@@ -21,5 +21,6 @@
     "workbench.editor.tabSizing": "shrink",
     "window.zoomLevel": 0,
     "terminal.integrated.fontFamily": "MesloLGLDZ Nerd Font",
-    "editor.detectIndentation": false
+    "editor.detectIndentation": false,
+    "workbench.colorTheme": "Visual Studio Dark"
 }
