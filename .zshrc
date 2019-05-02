@@ -32,13 +32,13 @@ run-tracked -v +a source $ZSH/plugins/z/z.plugin.zsh
 run-tracked -v    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 run-tracked -v    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 
-if [[ $USER == romka && $WSL == 0 ]]; then
+if [[ -d ~/powerlevel10k && -d ~/gitstatus ]]; then
   typeset -g GITSTATUS_ENABLE_LOGGING=1
   typeset -g GITSTATUS_DAEMON=~/gitstatus/gitstatusd
   typeset -g POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
-  run-tracked -v source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
-else
   run-tracked -v source ~/powerlevel10k/powerlevel10k.zsh-theme
+else
+  run-tracked -v source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
 # Must be sourced after all widgets have been defined.
