@@ -179,4 +179,6 @@ set_preferences
 
 change_shell
 
+[[ -f "$HOME"/.z ]] || touch "$HOME"/.z
+
 echo SUCCESS
