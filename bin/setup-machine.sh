@@ -73,21 +73,6 @@ function change_shell() {
   chsh -s "$(grep -E '/zsh$' /etc/shells | tail -1)"
 }
 
-# Install oh-my-zsh.
-function install_ohmyzsh() {
-  local REPO="$HOME"/.oh-my-zsh
-  [[ -d "$REPO" ]] || git clone --depth=1 https://github.com/robbyrussell/oh-my-zsh.git "$REPO"
-  git --git-dir="$REPO"/.git --work-tree="$REPO" pull
-}
-
-# Install oh-my-zsh plugin or theme.
-function install_ohmyzsh_extension() {
-  local REPO="$HOME/.oh-my-zsh/custom/${1}s/$2"
-  shift 2
-  [[ -d "$REPO" ]] || git clone "$@" "$REPO"
-  git --git-dir="$REPO"/.git --work-tree="$REPO" pull
-}
-
 # Install Visual Studio Code.
 function install_vscode() {
   test $WSL -eq 0 || return 0
@@ -174,13 +159,6 @@ function set_preferences() {
   with_dbus dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
 }
 
-function disable_fucking_magic() {
-  # Disable the retarded shit that Oh My Zsh peddles. It makes paste into terminal painfully slow
-  # and fucks up useful plugins like zsh-autosuggestions.
-  mkdir -p "$HOME"/.oh-my-zsh/custom/lib
-  touch "$HOME"/.oh-my-zsh/custom/lib/misc.zsh
-}
-
 if [[ "$(id -u)" == 0 ]]; then
   echo "setup-machine.sh: please run as non-root" >&2
   exit 1
@@ -191,18 +169,6 @@ umask g-w,o-w
 install_packages
 install_vscode
 install_fonts
-install_ohmyzsh
-
-install_ohmyzsh_extension plugin \
-  zsh-prompt-benchmark git@github.com:romkatv/zsh-prompt-benchmark.git
-install_ohmyzsh_extension plugin \
-  zsh-syntax-highlighting https://github.com/zsh-users/zsh-syntax-highlighting.git
-install_ohmyzsh_extension plugin \
-  zsh-autosuggestions -b faster-counts git@github.com:romkatv/zsh-autosuggestions.git
-install_ohmyzsh_extension theme \
-  powerlevel10k git@github.com:romkatv/powerlevel10k.git
-
-disable_fucking_magic
 
 fix_clock
 fix_shm

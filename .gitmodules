@@ -1,0 +1,20 @@
+[submodule "dotfiles/powerlevel10k"]
+	path = dotfiles/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git
+	branch = master
+[submodule "dotfiles/zsh-prompt-benchmark"]
+	path = dotfiles/zsh-prompt-benchmark
+	url = https://github.com/romkatv/zsh-prompt-benchmark.git
+	branch = master
+[submodule "dotfiles/zsh-autosuggestions"]
+	path = dotfiles/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
+	branch = master
+[submodule "dotfiles/zsh-syntax-highlighting"]
+	path = dotfiles/zsh-syntax-highlighting
+	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
+	branch = master
+[submodule "dotfiles/oh-my-zsh"]
+	path = dotfiles/oh-my-zsh
+	url = https://github.com/robbyrussell/oh-my-zsh.git
+	branch = master

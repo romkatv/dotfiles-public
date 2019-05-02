@@ -1,158 +1,73 @@
-export ZSH=$HOME/.oh-my-zsh
+emulate zsh
 
-ZSH_THEME=powerlevel10k/powerlevel10k
+typeset -g WORDCHARS=''                 # only alphanums make up words in word-based zle widgets
+typeset -g ZLE_REMOVE_SUFFIX_CHARS=''   # don't eat space when typing '|' after a tab completion
 
-plugins=(
-  zsh-prompt-benchmark     # function zsh_prompt_benchmark to benchmark prompt
-  zsh-syntax-highlighting  # syntax highlighting for prompt
-  zsh-autosuggestions      # suggests commands as you type, based on command history (grey text)
-  command-not-found        # use ubuntu's command-not-found on unrecognized command
-  dirhistory               # alt-left and alt-right to navigate dir history; alt-up for `cd ..`
-  extract                  # `extract <archive>` command
-  z                        # `z` command to cd into commonly used directories
-)
+typeset -g HISTFILE=$HOME/.zsh_history
+typeset -g HISTSIZE=1000000000
+typeset -g SAVEHIST=1000000000
+typeset -g HISTFILESIZE=1000000000
 
-GITSTATUS_ENABLE_LOGGING=1
-# GITSTATUS_DAEMON=~/.oh-my-zsh/custom/plugins/gitstatus/gitstatusd
-# POWERLEVEL9K_GITSTATUS_DIR=~/.oh-my-zsh/custom/plugins/gitstatus
+typeset -g ZSH=~/dotfiles/oh-my-zsh
+typeset -g ZSH_CUSTOM=$ZSH/custom
 
-ZLE_REMOVE_SUFFIX_CHARS=      # don't eat the space when typing '|' after a tab completion
-ZSH_DISABLE_COMPFIX=true      # don't complain about permissions when completing
-# ENABLE_CORRECTION=true      # zsh: correct 'sl' to 'ls' [nyae]?
-COMPLETION_WAITING_DOTS=true  # show "..." while completing
-DISABLE_AUTO_UPDATE=true      # disable check for Oh My Zsh updates on startup
+typeset -g ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
+source ~/dotfiles/functions.zsh
+source ~/dotfiles/bindings.zsh
+source ~/dotfiles/completions.zsh
+source ~/dotfiles/aliases.zsh
+source ~/.purepower
 
-ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
+[[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
 
-ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
-  end-of-line
-  vi-end-of-line
-  vi-add-eol
-  # forward-char     # my removal
-  # vi-forward-char  # my removal
-)
+run-tracked -v    source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
+# Disallow binding changes. We bind dirhistory_zle_dirhistory_up and others explicitly.
+run-tracked -v -b source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
+# Disallow `x` alias.
+run-tracked -v -a source $ZSH/plugins/extract/extract.plugin.zsh
+# Allow `z` alias.
+run-tracked -v +a source $ZSH/plugins/z/z.plugin.zsh
+run-tracked -v    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+run-tracked -v    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 
-ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
-  history-search-forward
-  history-search-backward
-  history-beginning-search-forward
-  history-beginning-search-backward
-  history-substring-search-up
-  history-substring-search-down
-  up-line-or-beginning-search
-  down-line-or-beginning-search
-  up-line-or-history
-  down-line-or-history
-  accept-line
-  up-line-or-beginning-search-local    # my addition
-  down-line-or-beginning-search-local  # my addition
-  my-expand-alias                      # my addition
-)
-
-ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
-  forward-word
-  emacs-forward-word
-  vi-forward-word
-  vi-forward-word-end
-  vi-forward-blank-word
-  vi-forward-blank-word-end
-  vi-find-next-char
-  vi-find-next-char-skip
-  forward-char               # my addition
-  vi-forward-char            # my addition
-)
-
-source $HOME/dotfiles/local-history.zsh
-source $HOME/.purepower
-source $ZSH/oh-my-zsh.sh
-
-# zle_highlight=(default:bold)  # bold prompt
-
-alias clang-format='clang-format -style=file'
-alias ls='ls --group-directories-first --color=auto'
-alias gedit='gedit &>/dev/null'                       # suppress useless warnings
-alias d2u='dos2unix'
-alias u2d='unix2dos'
-
-# If you want some random config file to be versioned in the dotfiles-public git repo, type
-# `dotfiles-public add -f <random-file>`. Use `commit`, `push`, etc., as with normal git.
-alias dotfiles-public='git --git-dir=$HOME/.dotfiles-public/.git --work-tree=$HOME'
-alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$HOME'
-
-alias x='xsel --clipboard -i'  # cut to clipboard
-alias v='xsel --clipboard -o'  # paste from clipboard
-alias c='x && v'               # copy to clipboard
-
-if (( WSL )); then
-  # Prints Windows environment variable $1.
-  function win_env() {
-    emulate -L zsh
-    echo -E ${$(/mnt/c/Windows/System32/cmd.exe /c "echo %$1%")%$'\r'}
-  }
+if [[ $USER == romka ]]; then
+  typeset -g GITSTATUS_ENABLE_LOGGING=1
+  typeset -g GITSTATUS_DAEMON=~/gitstatus/gitstatusd
+  typeset -g POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
+  run-tracked -v source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+else
+  run-tracked -v source ~/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
-# zsh-autosuggests wraps all widgets on every prompt, which takes ~12 ms.
-# We turn it off after making sure _zsh_autosuggest_start has run at least once.
-autoload -Uz add-zsh-hook
-typeset -gi _UNHOOK_ZSH_AUTOSUGGEST_COUNTER=0
-function _unhook_autosuggest() {
-  emulate -L zsh
-  if (( ++_UNHOOK_ZSH_AUTOSUGGEST_COUNTER == 2 )); then
-    add-zsh-hook -D precmd _zsh_autosuggest_start
-    add-zsh-hook -D precmd _unhook_autosuggest
-    unset _UNHOOK_ZSH_AUTOSUGGEST_COUNTER
-  fi
-}
-add-zsh-hook precmd _unhook_autosuggest
+# Must be sourced after all widgets have been defined.
+run-tracked -v source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
-# Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
-function my-expand-alias() { zle _expand_alias }
-zle -N my-expand-alias
+# On every prompt, set terminal title to "user@host: cwd".
+function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
+autoload -U add-zsh-hook
+add-zsh-hook precmd set-term-title
 
-# Automatically run `ls` after every `cd`.
-# function _chpwd_hook_ls() ls
-# autoload -Uz add-zsh-hook
-# add-zsh-hook chpwd _chpwd_hook_ls
+setopt ALWAYS_TO_END           # full completions move cursor to the end
+setopt AUTO_CD                 # `dirname` is equivalent to `cd dirname`
+setopt AUTO_PUSHD              # `cd` pushes directories to the directory stack
+setopt EXTENDED_GLOB           # (#qx) glob qualifier and more
+setopt GLOB_DOTS               # glob matches files starting with dot; `*` becomes `*(D)`
+setopt HIST_EXPIRE_DUPS_FIRST  # if history needs to be trimmed, evict dups first
+setopt HIST_IGNORE_DUPS        # don't add dups to history
+setopt HIST_IGNORE_SPACE       # don't add commands starting with space to history
+setopt HIST_REDUCE_BLANKS      # remove junk whitespace from commands before adding to history
+setopt HIST_VERIFY             # if a cmd triggers history expansion, show it instead of running
+setopt INTERACTIVE_COMMENTS    # allow comments in command line
+setopt MULTIOS                 # allow multiple redirections for the same fd
+setopt NO_BANG_HIST            # disable old history syntax
+setopt NO_BG_NICE              # don't nice background jobs; not useful and doesn't work on WSL
+setopt PROMPT_SUBST            # expand $FOO, $(bar) and the like in prompt
+setopt PUSHD_IGNORE_DUPS       # don’t push copies of the same directory onto the directory stack
+setopt PUSHD_MINUS             # `cd -3` now means "3 directory deeper in the stack"
+setopt SHARE_HISTORY           # write and import history on every command
+setopt EXTENDED_HISTORY        # write timestamps to history
 
-bindkey '^H'      backward-kill-word                  # ctrl+bs    delete previous word
-bindkey '^[[3;5~' kill-word                           # ctrl+del   delete next word
-bindkey '^J'      backward-kill-line                  # ctrl+j     delete everything before cursor
-bindkey '^Z'      undo                                # ctrl+z     undo
-bindkey '^Y'      redo                                # ctrl+y     redo
-bindkey '^[OA'    up-line-or-beginning-search-local   # up         previous command in local history
-bindkey '^[OB'    down-line-or-beginning-search-local # down       next command in local history
-bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
-bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
-bindkey '^ '      my-expand-alias                     # ctrl+space expand alias
-
-stty susp '^B'  # ctrl+b instead of ctrl+z to suspend (ctrl+z is undo)
-
-HISTFILE=$HOME/.zsh_history
-HISTSIZE=1000000000
-SAVEHIST=1000000000
-HISTFILESIZE=1000000000
-
-setopt HIST_IGNORE_SPACE     # don't add commands starting with space to history
-setopt HIST_VERIFY           # if a cmd triggers history expansion, show it instead of running
-setopt HIST_REDUCE_BLANKS    # remove junk whitespace from commands before adding to history
-setopt EXTENDED_GLOB         # (#qx) glob qualifier and more
-setopt NO_BANG_HIST          # disable old history syntax
-setopt GLOB_DOTS             # glob matches files starting with dot; `*` becomes `*(D)`
-setopt MULTIOS               # allow multiple redirections for the same fd
-setopt NO_BG_NICE            # don't nice background jobs; not useful and doesn't work on WSL
-setopt INTERACTIVE_COMMENTS  # allow comments in command line
-
-# This affects every invocation of `less`.
-#
-#   -R   color
-#   -F   exit if there is less than one page of content
-#   -X   keep content on screen after exit
-#   -M   show more info at the bottom prompt line
-#   -x4  tabs are 4 instead of 8
-export LESS=-RFXMx4
-
-if [[ -f $HOME/.zshrc-private ]]; then
-  source $HOME/.zshrc-private
-fi
+# setopt COMPLETE_IN_WORD      # not sure what it does
+# setopt NO_FLOW_CONTROL       # not sure what it does

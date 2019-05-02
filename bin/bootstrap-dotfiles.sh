@@ -53,7 +53,10 @@ function restore_files() {
   local backup_dir=$1
   pushd "$backup_dir"
   while read -r file; do
-    cp --parents -a -f "$file" "$HOME"
+    if ! cp --parents -a -f "$file" "$HOME"; then
+      echo "ERROR: cannot restore $HOME/$file from backup in $backup_dir/$f" >&2
+      return 1
+    fi
   done < <(find . -type f)
   popd
   rm -rf "$backup_dir"
@@ -82,6 +85,7 @@ function clone_repo() {
   git clone --bare "$(get_repo_uri "$repo")" "$git_dir"
   git --git-dir="$git_dir"/ --work-tree="$HOME" checkout master
   git --git-dir="$git_dir"/ --work-tree="$HOME" push -u origin master
+  git --git-dir="$git_dir"/ --work-tree="$HOME" submodule update --init --recursive
   git --git-dir="$git_dir"/ --work-tree="$HOME" config --local status.showUntrackedFiles no
 
   restore_files "$backup_dir"
