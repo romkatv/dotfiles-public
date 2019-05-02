@@ -58,7 +58,7 @@ function install_packages() {
   if [[ "$WSL" == 1 ]]; then
     PACKAGES+=(dbus-x11)
   else
-    PACKAGES+=(gnome-tweak-tool iotop unoconv)
+    PACKAGES+=(gnome-tweak-tool iotop)
   fi
 
   sudo apt update
