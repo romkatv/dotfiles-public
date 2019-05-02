@@ -32,7 +32,7 @@ run-tracked -v +a source $ZSH/plugins/z/z.plugin.zsh
 run-tracked -v    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 run-tracked -v    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 
-if [[ $USER == romka ]]; then
+if [[ $USER == romka && $WSL == 0 ]]; then
   typeset -g GITSTATUS_ENABLE_LOGGING=1
   typeset -g GITSTATUS_DAEMON=~/gitstatus/gitstatusd
   typeset -g POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
