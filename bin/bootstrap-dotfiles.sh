@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Clone dotfiles-public and dotfiles-private from github. Requires `git` and ssh
+# Clones dotfiles-public and dotfiles-private from github. Requires `git` and ssh
 # keys for github.
 
 set -xueEo pipefail
@@ -82,6 +82,7 @@ function clone_repo() {
   git clone --bare "$(get_repo_uri "$repo")" "$git_dir"
   git --git-dir="$git_dir"/ --work-tree="$HOME" checkout master
   git --git-dir="$git_dir"/ --work-tree="$HOME" push -u origin master
+  git --git-dir="$git_dir"/ --work-tree="$HOME" config --local status.showUntrackedFiles no
 
   restore_files "$backup_dir"
   trap - INT TERM EXIT
