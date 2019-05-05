@@ -49,6 +49,8 @@ function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
 autoload -U add-zsh-hook
 add-zsh-hook precmd set-term-title
 
+autoload -Uz zargs zmv zcp zln
+
 setopt ALWAYS_TO_END           # full completions move cursor to the end
 setopt AUTO_CD                 # `dirname` is equivalent to `cd dirname`
 setopt AUTO_PUSHD              # `cd` pushes directories to the directory stack
