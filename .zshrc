@@ -3,17 +3,13 @@ emulate zsh
 typeset -g WORDCHARS=''                 # only alphanums make up words in word-based zle widgets
 typeset -g ZLE_REMOVE_SUFFIX_CHARS=''   # don't eat space when typing '|' after a tab completion
 
-typeset -g HISTFILE=$HOME/.zsh_history
-typeset -g HISTSIZE=1000000000
-typeset -g SAVEHIST=1000000000
-typeset -g HISTFILESIZE=1000000000
-
 typeset -g ZSH=~/dotfiles/oh-my-zsh
 typeset -g ZSH_CUSTOM=$ZSH/custom
 
 typeset -g ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
 
+source ~/dotfiles/history.zsh
 source ~/dotfiles/functions.zsh
 source ~/dotfiles/bindings.zsh
 source ~/dotfiles/completions.zsh

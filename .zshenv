@@ -1,3 +1,6 @@
+umask 0002
+ulimit -c unlimited
+
 export WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
 export PATH=$HOME/bin:${PATH#$HOME/bin:}
 export EDITOR=$HOME/bin/redit
@@ -21,5 +24,7 @@ fi
 
 eval $(dircolors -b)
 
-umask 0002
-ulimit -c unlimited
+(( WSL )) && local flavor=wsl || local flavor=linux
+typeset -g MACHINE_ID=${(%):-%m-$flavor-%n}
+
+[[ -f $HOME/.zshenv-private ]] && source $HOME/.zshenv-private
