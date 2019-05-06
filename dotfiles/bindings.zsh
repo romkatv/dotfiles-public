@@ -71,19 +71,13 @@ function my-expand-alias() { zle _expand_alias }
 
 function expand-or-complete-with-dots() {
   emulate -L zsh
-  [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti rmam
+  local c=$(( ${+terminfo[rmam]} && ${+terminfo[smam]} ))
+  (( c )) && echoti rmam
   print -Pn "%{%F{red}......%f%}"
-  [[ -n "$terminfo[rmam]" && -n "$terminfo[smam]" ]] && echoti smam
+  (( c )) && echoti smam
   zle expand-or-complete
   zle redisplay
 }
-
-if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
-  function zle-line-init() { echoti smkx }
-  function zle-line-finish() { echoti rmkx }
-  zle -N zle-line-init
-  zle -N zle-line-finish
-fi
 
 autoload -U edit-command-line up-line-or-beginning-search down-line-or-beginning-search
 
@@ -95,30 +89,99 @@ zle -N expand-or-complete-with-dots
 zle -N up-line-or-beginning-search-local
 zle -N down-line-or-beginning-search-local
 
-bindkey '^[[3~'   delete-char                         # del        delete one char forward
-bindkey '^[OH'    beginning-of-line                   # home       go to the beginning of line
-bindkey '^[OF'    end-of-line                         # end        go to the end of line
-bindkey '^[[1;5C' forward-word                        # ctrl+right go forward one word
-bindkey '^[[1;5D' backward-word                       # ctrl+left  go backward one word
-bindkey '^H'      backward-kill-word                  # ctrl+bs    delete previous word
-bindkey '^[[3;5~' kill-word                           # ctrl+del   delete next word
-bindkey '^J'      backward-kill-line                  # ctrl+j     delete everything before cursor
-bindkey '^Z'      undo                                # ctrl+z     undo
-bindkey '^[z'     redo                                # alt+z      redo
-bindkey '^[OA'    up-line-or-beginning-search-local   # up         prev command in local history
-bindkey '^[OB'    down-line-or-beginning-search-local # down       next command in local history
-bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
-bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
-bindkey '^ '      my-expand-alias                     # ctrl+space expand alias
-bindkey '^[[Z'    reverse-menu-complete               # shift+tab  previous in completion menu
-bindkey '^E'      edit-command-line                   # ctrl+e     edit command line in $EDITOR
-bindkey '^I'      expand-or-complete-with-dots        # tab        show '...' while completing
-bindkey '^[[1;3A' dirhistory_zle_dirhistory_up        # alt-up     cd ..
-bindkey '^[[1;3B' dirhistory_zle_dirhistory_down      # alt-down   cd in the first subdirectory
-bindkey '^[[1;3C' dirhistory_zle_dirhistory_future    # alt-right  cd +1
-bindkey '^[[1;3D' dirhistory_zle_dirhistory_back      # alt-left   cd -1
+zmodload zsh/terminfo
 
-stty susp '^B'  # ctrl+b instead of ctrl+z to suspend (ctrl+z is undo)
+if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+  function enable-term-application-mode() { echoti smkx }
+  function disable-term-application-mode() { echoti rmkx }
+  autoload -Uz add-zle-hook-widget
+  zle -N enable-term-application-mode
+  zle -N disable-term-application-mode
+  add-zle-hook-widget line-init enable-term-application-mode
+  add-zle-hook-widget line-finish disable-term-application-mode
+fi
+
+# Note: You can specify several codes separated by space. All of them will be bound.
+#
+# For example:
+#
+#   CtrlUp '\e[1;5A \e[A'
+#
+# Now, any widget in `bindings` that binds to CtrlUp will be bound to '\e[1;5A' and '\e[A'.
+local -A key_code=(
+  Ctrl          '^'
+  CtrlDel       '\e[3;5~'
+  CtrlBackspace '^H'
+  CtrlUp        '\e[1;5A'
+  CtrlDown      '\e[1;5B'
+  CtrlRight     '\e[1;5C'
+  CtrlLeft      '\e[1;5D'
+  AltUp         '\e[1;3A'
+  AltDown       '\e[1;3B'
+  AltRight      '\e[1;3C'
+  AltLeft       '\e[1;3D'
+  Alt           '\e'
+  Tab           '\t'
+  Backspace     '^?'
+  Del           '\e[3~'
+  Insert        "$terminfo[kich1]"
+  Home          "$terminfo[khome]"
+  End           "$terminfo[kend]"
+  PageUp        "$terminfo[kpp]"
+  PageDown      "$terminfo[knp]"
+  Up            "$terminfo[kcuu1]"
+  Left          "$terminfo[kcub1]"
+  Down          "$terminfo[kcud1]"
+  Right         "$terminfo[kcuf1]"
+  ShiftTab      "$terminfo[kcbt]"
+)
+
+local -a bindings=(
+  Del           delete-char                          # delete one char forward
+  Home          beginning-of-line                    # go to the beginning of line
+  End           end-of-line                          # go to the end of line
+  CtrlRight     forward-word                         # go forward one word
+  CtrlLeft      backward-word                        # go backward one word
+  CtrlBackspace backward-kill-word                   # delete previous word
+  CtrlDel       kill-word                            # delete next word
+  Ctrl-J        backward-kill-line                   # delete everything before cursor
+  Ctrl-Z        undo                                 # undo (suspend is on Ctrl-B)
+  Alt-Z         redo                                 # redo
+  Up            up-line-or-beginning-search-local    # prev command in local history
+  Down          down-line-or-beginning-search-local  # next command in local history
+  CtrlUp        up-line-or-beginning-search          # prev command in global history
+  CtrlDown      down-line-or-beginning-search        # next command in global history
+  Ctrl-' '      my-expand-alias                      # expand alias
+  ShiftTab      reverse-menu-complete                # previous in completion menu
+  Ctrl-E        edit-command-line                    # edit command line in $EDITOR
+  Tab           expand-or-complete-with-dots         # show '...' while completing
+  AltUp         dirhistory_zle_dirhistory_up         # cd ..
+  AltDown       dirhistory_zle_dirhistory_down       # cd in the first subdirectory
+  AltRight      dirhistory_zle_dirhistory_future     # cd +1
+  AltLeft       dirhistory_zle_dirhistory_back       # cd -1
+)
+
+local key widget
+for key widget in $bindings[@]; do
+  local -a code=('')
+  local part=''
+  for part in ${(@ps:-:)key}; do
+    if [[ $#part == 1 ]]; then
+      code=${^code}${(L)part}
+    elif [[ -n $key_code[$part] ]]; then
+      local -a p=(${(@ps: :)key_code[$part]})
+      code=(${^code}${^p})
+    else
+      (( $+key_code[$part] )) || echo -E "[ERROR] undefined key: $part" >&2
+      code=()
+      break
+    fi
+  done
+  local c=''
+  for c in $code[@]; do bindkey $c $widget; done
+done
+
+stty susp '^B'  # Ctrl-B instead of Ctrl-Z to suspend (Ctrl-Z is undo)
 
 typeset -g ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
 typeset -g ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
