@@ -18,27 +18,27 @@ source ~/.purepower
 
 [[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
 
-run-tracked -v    source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
+run-tracked    source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
 # Disallow binding changes. We bind dirhistory_zle_dirhistory_up and others explicitly.
-run-tracked -v -b source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
+run-tracked -b source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
 # Disallow `x` alias.
-run-tracked -v -a source $ZSH/plugins/extract/extract.plugin.zsh
+run-tracked -a source $ZSH/plugins/extract/extract.plugin.zsh
 # Allow `z` alias.
-run-tracked -v +a source $ZSH/plugins/z/z.plugin.zsh
-run-tracked -v    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
-run-tracked -v    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+run-tracked +a source $ZSH/plugins/z/z.plugin.zsh
+run-tracked    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+run-tracked    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 
 if [[ -d ~/powerlevel10k && -d ~/gitstatus ]]; then
   typeset -g GITSTATUS_ENABLE_LOGGING=1
   typeset -g GITSTATUS_DAEMON=~/gitstatus/gitstatusd
   typeset -g POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
-  run-tracked -v source ~/powerlevel10k/powerlevel10k.zsh-theme
+  run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
 else
-  run-tracked -v source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+  run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
 fi
 
-# Must be sourced after all widgets have been defined.
-run-tracked -v source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+# Must be sourced after all widgets have been defined. Rebinds all widgets.
+run-tracked +w source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
 # On every prompt, set terminal title to "user@host: cwd".
 function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
