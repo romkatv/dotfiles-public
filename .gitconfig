@@ -26,3 +26,4 @@
 	whitespace = red reverse
 [submodule]
 	recurse = true
+	fetchJobs = 0
