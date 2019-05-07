@@ -161,7 +161,8 @@ local -a bindings=(
   AltLeft       dirhistory_zle_dirhistory_back       # cd -1
 )
 
-local key widget
+local key=''
+local widget=''
 for key widget in $bindings[@]; do
   local -a code=('')
   local part=''
