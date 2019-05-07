@@ -25,6 +25,6 @@ fi
 eval $(dircolors -b)
 
 (( WSL )) && local flavor=wsl || local flavor=linux
-typeset -g MACHINE_ID=${(%):-%m}-$flavor-$(logname)
+typeset -g MACHINE_ID=${(%):-%m}-${flavor}-${HOME:t}
 
 [[ -f $HOME/.zshenv-private ]] && source $HOME/.zshenv-private
