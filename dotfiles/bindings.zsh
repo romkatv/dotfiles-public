@@ -25,7 +25,7 @@
   # bless Open Source.
   function up-line-or-beginning-search-local() {
     emulate -L zsh
-    local LAST=$LASTWIDGET
+    local last=$LASTWIDGET
     zle .set-local-history 1
     if [[ $LBUFFER == *$'\n'* ]]; then
       zle .up-line-or-history
@@ -33,7 +33,7 @@
     elif [[ -n $PREBUFFER ]] && zstyle -t ':zle:up-line-or-beginning-search' edit-buffer; then
       zle .push-line-or-edit
     else
-      [[ $LAST = $__local_searching ]] && CURSOR=$__local_savecursor
+      [[ $last = $__local_searching ]] && CURSOR=$__local_savecursor
       __local_savecursor=$CURSOR
       __local_searching=$WIDGET
       zle .history-beginning-search-backward
@@ -45,11 +45,11 @@
   # Same as above but for Down.
   function down-line-or-beginning-search-local() {
     emulate -L zsh
-    local LAST=$LASTWIDGET
+    local last=$LASTWIDGET
     zle .set-local-history 1
     function impl() {
-      if [[ ${+NUMERIC} -eq 0 && ( $LAST = $__local_searching || $RBUFFER != *$'\n'* ) ]]; then
-        [[ $LAST = $__local_searching ]] && CURSOR=$__local_savecursor
+      if [[ ${+NUMERIC} -eq 0 && ( $last = $__local_searching || $RBUFFER != *$'\n'* ) ]]; then
+        [[ $last = $__local_searching ]] && CURSOR=$__local_savecursor
         __local_searching=$WIDGET
         __local_savecursor=$CURSOR
         if zle .history-beginning-search-forward; then
@@ -92,7 +92,7 @@
 
   zmodload zsh/terminfo
 
-  if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+  if (( $+terminfo[smkx] && $+terminfo[rmkx] )); then
     function enable-term-application-mode() { echoti smkx }
     function disable-term-application-mode() { echoti rmkx }
     autoload -Uz add-zle-hook-widget
@@ -124,7 +124,7 @@
     Alt           '\e'
     Tab           '\t'
     Backspace     '^?'
-    Del           '\e[3~'
+    Delete        '\e[3~'
     Insert        "$terminfo[kich1]"
     Home          "$terminfo[khome]"
     End           "$terminfo[kend]"
@@ -138,7 +138,8 @@
   )
 
   local -a bindings=(
-    Del           delete-char                          # delete one char forward
+    Backspace     backward-delete-char                 # delete one char backward
+    Delete        delete-char                          # delete one char forward
     Home          beginning-of-line                    # go to the beginning of line
     End           end-of-line                          # go to the end of line
     CtrlRight     forward-word                         # go forward one word
@@ -148,6 +149,8 @@
     Ctrl-J        backward-kill-line                   # delete everything before cursor
     Ctrl-Z        undo                                 # undo (suspend is on Ctrl-B)
     Alt-Z         redo                                 # redo
+    Left          backward-char                        # move cursor one char backward
+    Right         forward-char                         # move cursor one char forward
     Up            up-line-or-beginning-search-local    # prev command in local history
     Down          down-line-or-beginning-search-local  # next command in local history
     CtrlUp        up-line-or-beginning-search          # prev command in global history

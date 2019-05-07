@@ -1,5 +1,6 @@
 emulate zsh
 
+typeset -g READNULLCMD=$PAGER           # use the default pager instead of `more`
 typeset -g WORDCHARS=''                 # only alphanums make up words in word-based zle widgets
 typeset -g ZLE_REMOVE_SUFFIX_CHARS=''   # don't eat space when typing '|' after a tab completion
 
@@ -42,8 +43,11 @@ run-tracked +w source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting
 
 # On every prompt, set terminal title to "user@host: cwd".
 function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
-autoload -U add-zsh-hook
+autoload -Uz add-zsh-hook
 add-zsh-hook precmd set-term-title
+
+(( $+aliases[run-help] )) && unalias run-help
+autoload -Uz run-help
 
 autoload -Uz zargs zmv zcp zln
 
