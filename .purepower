@@ -148,6 +148,7 @@ fi
       echo -E  "valid options are 'fancy' and 'portable'; falling back to 'portable'" >&2
     fi
     function _pp_cond() { echo -E $1 }
+    typeset -g POWERLEVEL9K_IGNORE_TERM_COLORS=true
   fi
 
   typeset -ga POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
