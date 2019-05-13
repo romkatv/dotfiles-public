@@ -42,6 +42,7 @@ function install_packages() {
     git
     htop
     jq
+    libxml2-utils
     meld
     nano
     p7zip-full
