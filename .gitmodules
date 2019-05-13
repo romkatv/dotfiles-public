@@ -18,3 +18,7 @@
 	path = dotfiles/oh-my-zsh
 	url = https://github.com/robbyrussell/oh-my-zsh.git
 	branch = master
+[submodule "dotfiles/gitstatus"]
+	path = dotfiles/gitstatus
+	url = https://github.com/romkatv/gitstatus.git
+	branch = master
