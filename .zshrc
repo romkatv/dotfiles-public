@@ -41,6 +41,9 @@ fi
 # Must be sourced after all widgets have been defined. Rebinds all widgets.
 run-tracked +w source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
+# Disable highlighting of text pasted into the command line.
+zle_highlight=('paste:none')
+
 # On every prompt, set terminal title to "user@host: cwd".
 function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
 autoload -Uz add-zsh-hook
