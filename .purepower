@@ -97,7 +97,7 @@
 # To automatically switch to portable mode when logging in from a terminal that doesn't support
 # unicode, put the following incantation in your ~/.zshrc.
 #
-#   [[ $TERM != xterm* ]] && : ${PURE_POWER_MODE:=portable}
+#   [[ $TERM == xterm* ]] || : ${PURE_POWER_MODE:=portable}
 #   source ~/.purepower
 #
 # To configure what gets shown in the prompt, edit ~/.purepower. See
