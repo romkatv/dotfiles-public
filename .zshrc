@@ -8,7 +8,12 @@ typeset -g ZSH=~/dotfiles/oh-my-zsh
 typeset -g ZSH_CUSTOM=$ZSH/custom
 
 typeset -g ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
+
+if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
+  typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
+else
+  typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=005'  # the default is outside of 8 color range
+fi
 
 [[ $TERM == xterm* ]] || : ${PURE_POWER_MODE:=portable}
 
