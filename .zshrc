@@ -10,6 +10,8 @@ typeset -g ZSH_CUSTOM=$ZSH/custom
 typeset -g ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
 
+[[ $TERM != xterm* ]] && : ${PURE_POWER_MODE:=portable}
+
 source ~/dotfiles/history.zsh
 source ~/dotfiles/functions.zsh
 source ~/dotfiles/bindings.zsh
