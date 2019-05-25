@@ -1,18 +1,18 @@
 emulate zsh
 
-typeset -g READNULLCMD=$PAGER           # use the default pager instead of `more`
-typeset -g WORDCHARS=''                 # only alphanums make up words in word-based zle widgets
-typeset -g ZLE_REMOVE_SUFFIX_CHARS=''   # don't eat space when typing '|' after a tab completion
+READNULLCMD=$PAGER          # use the default pager instead of `more`
+WORDCHARS=''                # only alphanums make up words in word-based zle widgets
+ZLE_REMOVE_SUFFIX_CHARS=''  # don't eat space when typing '|' after a tab completion
 
-typeset -g ZSH=~/dotfiles/oh-my-zsh
-typeset -g ZSH_CUSTOM=$ZSH/custom
+ZSH=~/dotfiles/oh-my-zsh
+ZSH_CUSTOM=$ZSH/custom
 
-typeset -g ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
 if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
-  typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
 else
-  typeset -g ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=005'  # the default is outside of 8 color range
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=005'  # the default is outside of 8 color range
 fi
 
 [[ $TERM == xterm* ]] || : ${PURE_POWER_MODE:=portable}
@@ -28,7 +28,7 @@ source ~/.purepower
 
 run-tracked     source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
 # Disallow binding and widget changes. We define our own in bindings.zsh.
-run-tracked -bw source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
+run-tracked -bwe source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
 # Disallow `x` alias.
 run-tracked -a  source $ZSH/plugins/extract/extract.plugin.zsh
 # Allow `z` alias.
@@ -43,9 +43,9 @@ function _zsh_autosuggest_bind_widgets() {
 }
 
 if [[ -d ~/powerlevel10k && -d ~/gitstatus ]]; then
-  typeset -g GITSTATUS_ENABLE_LOGGING=1
-  typeset -g GITSTATUS_DAEMON=~/gitstatus/gitstatusd
-  typeset -g POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
+  GITSTATUS_ENABLE_LOGGING=1
+  GITSTATUS_DAEMON=~/gitstatus/gitstatusd
+  POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
   run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
 else
   run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme

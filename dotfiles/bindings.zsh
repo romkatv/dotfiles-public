@@ -42,7 +42,7 @@
       zle .history-beginning-search-backward
       zstyle -T ':zle:up-line-or-beginning-search' leave-cursor && zle .end-of-line
     fi
-    builtin zle set-local-history 0
+    zle .set-local-history 0
   }
 
   # Same as above but for Down.
@@ -50,7 +50,7 @@
     emulate -L zsh
     local last=$LASTWIDGET
     zle .set-local-history 1
-    function impl() {
+    () {
       if [[ ${+NUMERIC} -eq 0 && ( $last = $__local_searching || $RBUFFER != *$'\n'* ) ]]; then
         [[ $last = $__local_searching ]] && CURSOR=$__local_savecursor
         __local_searching=$WIDGET
@@ -66,7 +66,6 @@
       __local_searching=''
       zle .down-line-or-history
     }
-    impl
     zle .set-local-history 0
   }
 
