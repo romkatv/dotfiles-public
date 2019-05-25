@@ -14,14 +14,3 @@ alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$
 alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
 alias c='x && v'               # copy to clipboard
-
-alias d='dirs -v | head -10'
-alias 1='cd -1'
-alias 2='cd -2'
-alias 3='cd -3'
-alias 4='cd -4'
-alias 5='cd -5'
-alias 6='cd -6'
-alias 7='cd -7'
-alias 8='cd -8'
-alias 9='cd -9'

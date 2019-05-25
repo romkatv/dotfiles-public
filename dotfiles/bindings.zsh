@@ -1,4 +1,7 @@
 () {
+  zmodload zsh/terminfo
+  autoload -Uz add-zle-hook-widget
+
   typeset -g __local_searching __local_savecursor
 
   # This zle widget replaces the standard widget bound to Up (up-line-or-beginning-search). The
@@ -80,6 +83,61 @@
     zle redisplay
   }
 
+  function dirhistory-shorten() {
+    cd $1 >/dev/null && print -P '%~' || echo -E $1
+  }
+
+  function dirhistory-print() {
+    local -i max_hist=$1
+    local clr=${(%):-%k%f%b}
+    (( terminfo[colors] >= 256 )) && local fg=${(%):-%F{244}} || local fg=${(%):-%F{005}}
+    local dir out=$clr
+
+    local -i lim=-1
+    if (( $#dirhistory_past > max_hist + 2 )); then
+      lim=$((max_hist+1))
+      out+=$'\n'"$fg... $(($#dirhistory_past - max_hist - 1)) more ...$clr"
+    fi
+    for dir in ${(Oa)${(Oa)dirhistory_past}[2,lim]}; do
+      out+=$'\n'"$fg  $(dirhistory-shorten $dir)$clr"
+    done
+
+    out+=$'\n'"* $(dirhistory-shorten $dirhistory_past[-1])"
+
+    local -i lim=-1
+    (( $#dirhistory_future > max_hist + 1 )) && lim=max_hist
+    for dir in ${${(Oa)dirhistory_future}[1,lim]}; do
+      out+=$'\n'"$fg  $(dirhistory-shorten $dir)$clr"
+    done
+    if (( lim >= 0 )); then
+      out+=$'\n'"$fg... $(($#dirhistory_future - max_hist)) more ...$clr"
+    fi
+    echo -nE $out
+  }
+
+  function dirhistory-restore-buffer() {
+    emulate -L zsh
+    BUFFER=$_DIRHISTORY_BUFFER
+    CURSOR=$_DIRHISTORY_CURSOR
+    typeset -g _DIRHISTORY_BUFFER=
+    typeset -g _DIRHISTORY_CURSOR=1
+  }
+
+  function dirhistory_noop() {}
+
+  local which
+  for which in noop up back forward; do
+    eval "function dirhistory-$which() {
+      emulate -L zsh
+      typeset -g _DIRHISTORY_BUFFER=\$BUFFER
+      typeset -g _DIRHISTORY_CURSOR=\$CURSOR
+      BUFFER=
+      dirhistory_$which
+      zle accept-line
+      [[ $which == noop ]] && dirhistory-print 20 || dirhistory-print 3
+    }"
+  done
+
   autoload -U edit-command-line up-line-or-beginning-search down-line-or-beginning-search
 
   zle -N edit-command-line
@@ -89,18 +147,24 @@
   zle -N expand-or-complete-with-dots
   zle -N up-line-or-beginning-search-local
   zle -N down-line-or-beginning-search-local
+  zle -N dirhistory-restore-buffer
+  zle -N dirhistory-noop
+  zle -N dirhistory-up
+  zle -N dirhistory-back
+  zle -N dirhistory-forward
 
   zmodload zsh/terminfo
 
   if (( $+terminfo[smkx] && $+terminfo[rmkx] )); then
     function enable-term-application-mode() { echoti smkx }
     function disable-term-application-mode() { echoti rmkx }
-    autoload -Uz add-zle-hook-widget
     zle -N enable-term-application-mode
     zle -N disable-term-application-mode
     add-zle-hook-widget line-init enable-term-application-mode
     add-zle-hook-widget line-finish disable-term-application-mode
   fi
+
+  add-zle-hook-widget line-init dirhistory-restore-buffer
 
   # Note: You can specify several codes separated by space. All of them will be bound.
   #
@@ -159,10 +223,10 @@
     ShiftTab      reverse-menu-complete                # previous in completion menu
     Ctrl-E        edit-command-line                    # edit command line in $EDITOR
     Tab           expand-or-complete-with-dots         # show '...' while completing
-    AltUp         dirhistory_zle_dirhistory_up         # cd ..
-    AltDown       dirhistory_zle_dirhistory_down       # cd in the first subdirectory
-    AltRight      dirhistory_zle_dirhistory_future     # cd +1
-    AltLeft       dirhistory_zle_dirhistory_back       # cd -1
+    AltUp         dirhistory-up                        # cd ..
+    AltDown       dirhistory-noop                      # print directory history
+    AltLeft       dirhistory-back                      # cd into the previous directory
+    AltRight      dirhistory-forward                   # cd into the next directory
   )
 
   local key widget

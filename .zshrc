@@ -26,15 +26,21 @@ source ~/.purepower
 
 [[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
 
-run-tracked    source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
-# Disallow binding changes. We bind dirhistory_zle_dirhistory_up and others explicitly.
-run-tracked -b source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
+run-tracked     source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
+# Disallow binding and widget changes. We define our own in bindings.zsh.
+run-tracked -bw source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
 # Disallow `x` alias.
-run-tracked -a source $ZSH/plugins/extract/extract.plugin.zsh
+run-tracked -a  source $ZSH/plugins/extract/extract.plugin.zsh
 # Allow `z` alias.
-run-tracked +a source $ZSH/plugins/z/z.plugin.zsh
-run-tracked    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
-run-tracked    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+run-tracked +a  source $ZSH/plugins/z/z.plugin.zsh
+run-tracked     source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+run-tracked     source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+
+functions[orig_zsh_autosuggest_bind_widgets]=$functions[_zsh_autosuggest_bind_widgets]
+function _zsh_autosuggest_bind_widgets() {
+  orig_zsh_autosuggest_bind_widgets
+  _zsh_autosuggest_bind_widget zle-line-init modify
+}
 
 if [[ -d ~/powerlevel10k && -d ~/gitstatus ]]; then
   typeset -g GITSTATUS_ENABLE_LOGGING=1
