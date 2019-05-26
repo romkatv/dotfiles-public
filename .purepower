@@ -55,9 +55,9 @@
 #
 #                        RIGHT PROMPT
 #
-#   * Last command execution time (in seconds).
 #   * Error code with an optional signal name of the last command if it failed, in red.
-#   * '☰' if you have background jobs.
+#   * Last command execution time (in seconds).
+#   * '⇶' if you have background jobs.
 #   * user@host in bright yellow if root, grey otherwise.
 #   * If you type `custom_rprompt() { echo 'message' }` in your terminal, you'll get 'message' shown
 #     on the right. Useful for integration with your scripts that change some sort of
@@ -237,7 +237,7 @@ fi
   typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VERBOSE=false
   typeset -g POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND=none
   typeset -g POWERLEVEL9K_BACKGROUND_JOBS_VISUAL_IDENTIFIER_COLOR=002
-  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_ICON=$(_pp_s '%%' '☰')
+  typeset -g POWERLEVEL9K_BACKGROUND_JOBS_ICON=$(_pp_s '%%' '⇶')
 
   typeset -g POWERLEVEL9K_CUSTOM_RPROMPT=custom_rprompt
   typeset -g POWERLEVEL9K_CUSTOM_RPROMPT_BACKGROUND=none
