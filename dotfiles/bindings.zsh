@@ -87,7 +87,14 @@
   }
 
   function dirhistory-print() {
-    local -i max_hist=$1
+    emulate -L zsh
+    local -i max_hist=${1:-20}
+
+    typeset -g _DIRHISTORY_BUFFER=$BUFFER
+    typeset -g _DIRHISTORY_CURSOR=$CURSOR
+    BUFFER=
+    zle accept-line
+
     local clr=${(%):-%k%f%b}
     (( terminfo[colors] >= 256 )) && local fg=${(%):-%F{244}} || local fg=${(%):-%F{005}}
     local dir out=$clr
@@ -122,18 +129,13 @@
     typeset -g _DIRHISTORY_CURSOR=1
   }
 
-  function dirhistory_noop() {}
-
   local which
-  for which in noop up back forward; do
+  for which in up back forward; do
     eval "function dirhistory-$which() {
       emulate -L zsh
-      typeset -g _DIRHISTORY_BUFFER=\$BUFFER
-      typeset -g _DIRHISTORY_CURSOR=\$CURSOR
-      BUFFER=
       dirhistory_$which
-      zle accept-line
-      [[ $which == noop ]] && dirhistory-print 20 || dirhistory-print 3
+      powerlevel9k_refresh_prompt_inplace
+      zle .reset-prompt && zle -R
     }"
   done
 
@@ -147,7 +149,7 @@
   zle -N up-line-or-beginning-search-local
   zle -N down-line-or-beginning-search-local
   zle -N dirhistory-restore-buffer
-  zle -N dirhistory-noop
+  zle -N dirhistory-print
   zle -N dirhistory-up
   zle -N dirhistory-back
   zle -N dirhistory-forward
@@ -222,10 +224,10 @@
     ShiftTab      reverse-menu-complete                # previous in completion menu
     Ctrl-E        edit-command-line                    # edit command line in $EDITOR
     Tab           expand-or-complete-with-dots         # show '...' while completing
-    AltUp         dirhistory-up                        # cd ..
-    AltDown       dirhistory-noop                      # print directory history
     AltLeft       dirhistory-back                      # cd into the previous directory
     AltRight      dirhistory-forward                   # cd into the next directory
+    AltUp         dirhistory-up                        # cd ..
+    AltDown       dirhistory-print                     # print directory history
   )
 
   local key widget
