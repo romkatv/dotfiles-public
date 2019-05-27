@@ -287,4 +287,17 @@
     forward-char               # my addition
     vi-forward-char            # my addition
   )
+
+  typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
+    orig-\*
+    beep
+    run-help
+    set-local-history
+    which-command
+    yank
+    yank-pop
+    zle-isearch-update
+    zle-keymap-select
+    zle-line-finish      # my addition
+	)
 }
