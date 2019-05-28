@@ -1,9 +1,5 @@
 emulate zsh
 
-READNULLCMD=$PAGER          # use the default pager instead of `more`
-WORDCHARS=''                # only alphanums make up words in word-based zle widgets
-ZLE_REMOVE_SUFFIX_CHARS=''  # don't eat space when typing '|' after a tab completion
-
 ZSH=~/dotfiles/oh-my-zsh
 ZSH_CUSTOM=$ZSH/custom
 
@@ -66,6 +62,11 @@ add-zsh-hook precmd set-term-title
 autoload -Uz run-help
 
 autoload -Uz zargs zmv zcp zln
+
+ZLE_RPROMPT_INDENT=0           # don't leave an empty space after right prompt
+READNULLCMD=$PAGER             # use the default pager instead of `more`
+WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
+ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
 
 setopt ALWAYS_TO_END           # full completions move cursor to the end
 setopt AUTO_CD                 # `dirname` is equivalent to `cd dirname`
