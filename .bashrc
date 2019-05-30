@@ -24,4 +24,10 @@ elif [ -f /etc/bash_completion ]; then
   source /etc/bash_completion
 fi
 
-source "$HOME"/dotfiles/gitstatus/gitstatus.prompt.sh
+if [[ -d ~/gitstatus ]]; then
+  GITSTATUS_ENABLE_LOGGING=1
+  GITSTATUS_DAEMON=~/gitstatus/gitstatusd
+  source ~/gitstatus/gitstatus.prompt.sh
+else
+  source ~/dotfiles/gitstatus/gitstatus.prompt.sh
+fi
