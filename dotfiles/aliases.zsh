@@ -14,3 +14,9 @@ alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$
 alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
 alias c='x && v'               # copy to clipboard
+
+if (( WSL )); then
+  hash -d r=/mnt/d/r
+  hash -d h=$(wslpath $(win_env USERPROFILE))
+fi
+
