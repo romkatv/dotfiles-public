@@ -13,17 +13,10 @@ fi
 
 [[ $TERM == xterm* ]] || : ${PURE_POWER_MODE:=portable}
 
-source ~/dotfiles/history.zsh
 source ~/dotfiles/functions.zsh
-source ~/dotfiles/bindings.zsh
-source ~/dotfiles/completions.zsh
-source ~/dotfiles/aliases.zsh
-source ~/.purepower
-
-[[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
 
 run-tracked     source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
-# Disallow binding and widget changes. We define our own in bindings.zsh.
+# Kill binding and widget as we define our own in bindings.zsh. Strip random exports.
 run-tracked -bwe source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
 # Disallow `x` alias.
 run-tracked -a  source $ZSH/plugins/extract/extract.plugin.zsh
@@ -38,14 +31,25 @@ function _zsh_autosuggest_bind_widgets() {
   _zsh_autosuggest_bind_widget zle-line-init modify
 }
 
-if [[ -d ~/powerlevel10k && -d ~/gitstatus ]]; then
+if [[ -d ~/gitstatus ]]; then
   GITSTATUS_ENABLE_LOGGING=1
   GITSTATUS_DAEMON=~/gitstatus/gitstatusd
   POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
+fi
+
+if [[ -d ~/powerlevel10k ]]; then
   run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
 else
   run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
 fi
+
+source ~/.purepower
+source ~/dotfiles/history.zsh
+
+[[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
+
+source ~/dotfiles/bindings.zsh
+source ~/dotfiles/completions.zsh
 
 # Must be sourced after all widgets have been defined. Rebinds all widgets.
 run-tracked +w source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
@@ -62,6 +66,8 @@ add-zsh-hook precmd set-term-title
 autoload -Uz run-help
 
 autoload -Uz zargs zmv zcp zln
+
+source ~/dotfiles/aliases.zsh
 
 ZLE_RPROMPT_INDENT=0           # don't leave an empty space after right prompt
 READNULLCMD=$PAGER             # use the default pager instead of `more`
