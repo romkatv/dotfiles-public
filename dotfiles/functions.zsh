@@ -15,10 +15,12 @@
 #
 # For every type of environment the default action on detected changes is to print a warning.
 # Options prefixed with `+` cause changes to be accepted without a warning. Options prefixed
-# with '-' cause changes to be reverted.
+# with '-' cause changes to be reverted, also without a warning.
 #
 # For zle widgets and functions, new entities are not considered changes. For all other
-# environments they are.
+# environments they are. That is, it's absolutely fine for a sourced file to define a new
+# function, but it's not fine (unless explicitly allowed) to define an alias or a key binding
+# even if they don't clash with existing aliases/bindings.
 #
 # The primary purpose of `run-tracked` is to provide a modicum of protection against clashes when
 # sourcing ZSH plugins. It can help with the following problems:
