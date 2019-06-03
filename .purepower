@@ -169,8 +169,8 @@ fi
   typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
       status command_execution_time background_jobs custom_rprompt context)
 
-  local ins=$(_pp_s '>' '❯')
-  local cmd=$(_pp_s '<' '❮')
+  local ins=$(_pp_s '> ' '❯ ')
+  local cmd=$(_pp_s '< ' '❮ ')
   if (( ${PURE_POWER_USE_P10K_EXTENSIONS:-1} )); then
     local p="\${\${\${KEYMAP:-0}:#vicmd}:+${${ins//\\/\\\\}//\}/\\\}}}"
     p+="\${\${\$((!\${#\${KEYMAP:-0}:#vicmd})):#0}:+${${cmd//\\/\\\\}//\}/\\\}}}"
