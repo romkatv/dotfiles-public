@@ -254,4 +254,5 @@ fi
   typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=$(_pp_c 003 011)
 
   unfunction _pp_c _pp_s
+  function custom_rprompt() {}  # redefine this to show stuff in custom_rprompt segment
 } "$@"
