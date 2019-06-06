@@ -186,6 +186,7 @@ fi
     typeset -g POWERLEVEL9K_RULER_FOREGROUND=$(_pp_c 5 237)
   else
     typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+    function custom_rprompt() { }
   fi
 
   typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
