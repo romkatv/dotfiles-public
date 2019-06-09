@@ -188,6 +188,7 @@ fi
     function custom_rprompt() { }
   fi
 
+  typeset -g POWERLEVEL9K_LEFT_SEGMENT_END_SEPARATOR=
   typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
   typeset -g POWERLEVEL9K_RPROMPT_ON_NEWLINE=false
   typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=
