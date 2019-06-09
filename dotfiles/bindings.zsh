@@ -301,5 +301,5 @@
     zle-isearch-update
     zle-keymap-select
     zle-line-finish      # my addition
-	)
+  )
 }
