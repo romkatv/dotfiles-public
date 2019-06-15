@@ -90,14 +90,9 @@
     emulate -L zsh
     local -i max_hist=${1:-20}
 
-    typeset -g _DIRHISTORY_BUFFER=$BUFFER
-    typeset -g _DIRHISTORY_CURSOR=$CURSOR
-    BUFFER=
-    zle accept-line
-
     local clr=${(%):-%k%f%b}
     (( terminfo[colors] >= 256 )) && local fg=${(%):-%F{244}} || local fg=${(%):-%F{005}}
-    local dir out=$clr
+    local dir out
 
     local -i lim=-1
     if (( $#dirhistory_past > max_hist + 2 )); then
@@ -118,15 +113,9 @@
     if (( lim >= 0 )); then
       out+=$'\n'"$fg... $(($#dirhistory_future - max_hist)) more ...$clr"
     fi
-    echo -nE $out
-  }
 
-  function dirhistory-restore-buffer() {
-    emulate -L zsh
-    BUFFER=$_DIRHISTORY_BUFFER
-    CURSOR=$_DIRHISTORY_CURSOR
-    typeset -g _DIRHISTORY_BUFFER=
-    typeset -g _DIRHISTORY_CURSOR=1
+    zle && zle -I
+    echo -E $clr${out#$'\n'}
   }
 
   local which
@@ -148,7 +137,6 @@
   zle -N expand-or-complete-with-dots
   zle -N up-line-or-beginning-search-local
   zle -N down-line-or-beginning-search-local
-  zle -N dirhistory-restore-buffer
   zle -N dirhistory-print
   zle -N dirhistory-up
   zle -N dirhistory-back
@@ -164,8 +152,6 @@
     add-zle-hook-widget line-init enable-term-application-mode
     add-zle-hook-widget line-finish disable-term-application-mode
   fi
-
-  add-zle-hook-widget line-init dirhistory-restore-buffer
 
   # Note: You can specify several codes separated by space. All of them will be bound.
   #
@@ -288,18 +274,5 @@
     vi-find-next-char-skip
     forward-char               # my addition
     vi-forward-char            # my addition
-  )
-
-  typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
-    orig-\*
-    beep
-    run-help
-    set-local-history
-    which-command
-    yank
-    yank-pop
-    zle-isearch-update
-    zle-keymap-select
-    zle-line-finish      # my addition
   )
 }
