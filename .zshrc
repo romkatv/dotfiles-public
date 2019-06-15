@@ -1,5 +1,7 @@
 emulate zsh
 
+autoload -Uz add-zsh-hook run-help zargs zmv zcp zln
+
 ZSH=~/dotfiles/oh-my-zsh
 ZSH_CUSTOM=$ZSH/custom
 
@@ -16,20 +18,26 @@ fi
 source ~/dotfiles/functions.zsh
 
 run-tracked     source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
-# Kill binding and widget as we define our own in bindings.zsh. Strip random exports.
+# Kill bindings and widgets as we define our own in bindings.zsh. Deny random exports.
 run-tracked -bwe source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
 # Disallow `x` alias.
 run-tracked -a  source $ZSH/plugins/extract/extract.plugin.zsh
 # Allow `z` alias.
 run-tracked +a  source $ZSH/plugins/z/z.plugin.zsh
 run-tracked     source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
-run-tracked     source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 
-functions[orig_zsh_autosuggest_bind_widgets]=$functions[_zsh_autosuggest_bind_widgets]
-function _zsh_autosuggest_bind_widgets() {
-  orig_zsh_autosuggest_bind_widgets
-  _zsh_autosuggest_bind_widget zle-line-init modify
+function late-init() {
+  emulate -L zsh
+
+  # Must be sourced after all widgets have been defined but before zsh-autosuggestions.
+  run-tracked +w source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+
+  run-tracked    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+  run-tracked +w _zsh_autosuggest_start
+  
+  add-zsh-hook -d precmd late-init
 }
+add-zsh-hook precmd late-init
 
 if [[ -d ~/gitstatus ]]; then
   GITSTATUS_ENABLE_LOGGING=1
@@ -51,22 +59,14 @@ source ~/dotfiles/history.zsh
 source ~/dotfiles/bindings.zsh
 source ~/dotfiles/completions.zsh
 
-# Must be sourced after all widgets have been defined. Rebinds all widgets.
-run-tracked +w source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
-
 # Disable highlighting of text pasted into the command line.
 zle_highlight=('paste:none')
 
 # On every prompt, set terminal title to "user@host: cwd".
 function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
-autoload -Uz add-zsh-hook
 add-zsh-hook precmd set-term-title
 
 (( $+aliases[run-help] )) && unalias run-help
-autoload -Uz run-help
-
-autoload -Uz zargs zmv zcp zln
-
 source ~/dotfiles/aliases.zsh
 
 ZLE_RPROMPT_INDENT=0           # don't leave an empty space after right prompt
@@ -88,7 +88,6 @@ setopt INTERACTIVE_COMMENTS    # allow comments in command line
 setopt MULTIOS                 # allow multiple redirections for the same fd
 setopt NO_BANG_HIST            # disable old history syntax
 setopt NO_BG_NICE              # don't nice background jobs; not useful and doesn't work on WSL
-setopt PROMPT_SUBST            # expand $FOO, $(bar) and the like in prompt
 setopt PUSHD_IGNORE_DUPS       # don’t push copies of the same directory onto the directory stack
 setopt PUSHD_MINUS             # `cd -3` now means "3 directory deeper in the stack"
 setopt SHARE_HISTORY           # write and import history on every command
