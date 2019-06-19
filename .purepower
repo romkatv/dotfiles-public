@@ -182,7 +182,7 @@ fi
     typeset -g POWERLEVEL9K_SHOW_RULER=true
     typeset -g POWERLEVEL9K_RULER_CHAR=$(_pp_s '-' '─')
     typeset -g POWERLEVEL9K_RULER_BACKGROUND=none
-    typeset -g POWERLEVEL9K_RULER_FOREGROUND=$(_pp_c 5 237)
+    typeset -g POWERLEVEL9K_RULER_FOREGROUND=$(_pp_c 7 237)
   else
     typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
     function custom_rprompt() { }
