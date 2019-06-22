@@ -185,7 +185,7 @@ fi
     local p="\${\${\${KEYMAP:-0}:#vicmd}:+${${ins//\\/\\\\}//\}/\\\}}}"
     p+="\${\${\$((!\${#\${KEYMAP:-0}:#vicmd})):#0}:+${${cmd//\\/\\\\}//\}/\\\}}}"
   else
-    p=$ins
+    local p=$ins
   fi
 
   if (( ${PURE_POWER_USE_P10K_EXTENSIONS:-1} )); then
