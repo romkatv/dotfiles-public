@@ -7,7 +7,7 @@ export PAGER=less
 export GOPATH=$HOME/go
 
 typeset -gaU cdpath fpath mailpath path
-path=($HOME/bin ~/.local/bin ${path[@]})
+path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin ${path[@]})
 
 # This affects every invocation of `less`.
 #
