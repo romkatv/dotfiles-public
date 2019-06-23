@@ -157,6 +157,7 @@ fi
       # pyenv                 # python environment (https://github.com/pyenv/pyenv)
       custom_rprompt          # the output of function `custom_rprompt()` if it is defined
       context                 # user@host
+      # time                  # current time
   )
 
   # `$(_pp_c x y`) evaluates to `y` if the terminal supports >= 256 colors and to `x` otherwise.
@@ -285,6 +286,10 @@ fi
 
   # Icon for virtualenv, anaconda and pyenv.
   typeset -g POWERLEVEL9K_PYTHON_ICON=
+
+  typeset -g POWERLEVEL9K_TIME_BACKGROUND=none
+  typeset -g POWERLEVEL9K_TIME_FOREGROUND=$(_pp_c 7 66)
+  typeset -g POWERLEVEL9K_TIME_ICON=
 
   unfunction _pp_c _pp_s
 } "$@"
