@@ -293,7 +293,7 @@ fi
   typeset -g POWERLEVEL9K_TIME_FOREGROUND=$(_pp_c 7 66)
   typeset -g POWERLEVEL9K_TIME_ICON=
   # Format for the time segment: 09:51:02. See `man 3 strftime`.
-  typeset -g POWERLEVEL9K_TIME_FORMAT '%D{%H:%M:%S}'
+  typeset -g POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
 
   unfunction _pp_c _pp_s
 } "$@"
