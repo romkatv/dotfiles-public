@@ -9,7 +9,7 @@ shopt -s histappend
 shopt -s checkwinsize
 shopt -s globstar
 
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+command -v lesspipe &>/dev/null && eval "$(SHELL=/bin/sh lesspipe)"
 
 eval "$(dircolors -b)"
 
