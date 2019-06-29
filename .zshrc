@@ -95,3 +95,10 @@ setopt EXTENDED_HISTORY        # write timestamps to history
 
 # setopt COMPLETE_IN_WORD      # not sure what it does
 # setopt NO_FLOW_CONTROL       # not sure what it does
+
+# export PYENV_ROOT="$HOME/.pyenv"
+# path=("$PYENV_ROOT/bin" $path)
+# eval "$(pyenv init -)"
+
+# path=($HOME/.rbenv/bin $path)
+# eval "$(rbenv init -)"
