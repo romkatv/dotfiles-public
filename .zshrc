@@ -41,8 +41,8 @@ add-zsh-hook precmd late-init
 
 if [[ -d ~/gitstatus ]]; then
   GITSTATUS_ENABLE_LOGGING=1
-  GITSTATUS_DAEMON=~/gitstatus/gitstatusd
   POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
+  [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
 fi
 
 if [[ -d ~/powerlevel10k ]]; then
@@ -95,3 +95,10 @@ setopt EXTENDED_HISTORY        # write timestamps to history
 
 # setopt COMPLETE_IN_WORD      # not sure what it does
 # setopt NO_FLOW_CONTROL       # not sure what it does
+
+# export PYENV_ROOT="$HOME/.pyenv"
+# path=("$PYENV_ROOT/bin" $path)
+# eval "$(pyenv init -)"
+
+# path=($HOME/.rbenv/bin $path)
+# eval "$(rbenv init -)"

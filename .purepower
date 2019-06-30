@@ -143,6 +143,23 @@ fi
 () {
   emulate -L zsh && setopt no_unset pipe_fail
 
+  typeset -ga POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
+      dir  # current directory
+      vcs  # git status
+  )
+
+  typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+      status                  # exit code of the last command
+      command_execution_time  # duration of the last command
+      background_jobs         # presence of background jobs
+      # virtualenv            # python virtual environment (https://docs.python.org/3/library/venv.html)
+      # anaconda              # conda environment (https://conda.io/)
+      # pyenv                 # python environment (https://github.com/pyenv/pyenv)
+      custom_rprompt          # the output of function `custom_rprompt()` if it is defined
+      context                 # user@host
+      # time                  # current time
+  )
+
   # `$(_pp_c x y`) evaluates to `y` if the terminal supports >= 256 colors and to `x` otherwise.
   zmodload zsh/terminfo
   if (( terminfo[colors] >= 256 )); then
@@ -163,26 +180,20 @@ fi
     function _pp_s() { print -nr -- $1 }
   fi
 
-  typeset -ga POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-      dir vcs)
-
-  typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-      status command_execution_time background_jobs custom_rprompt context)
-
   local ins=$(_pp_s '>' '❯')
   local cmd=$(_pp_s '<' '❮')
   if (( ${PURE_POWER_USE_P10K_EXTENSIONS:-1} )); then
     local p="\${\${\${KEYMAP:-0}:#vicmd}:+${${ins//\\/\\\\}//\}/\\\}}}"
     p+="\${\${\$((!\${#\${KEYMAP:-0}:#vicmd})):#0}:+${${cmd//\\/\\\\}//\}/\\\}}}"
   else
-    p=$ins
+    local p=$ins
   fi
 
   if (( ${PURE_POWER_USE_P10K_EXTENSIONS:-1} )); then
     typeset -g POWERLEVEL9K_SHOW_RULER=true
     typeset -g POWERLEVEL9K_RULER_CHAR=$(_pp_s '-' '─')
     typeset -g POWERLEVEL9K_RULER_BACKGROUND=none
-    typeset -g POWERLEVEL9K_RULER_FOREGROUND=$(_pp_c 5 237)
+    typeset -g POWERLEVEL9K_RULER_FOREGROUND=$(_pp_c 7 237)
   else
     typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
     function custom_rprompt() { }
@@ -203,6 +214,7 @@ fi
   typeset -g POWERLEVEL9K_DIR_NOT_WRITABLE_FOREGROUND=$(_pp_c 3 209)
   typeset -g POWERLEVEL9K_DIR_{HOME,HOME_SUBFOLDER,ETC,DEFAULT}_FOREGROUND=$(_pp_c 4 39)
   typeset -g POWERLEVEL9K_{ETC,FOLDER,HOME,HOME_SUB,LOCK}_ICON=
+  typeset -g POWERLEVEL9K_DIR_HYPERLINK=false
 
   typeset -g POWERLEVEL9K_VCS_{CLEAN,UNTRACKED,MODIFIED,LOADING}_BACKGROUND=none
   typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=$(_pp_c 2 76)
@@ -220,14 +232,20 @@ fi
   typeset -g POWERLEVEL9K_VCS_{GIT,GIT_GITHUB,GIT_BITBUCKET,GIT_GITLAB,BRANCH}_ICON=
   typeset -g POWERLEVEL9K_VCS_REMOTE_BRANCH_ICON=$'%{\b|%}'
   typeset -g POWERLEVEL9K_VCS_COMMIT_ICON='@'
-  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
-  typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='!'
-  typeset -g POWERLEVEL9K_VCS_STAGED_ICON='+'
   typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON=$(_pp_s '<' '⇣')
   typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON=$(_pp_s '>' '⇡')
   typeset -g POWERLEVEL9K_VCS_STASH_ICON='*'
   typeset -g POWERLEVEL9K_VCS_TAG_ICON=$'%{\b#%}'
-  typeset -g POWERLEVEL9K_VCS_{STAGED,UNSTAGED}_MAX_NUM=99
+  if (( ${PURE_POWER_USE_P10K_EXTENSIONS:-1} )); then
+    typeset -g POWERLEVEL9K_VCS_{STAGED,UNSTAGED}_MAX_NUM=99
+    typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON='?'
+    typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON='!'
+    typeset -g POWERLEVEL9K_VCS_STAGED_ICON='+'
+  else
+    typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON=$'%{\b?%}'
+    typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON=$'%{\b!%}'
+    typeset -g POWERLEVEL9K_VCS_STAGED_ICON=$'%{\b+%}'
+  fi
 
   typeset -g POWERLEVEL9K_STATUS_OK=false
   typeset -g POWERLEVEL9K_STATUS_ERROR_BACKGROUND=none
@@ -251,6 +269,31 @@ fi
   typeset -g POWERLEVEL9K_CONTEXT_{DEFAULT,ROOT,REMOTE_SUDO,REMOTE,SUDO}_BACKGROUND=none
   typeset -g POWERLEVEL9K_CONTEXT_{DEFAULT,REMOTE_SUDO,REMOTE,SUDO}_FOREGROUND=$(_pp_c 7 244)
   typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=$(_pp_c 3 11)
+
+  typeset -g POWERLEVEL9K_VIRTUALENV_BACKGROUND=none
+  typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND=6
+  typeset -g POWERLEVEL9K_VIRTUALENV_SHOW_PYTHON_VERSION=true
+  typeset -g POWERLEVEL9K_VIRTUALENV_LEFT_DELIMITER=
+  typeset -g POWERLEVEL9K_VIRTUALENV_RIGHT_DELIMITER=
+
+  typeset -g POWERLEVEL9K_ANACONDA_BACKGROUND=none
+  typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND=6
+  typeset -g POWERLEVEL9K_ANACONDA_SHOW_PYTHON_VERSION=true
+  typeset -g POWERLEVEL9K_ANACONDA_LEFT_DELIMITER=
+  typeset -g POWERLEVEL9K_ANACONDA_RIGHT_DELIMITER=
+
+  typeset -g POWERLEVEL9K_PYENV_BACKGROUND=none
+  typeset -g POWERLEVEL9K_PYENV_FOREGROUND=6
+  typeset -g POWERLEVEL9K_PYENV_PROMPT_ALWAYS_SHOW=false
+
+  # Icon for virtualenv, anaconda and pyenv.
+  typeset -g POWERLEVEL9K_PYTHON_ICON=
+
+  typeset -g POWERLEVEL9K_TIME_BACKGROUND=none
+  typeset -g POWERLEVEL9K_TIME_FOREGROUND=$(_pp_c 7 66)
+  typeset -g POWERLEVEL9K_TIME_ICON=
+  # Format for the time segment: 09:51:02. See `man 3 strftime`.
+  typeset -g POWERLEVEL9K_TIME_FORMAT='%D{%H:%M:%S}'
 
   unfunction _pp_c _pp_s
 } "$@"

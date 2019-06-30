@@ -5,9 +5,10 @@ export WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
 export EDITOR=$HOME/bin/redit
 export PAGER=less
 export GOPATH=$HOME/go
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 typeset -gaU cdpath fpath mailpath path
-path=($HOME/bin ${path[@]})
+path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin ${path[@]})
 
 # This affects every invocation of `less`.
 #
