@@ -40,7 +40,7 @@ function late-init() {
 add-zsh-hook precmd late-init
 
 if [[ -d ~/gitstatus ]]; then
-  GITSTATUS_ENABLE_LOGGING=1
+  GITSTATUS_LOG_LEVEL=DEBUG
   POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
   [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
 fi
