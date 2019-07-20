@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+docker run -v $HOME:/host -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -e TERM=$TERM -it --rm ubuntu bash -uexc '
+  cd
+  apt update && apt install -y nano zsh git curl gawk
+  touch ~/.z
+  ln -s /host/bin ~/bin
+  ln -s /host/dotfiles ~/dotfiles
+  ln -s /host/gitstatus ~/gitstatus
+  ln -s /host/powerlevel10k ~/powerlevel10k
+  echo "source /host/.zshenv" >~/.zshenv
+  echo "source /host/docker-zshrc" >~/.zshrc
+  exec zsh'
