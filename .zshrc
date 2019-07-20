@@ -45,13 +45,16 @@ if [[ -d ~/gitstatus ]]; then
   [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
 fi
 
-if [[ -d ~/powerlevel10k ]]; then
-  run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
-else
-  run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+if (( ${THEME:-1} )); then
+  if [[ -d ~/powerlevel10k ]]; then
+    run-tracked source ~/powerlevel10k/config/p10k-lean.zsh
+    run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
+  else
+    run-tracked source ~/dotfiles/powerlevel10k/config/p10k-lean.zsh
+    run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+  fi
 fi
 
-source ~/.purepower
 source ~/dotfiles/history.zsh
 
 [[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
@@ -102,3 +105,6 @@ setopt EXTENDED_HISTORY        # write timestamps to history
 
 # path=($HOME/.rbenv/bin $path)
 # eval "$(rbenv init -)"
+
+# path=($HOME/.nodenv/bin $path)
+# eval "$(nodenv init -)"
