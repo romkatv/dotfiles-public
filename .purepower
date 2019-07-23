@@ -80,17 +80,17 @@ fi
 
   # Disable segment icons by default.
   #
+  # To enable default icons for all segments, don't set POWERLEVEL9K_VISUAL_IDENTIFIER_EXPANSION
+  # or set it to '${P9K_VISUAL_IDENTIFIER}'.
+  #
+  # To enable default segment icons for one segment (e.g., dir), define
+  # POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER}'.
+  #
   # To set a specific icon for a segment (e.g., dir), define
   # POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_EXPANSION='⭐'.
   #
   # To set a specific icon for a segment in a given state (e.g., dir in state NOT_WRITABLE),
   # define POWERLEVEL9K_DIR_NOT_WRITABLE_VISUAL_IDENTIFIER_EXPANSION='⭐'.
-  #
-  # To enable default segment icons for one segment (e.g., dir), define
-  # POWERLEVEL9K_DIR_VISUAL_IDENTIFIER_EXPANSION='${P9K_VISUAL_IDENTIFIER}'.
-  #
-  # To enable default icons for all segments, don't set POWERLEVEL9K_VISUAL_IDENTIFIER_EXPANSION
-  # or set it to '${P9K_VISUAL_IDENTIFIER}'.
   #
   # When a segment is displaying its default icon, in addition to being able to chage it with
   # VISUAL_IDENTIFIER_EXPANSION as described above, you can also change it with an override
@@ -98,7 +98,7 @@ fi
   # LOCK_ICON as default icon.
   #
   # Note: Many default icons cannot be displayed with system fonts. You'll need to install a
-  # Powerline font to use them.
+  # Powerline font to use them. See POWERLEVEL9K_MODE below.
   typeset -g POWERLEVEL9K_VISUAL_IDENTIFIER_EXPANSION=
 
   # This option doesn't make a difference unless you've enabled default icons for all or some
@@ -116,9 +116,20 @@ fi
   #   Awesome-Terminal Fonts (regular) | awesome-fontconfig
   #   Awesome-Terminal Fonts (patched) | awesome-patched
   #   Nerd Fonts                       | nerdfont-complete
-  #
-  # Tip: Don't use default icons and forget about font configuration headaches.
   typeset -g POWERLEVEL9K_MODE=nerdfont-complete
+
+  # When set to true, icons appear before content on both sides of the prompt. When set
+  # to false, icons go after content. If not set, icons go before content in the left prompt
+  # and after content in the right prompt.
+  #
+  # You can also override it for a specific segment:
+  #
+  #   POWERLEVEL9K_STATUS_ICON_BEFORE_CONTENT=false
+  #
+  # Or for specific segment in specific state:
+  #
+  #   POWERLEVEL9K_DIR_NOT_WRITABLE_ICON_BEFORE_CONTENT=false
+  typeset -g POWERLEVEL9K_ICON_BEFORE_CONTENT=true
 
   # Add an empty line before each prompt. If you set it to false, you might want to
   # set POWERLEVEL9K_SHOW_RULER=true or POWERLEVEL9K_MULTILINE_FIRST_PROMPT_GAP_CHAR='·' below.
@@ -168,11 +179,8 @@ fi
   typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIVIS_CONTENT_EXPANSION='Ⅴ'
   typeset -g POWERLEVEL9K_PROMPT_CHAR_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=''
 
-  # Enable special styling for non-writable directories. If set to false,
-  # POWERLEVEL9K_DIR_NOT_WRITABLE_VISUAL_IDENTIFIER_EXPANSION defined below won't have effect.
+  # Enable special styling for non-writable directories.
   typeset -g POWERLEVEL9K_DIR_SHOW_WRITABLE=true
-  # Icon to display when the current directory isn't writable.
-  typeset -g POWERLEVEL9K_DIR_NOT_WRITABLE_VISUAL_IDENTIFIER_EXPANSION='%214F%B!w'
   # Default current directory color.
   typeset -g POWERLEVEL9K_DIR_FOREGROUND=12
   # If directory is too long, shorten some of its segments to the shortest possible unique
@@ -206,7 +214,8 @@ fi
   # https://github.com/romkatv/gitstatus/blob/master/gitstatus.plugin.zsh.
   local vcs=''
   # 'feature' or '@72f5c8a' if not on a branch.
-  vcs+='%76F${${VCS_STATUS_LOCAL_BRANCH//\%/%%}:-%f@%76F${VCS_STATUS_COMMIT[1,8]}}'
+  vcs+='${${VCS_STATUS_LOCAL_BRANCH:+%76F${(g::)POWERLEVEL9K_VCS_BRANCH_ICON}${VCS_STATUS_LOCAL_BRANCH//\%/%%}}'
+  vcs+=':-%f@%76F${VCS_STATUS_COMMIT[1,8]}}'
   # ':master' if the tracking branch name differs from local branch.
   vcs+='${${VCS_STATUS_REMOTE_BRANCH:#$VCS_STATUS_LOCAL_BRANCH}:+%f:%76F${VCS_STATUS_REMOTE_BRANCH//\%/%%}}'
   # '#tag' if on a tag.
@@ -231,6 +240,9 @@ fi
   # If P9K_CONTENT is not empty, leave it unchanged. It's either "loading" or from vcs_info.
   vcs="\${P9K_CONTENT:-$vcs}"
 
+  # No branch icon. Set this parameter to '\uF126 ' for the popular Powerline branch icon.
+  typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=
+
   # Disable the default Git status formatting.
   typeset -g POWERLEVEL9K_VCS_DISABLE_GITSTATUS_FORMATTING=true
   # Install our own Git status formatter.
@@ -248,9 +260,7 @@ fi
 
   # These settings are used for respositories other than Git or when gitstatusd fails and
   # Powerlevel10k has to fall back to using vcs_info.
-  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND=76
-  typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND=11
-  typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND=76
+  typeset -g POWERLEVEL9K_VCS_{CLEAN,MODIFIED,UNTRACKED}_FOREGROUND=76
   typeset -g POWERLEVEL9K_VCS_REMOTE_BRANCH_ICON=':'
   typeset -g POWERLEVEL9K_VCS_COMMIT_ICON='@'
   typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON='⇣'
@@ -260,7 +270,6 @@ fi
   typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON=$'%{\b?%}'
   typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON=$'%{\b!%}'
   typeset -g POWERLEVEL9K_VCS_STAGED_ICON=$'%{\b+%}'
-  typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=
 
   # Don't show status on success.
   typeset -g POWERLEVEL9K_STATUS_OK=false
