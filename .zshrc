@@ -6,6 +6,7 @@ ZSH=~/dotfiles/oh-my-zsh
 ZSH_CUSTOM=$ZSH/custom
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+ZSH_HIGHLIGHT_MAXLENGTH=1024
 
 if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
