@@ -101,25 +101,25 @@ function fix_shm() {
   '
 }
 
-function win_install_fonts() {
-  local DST_DIR
-  DST_DIR=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" | sed 's/\r$//'))
-  mkdir -p "$DST_DIR"
-  for SRC in "$@"; do
-    local FILE=$(basename "$SRC")
-    test -f "$DST_DIR/$FILE" || cp -f "$SRC" "$DST_DIR/"
-    local WIN_PATH
-    WIN_PATH=$(wslpath -w "$DST_DIR/$FILE")
-    # Install fond for the current user. It'll appear in "Font settings".
+function install_fonts() {
+  local dst_dir
+  dst_dir=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" 2>/dev/null | sed 's/\r$//'))
+  mkdir -p "$dst_dir"
+  local src
+  for src in "$@"; do
+    local file=$(basename "$src")
+    test -f "$dst_dir/$file" || cp -f "$src" "$dst_dir/"
+    local win_path
+    win_path=$(wslpath -w "$dst_dir/$file")
+    # Install font for the current user. It'll appear in "Font settings".
     reg.exe add \
       "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" \
-      /v "${FILE%.*} (TrueType)"  /t REG_SZ /d "$WIN_PATH" /f
+      /v "${file%.*} (TrueType)"  /t REG_SZ /d "$win_path" /f 2>/dev/null
   done
   # Install font for the use with Windows Command Prompt. Requires reboot.
   reg.exe add \
     "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Console\\TrueTypeFont" \
-    /v 1337 /t REG_SZ /d "MesloLGLDZ NF" /f
-
+    /v 1337 /t REG_SZ /d "MesloLGS NF" /f 2>/dev/null
 }
 
 # Install a decent monospace font.
