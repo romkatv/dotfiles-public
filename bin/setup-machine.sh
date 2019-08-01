@@ -84,6 +84,13 @@ function install_vscode() {
   rm "$VSCODE_DEB"
 }
 
+function install_ripgrep() {
+  local deb="$(mktemp)"
+  curl -fsSL 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb' > "$deb"
+  sudo dpkg -i "$deb"
+  rm "$deb"
+}
+
 # Avoid clock snafu when dual-booting Windows and Linux.
 # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
 function fix_clock() {
@@ -148,7 +155,7 @@ function with_dbus() {
 function set_preferences() {
   if [[ $WSL == 0 ]]; then
     # It doesn't work on WSL.
-    gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS Nerd Font Mono 11'
+    gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS NF 11'
   fi
   if [[ "${DISPLAY+X}" == "" ]]; then
     export DISPLAY=:0
@@ -169,6 +176,7 @@ umask g-w,o-w
 
 install_packages
 install_vscode
+install_ripgrep
 install_fonts
 
 fix_clock
