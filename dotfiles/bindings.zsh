@@ -83,6 +83,24 @@
     zle redisplay
   }
 
+  # The same as fzf-history-widget from fzf but with extra `awk` to remove duplicate
+  # history entries.
+  function fzf-history-widget-unique() {
+    local selected num
+    setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
+    selected=( $(fc -rl 1 | awk '!_[substr($0, 8)]++' |
+      FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" $(__fzfcmd)) )
+    local ret=$?
+    if [ -n "$selected" ]; then
+      num=$selected[1]
+      if [ -n "$num" ]; then
+        zle vi-fetch-history -n $num
+      fi
+    fi
+    zle reset-prompt
+    return $ret
+  }
+
   function dirhistory-shorten() {
     cd $1 >/dev/null && print -P '%~' || echo -E $1
   }
@@ -142,6 +160,7 @@
   zle -N dirhistory-up
   zle -N dirhistory-back
   zle -N dirhistory-forward
+  zle -N fzf-history-widget-unique
 
   fzf_default_completion=expand-or-complete-with-dots
   run-tracked -b source ~/dotfiles/fzf/shell/completion.zsh
@@ -219,7 +238,7 @@
     AltUp         dirhistory-up                        # cd ..
     AltDown       fzf-cd-widget                        # fzf cd
     Tab           fzf-completion                       # fzf completion
-    Ctrl-R        fzf-history-widget                   # fzf history
+    Ctrl-R        fzf-history-widget-unique            # fzf history
     Ctrl-T        fzf-file-widget                      # fzf file picker
   )
 

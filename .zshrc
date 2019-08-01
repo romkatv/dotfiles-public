@@ -88,6 +88,7 @@ setopt EXTENDED_GLOB           # (#qx) glob qualifier and more
 setopt GLOB_DOTS               # glob matches files starting with dot; `*` becomes `*(D)`
 setopt HIST_EXPIRE_DUPS_FIRST  # if history needs to be trimmed, evict dups first
 setopt HIST_IGNORE_DUPS        # don't add dups to history
+setopt HIST_FIND_NO_DUPS       # don't show dups when searching history
 setopt HIST_IGNORE_SPACE       # don't add commands starting with space to history
 setopt HIST_REDUCE_BLANKS      # remove junk whitespace from commands before adding to history
 setopt HIST_VERIFY             # if a cmd triggers history expansion, show it instead of running
