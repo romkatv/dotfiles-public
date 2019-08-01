@@ -101,7 +101,7 @@ function fix_shm() {
   '
 }
 
-function install_fonts() {
+function win_install_fonts() {
   local dst_dir
   dst_dir=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" 2>/dev/null | sed 's/\r$//'))
   mkdir -p "$dst_dir"
@@ -125,7 +125,7 @@ function install_fonts() {
 # Install a decent monospace font.
 function install_fonts() {
   if [[ $WSL == 1 ]]; then
-    win_install_fonts "$HOME"/.local/share/fonts/NerdFonts/*"Windows Compatible.ttf"
+    win_install_fonts "$HOME"/.local/share/fonts/NerdFonts/*.ttf
   fi
 }
 
