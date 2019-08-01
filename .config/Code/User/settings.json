@@ -20,7 +20,7 @@
     "C_Cpp.default.intelliSenseMode": "gcc-x64",
     "workbench.editor.tabSizing": "shrink",
     "window.zoomLevel": 0,
-    "terminal.integrated.fontFamily": "MesloLGLDZ Nerd Font",
+    "terminal.integrated.fontFamily": "MesloLGS NF",
     "editor.detectIndentation": false,
     "workbench.colorTheme": "Visual Studio Dark"
 }

@@ -72,6 +72,7 @@
   # Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
   function my-expand-alias() { zle _expand_alias }
 
+  # Shows '...' while completing
   function expand-or-complete-with-dots() {
     emulate -L zsh
     local c=$(( ${+terminfo[rmam]} && ${+terminfo[smam]} ))
@@ -80,6 +81,24 @@
     (( c )) && echoti smam
     zle expand-or-complete
     zle redisplay
+  }
+
+  # The same as fzf-history-widget from fzf but with extra `awk` to remove duplicate
+  # history entries.
+  function fzf-history-widget-unique() {
+    local selected num
+    setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
+    selected=( $(fc -rl 1 | awk '!_[substr($0, 8)]++' |
+      FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" $(__fzfcmd)) )
+    local ret=$?
+    if [ -n "$selected" ]; then
+      num=$selected[1]
+      if [ -n "$num" ]; then
+        zle vi-fetch-history -n $num
+      fi
+    fi
+    zle reset-prompt
+    return $ret
   }
 
   function dirhistory-shorten() {
@@ -141,6 +160,11 @@
   zle -N dirhistory-up
   zle -N dirhistory-back
   zle -N dirhistory-forward
+  zle -N fzf-history-widget-unique
+
+  fzf_default_completion=expand-or-complete-with-dots
+  run-tracked -b source ~/dotfiles/fzf/shell/completion.zsh
+  run-tracked -b source ~/dotfiles/fzf/shell/key-bindings.zsh
 
   zmodload zsh/terminfo
 
@@ -209,11 +233,13 @@
     Ctrl-' '      my-expand-alias                      # expand alias
     ShiftTab      reverse-menu-complete                # previous in completion menu
     Ctrl-E        edit-command-line                    # edit command line in $EDITOR
-    Tab           expand-or-complete-with-dots         # show '...' while completing
     AltLeft       dirhistory-back                      # cd into the previous directory
     AltRight      dirhistory-forward                   # cd into the next directory
     AltUp         dirhistory-up                        # cd ..
-    AltDown       dirhistory-print                     # print directory history
+    AltDown       fzf-cd-widget                        # fzf cd
+    Tab           fzf-completion                       # fzf completion
+    Ctrl-R        fzf-history-widget-unique            # fzf history
+    Ctrl-T        fzf-file-widget                      # fzf file picker
   )
 
   local key widget

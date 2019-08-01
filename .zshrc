@@ -6,6 +6,7 @@ ZSH=~/dotfiles/oh-my-zsh
 ZSH_CUSTOM=$ZSH/custom
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+ZSH_HIGHLIGHT_MAXLENGTH=1024
 
 if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
@@ -16,6 +17,10 @@ fi
 [[ $TERM == xterm* ]] || : ${PURE_POWER_MODE:=portable}
 
 source ~/dotfiles/functions.zsh
+
+path+=~/dotfiles/fzf/bin
+FZF_COMPLETION_TRIGGER=',,'
+export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 run-tracked     source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
 # Kill bindings and widgets as we define our own in bindings.zsh. Deny random exports.
@@ -40,18 +45,20 @@ function late-init() {
 add-zsh-hook precmd late-init
 
 if [[ -d ~/gitstatus ]]; then
-  GITSTATUS_ENABLE_LOGGING=1
+  GITSTATUS_LOG_LEVEL=DEBUG
   POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
   [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
 fi
 
-if [[ -d ~/powerlevel10k ]]; then
-  run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
-else
-  run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+if (( ${THEME:-1} )); then
+  [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+  if [[ -d ~/powerlevel10k ]]; then
+    run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
+  else
+    run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+  fi
 fi
 
-source ~/.purepower
 source ~/dotfiles/history.zsh
 
 [[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
@@ -81,6 +88,7 @@ setopt EXTENDED_GLOB           # (#qx) glob qualifier and more
 setopt GLOB_DOTS               # glob matches files starting with dot; `*` becomes `*(D)`
 setopt HIST_EXPIRE_DUPS_FIRST  # if history needs to be trimmed, evict dups first
 setopt HIST_IGNORE_DUPS        # don't add dups to history
+setopt HIST_FIND_NO_DUPS       # don't show dups when searching history
 setopt HIST_IGNORE_SPACE       # don't add commands starting with space to history
 setopt HIST_REDUCE_BLANKS      # remove junk whitespace from commands before adding to history
 setopt HIST_VERIFY             # if a cmd triggers history expansion, show it instead of running
@@ -102,3 +110,6 @@ setopt EXTENDED_HISTORY        # write timestamps to history
 
 # path=($HOME/.rbenv/bin $path)
 # eval "$(rbenv init -)"
+
+# path=($HOME/.nodenv/bin $path)
+# eval "$(nodenv init -)"
