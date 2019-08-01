@@ -72,6 +72,7 @@
   # Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
   function my-expand-alias() { zle _expand_alias }
 
+  # Shows '...' while completing
   function expand-or-complete-with-dots() {
     emulate -L zsh
     local c=$(( ${+terminfo[rmam]} && ${+terminfo[smam]} ))
@@ -142,6 +143,10 @@
   zle -N dirhistory-back
   zle -N dirhistory-forward
 
+  fzf_default_completion=expand-or-complete-with-dots
+  run-tracked -b source ~/dotfiles/fzf/shell/completion.zsh
+  run-tracked -b source ~/dotfiles/fzf/shell/key-bindings.zsh
+
   zmodload zsh/terminfo
 
   if (( $+terminfo[smkx] && $+terminfo[rmkx] )); then
@@ -209,11 +214,13 @@
     Ctrl-' '      my-expand-alias                      # expand alias
     ShiftTab      reverse-menu-complete                # previous in completion menu
     Ctrl-E        edit-command-line                    # edit command line in $EDITOR
-    Tab           expand-or-complete-with-dots         # show '...' while completing
     AltLeft       dirhistory-back                      # cd into the previous directory
     AltRight      dirhistory-forward                   # cd into the next directory
     AltUp         dirhistory-up                        # cd ..
-    AltDown       dirhistory-print                     # print directory history
+    AltDown       fzf-cd-widget                        # fzf cd
+    Tab           fzf-completion                       # fzf completion
+    Ctrl-R        fzf-history-widget                   # fzf history
+    Ctrl-T        fzf-file-widget                      # fzf file picker
   )
 
   local key widget

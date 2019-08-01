@@ -18,6 +18,10 @@ fi
 
 source ~/dotfiles/functions.zsh
 
+path+=~/dotfiles/fzf/bin
+FZF_COMPLETION_TRIGGER=',,'
+export FZF_DEFAULT_COMMAND='rg --files --hidden'
+
 run-tracked     source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
 # Kill bindings and widgets as we define our own in bindings.zsh. Deny random exports.
 run-tracked -bwe source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh

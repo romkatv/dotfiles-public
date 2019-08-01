@@ -22,3 +22,7 @@
 	path = dotfiles/gitstatus
 	url = https://github.com/romkatv/gitstatus.git
 	branch = master
+[submodule "dotfiles/fzf"]
+	path = dotfiles/fzf
+	url = https://github.com/junegunn/fzf.git
+	branch = master
