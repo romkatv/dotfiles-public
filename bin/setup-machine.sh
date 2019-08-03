@@ -91,6 +91,10 @@ function install_ripgrep() {
   rm "$deb"
 }
 
+function install_fzf() {
+  ~/dotfiles/fzf/install --bin
+}
+
 # Avoid clock snafu when dual-booting Windows and Linux.
 # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
 function fix_clock() {
@@ -177,6 +181,7 @@ umask g-w,o-w
 install_packages
 install_vscode
 install_ripgrep
+install_fzf
 install_fonts
 
 fix_clock
