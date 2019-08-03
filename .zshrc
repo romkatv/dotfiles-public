@@ -76,7 +76,10 @@ add-zsh-hook precmd set-term-title
 (( $+aliases[run-help] )) && unalias run-help
 source ~/dotfiles/aliases.zsh
 
-ZLE_RPROMPT_INDENT=0           # don't leave an empty space after right prompt
+if [[ $ZSH_PATCHLEVEL == *dev* ]]; then
+  ZLE_RPROMPT_INDENT=0         # don't leave an empty space after right prompt
+fi
+
 READNULLCMD=$PAGER             # use the default pager instead of `more`
 WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
