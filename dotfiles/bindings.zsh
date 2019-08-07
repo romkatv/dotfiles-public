@@ -208,8 +208,6 @@
     CtrlBackspace backward-kill-word                   # delete previous word
     CtrlDel       kill-word                            # delete next word
     Ctrl-J        backward-kill-line                   # delete everything before cursor
-    Ctrl-Z        undo                                 # undo (suspend is on Ctrl-B)
-    Alt-Z         redo                                 # redo
     Left          backward-char                        # move cursor one char backward
     Right         forward-char                         # move cursor one char forward
     Up            up-line-or-beginning-search-local    # prev command in local history
@@ -247,8 +245,6 @@
     local c=''
     for c in $code[@]; do bindkey $c $widget; done
   done
-
-  stty susp '^B'  # Ctrl-B instead of Ctrl-Z to suspend (Ctrl-Z is undo)
 
   typeset -g ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
   typeset -g ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
