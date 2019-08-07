@@ -101,6 +101,13 @@
     return $ret
   }
 
+  # Override the stock fzf-redraw-prompt with a better implementation.
+  function fzf-redraw-prompt() {
+    powerlevel9k_refresh_prompt_inplace
+    set-term-title
+    zle .reset-prompt && zle -R
+  }
+
   function dirhistory-shorten() {
     cd $1 >/dev/null && print -P '%~' || echo -E $1
   }
@@ -143,6 +150,7 @@
       emulate -L zsh
       dirhistory_$which
       powerlevel9k_refresh_prompt_inplace
+      set-term-title
       zle .reset-prompt && zle -R
     }"
   done
@@ -163,8 +171,9 @@
   zle -N fzf-history-widget-unique
 
   fzf_default_completion=expand-or-complete-with-dots
-  run-tracked -b source ~/dotfiles/fzf/shell/completion.zsh
-  run-tracked -b source ~/dotfiles/fzf/shell/key-bindings.zsh
+  run-tracked -b  source ~/dotfiles/fzf/shell/completion.zsh
+  # Deny fzf-redraw-prompt function. We have our own.
+  run-tracked -bf source ~/dotfiles/fzf/shell/key-bindings.zsh
 
   zmodload zsh/terminfo
 
