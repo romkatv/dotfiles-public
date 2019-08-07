@@ -95,8 +95,6 @@ setopt INTERACTIVE_COMMENTS    # allow comments in command line
 setopt MULTIOS                 # allow multiple redirections for the same fd
 setopt NO_BANG_HIST            # disable old history syntax
 setopt NO_BG_NICE              # don't nice background jobs; not useful and doesn't work on WSL
-setopt PUSHD_IGNORE_DUPS       # don’t push copies of the same directory onto the directory stack
-setopt PUSHD_MINUS             # `cd -3` now means "3 directory deeper in the stack"
 setopt SHARE_HISTORY           # write and import history on every command
 setopt EXTENDED_HISTORY        # write timestamps to history
 
