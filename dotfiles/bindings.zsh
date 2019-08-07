@@ -105,7 +105,7 @@
     emulate -L zsh
     zle || return
     local f
-    for f in ${(@)precmd_functions:#*p9k*}; do
+    for f in precmd ${(@)precmd_functions:#*p9k*}; do
       (( $+functions[$f] )) && $f
     done
     powerlevel9k_refresh_prompt_inplace
@@ -120,11 +120,17 @@
     while (( $#dirstack )) && ! pushd -q $1 &>/dev/null; do
       popd -q $1
     done
-    redraw-prompt
+    if (( $#dirstack )); then
+      local f
+      for f in chpwd $chpwd_functions; do
+        (( $+functions[$f] )) && $f
+      done
+      redraw-prompt
+    fi
   }
 
   function cd-back() { cd-rotate +1 }
-  function cd-forward() { cd-rotate -1 }
+  function cd-forward() { cd-rotate -0 }
   function cd-up() { cd .. && redraw-prompt }
 
   autoload -U edit-command-line up-line-or-beginning-search down-line-or-beginning-search
