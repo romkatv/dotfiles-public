@@ -101,59 +101,31 @@
     return $ret
   }
 
-  # Override the stock fzf-redraw-prompt with a better implementation.
-  function fzf-redraw-prompt() {
+  function redraw-prompt() {
+    emulate -L zsh
+    zle || return
+    local f
+    for f in ${(@)precmd_functions:#*p9k*}; do
+      (( $+functions[$f] )) && $f
+    done
     powerlevel9k_refresh_prompt_inplace
-    set-term-title
     zle .reset-prompt && zle -R
   }
 
-  function dirhistory-shorten() {
-    cd $1 >/dev/null && print -P '%~' || echo -E $1
-  }
+  # Override the stock fzf-redraw-prompt with a better implementation.
+  function fzf-redraw-prompt() { redraw-prompt }
 
-  function dirhistory-print() {
+  function cd-rotate() {
     emulate -L zsh
-    local -i max_hist=${1:-20}
-
-    local clr=${(%):-%k%f%b}
-    (( terminfo[colors] >= 256 )) && local fg=${(%):-%F{244}} || local fg=${(%):-%F{005}}
-    local dir out
-
-    local -i lim=-1
-    if (( $#dirhistory_past > max_hist + 2 )); then
-      lim=$((max_hist+1))
-      out+=$'\n'"$fg... $(($#dirhistory_past - max_hist - 1)) more ...$clr"
-    fi
-    for dir in ${(Oa)${(Oa)dirhistory_past}[2,lim]}; do
-      out+=$'\n'"$fg  $(dirhistory-shorten $dir)$clr"
+    while (( $#dirstack )) && ! pushd -q $1 &>/dev/null; do
+      popd -q $1
     done
-
-    out+=$'\n'"* $(dirhistory-shorten $dirhistory_past[-1])"
-
-    local -i lim=-1
-    (( $#dirhistory_future > max_hist + 1 )) && lim=max_hist
-    for dir in ${${(Oa)dirhistory_future}[1,lim]}; do
-      out+=$'\n'"$fg  $(dirhistory-shorten $dir)$clr"
-    done
-    if (( lim >= 0 )); then
-      out+=$'\n'"$fg... $(($#dirhistory_future - max_hist)) more ...$clr"
-    fi
-
-    zle && zle -I
-    echo -E $clr${out#$'\n'}
+    redraw-prompt
   }
 
-  local which
-  for which in up back forward; do
-    eval "function dirhistory-$which() {
-      emulate -L zsh
-      dirhistory_$which
-      powerlevel9k_refresh_prompt_inplace
-      set-term-title
-      zle .reset-prompt && zle -R
-    }"
-  done
+  function cd-back() { cd-rotate +1 }
+  function cd-forward() { cd-rotate -1 }
+  function cd-up() { cd .. && redraw-prompt }
 
   autoload -U edit-command-line up-line-or-beginning-search down-line-or-beginning-search
 
@@ -164,10 +136,9 @@
   zle -N expand-or-complete-with-dots
   zle -N up-line-or-beginning-search-local
   zle -N down-line-or-beginning-search-local
-  zle -N dirhistory-print
-  zle -N dirhistory-up
-  zle -N dirhistory-back
-  zle -N dirhistory-forward
+  zle -N cd-back
+  zle -N cd-forward
+  zle -N cd-up
   zle -N fzf-history-widget-unique
 
   fzf_default_completion=expand-or-complete-with-dots
@@ -242,9 +213,9 @@
     Ctrl-' '      my-expand-alias                      # expand alias
     ShiftTab      reverse-menu-complete                # previous in completion menu
     Ctrl-E        edit-command-line                    # edit command line in $EDITOR
-    AltLeft       dirhistory-back                      # cd into the previous directory
-    AltRight      dirhistory-forward                   # cd into the next directory
-    AltUp         dirhistory-up                        # cd ..
+    AltLeft       cd-back                              # cd into the previous directory
+    AltRight      cd-forward                           # cd into the next directory
+    AltUp         cd-up                                # cd ..
     AltDown       fzf-cd-widget                        # fzf cd
     Tab           fzf-completion                       # fzf completion
     Ctrl-R        fzf-history-widget-unique            # fzf history

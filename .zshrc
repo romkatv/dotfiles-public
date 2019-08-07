@@ -22,14 +22,10 @@ path+=~/dotfiles/fzf/bin
 FZF_COMPLETION_TRIGGER=',,'
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
-run-tracked     source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
-# Kill bindings and widgets as we define our own in bindings.zsh. Deny random exports.
-run-tracked -bwe source $ZSH/plugins/dirhistory/dirhistory.plugin.zsh
 # Disallow `x` alias.
-run-tracked -a  source $ZSH/plugins/extract/extract.plugin.zsh
-# Allow `z` alias.
-run-tracked +a  source $ZSH/plugins/z/z.plugin.zsh
-run-tracked     source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+run-tracked -a source $ZSH/plugins/extract/extract.plugin.zsh
+run-tracked    source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
+run-tracked    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 
 function late-init() {
   emulate -L zsh
