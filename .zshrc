@@ -1,6 +1,6 @@
 emulate zsh
 
-autoload -Uz add-zsh-hook run-help zargs zmv zcp zln
+autoload -Uz add-zsh-hook run-help zargs zmv zcp zln is-at-least
 
 ZSH=~/dotfiles/oh-my-zsh
 ZSH_CUSTOM=$ZSH/custom
@@ -44,12 +44,6 @@ function late-init() {
 }
 add-zsh-hook precmd late-init
 
-if [[ -d ~/gitstatus ]]; then
-  GITSTATUS_LOG_LEVEL=DEBUG
-  POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
-  [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
-fi
-
 if (( ${THEME:-1} )); then
   [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
   if [[ -d ~/powerlevel10k ]]; then
@@ -57,6 +51,12 @@ if (( ${THEME:-1} )); then
   else
     run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
   fi
+fi
+
+if [[ -d ~/gitstatus ]]; then
+  GITSTATUS_LOG_LEVEL=DEBUG
+  POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
+  [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
 fi
 
 source ~/dotfiles/history.zsh
@@ -76,7 +76,7 @@ add-zsh-hook precmd set-term-title
 (( $+aliases[run-help] )) && unalias run-help
 source ~/dotfiles/aliases.zsh
 
-if [[ $ZSH_PATCHLEVEL == *dev* ]]; then
+if is-at-least 5.7.2 || [[ $ZSH_PATCHLEVEL =~ '^zsh-5\.7\.1-([0-9]+)-' && $match[1] -ge 50 ]]; then
   ZLE_RPROMPT_INDENT=0         # don't leave an empty space after right prompt
 fi
 
