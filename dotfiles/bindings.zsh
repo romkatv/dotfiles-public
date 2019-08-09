@@ -72,13 +72,12 @@
   # Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
   function my-expand-alias() { zle _expand_alias }
 
-  # Shows '...' while completing
+  # Shows '...' while completing. No `emulate -L zsh` to pick up dotglob if it's set.
   function expand-or-complete-with-dots() {
-    emulate -L zsh
     local c=$(( ${+terminfo[rmam]} && ${+terminfo[smam]} ))
-    (( c )) && echoti rmam
-    print -Pn "%{%F{red}......%f%}"
-    (( c )) && echoti smam
+    (( c )) && echoti rmam          || true
+    print -Pn "%{%F{red}......%f%}" || true
+    (( c )) && echoti smam          || true
     zle expand-or-complete
     zle redisplay
   }
