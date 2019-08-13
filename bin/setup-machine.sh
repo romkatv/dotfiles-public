@@ -119,7 +119,9 @@ function win_install_fonts() {
   local src
   for src in "$@"; do
     local file=$(basename "$src")
-    test -f "$dst_dir/$file" || cp -f "$src" "$dst_dir/"
+    if [[ ! -f "$dst_dir/$file" ]]; then
+      cp -f "$src" "$dst_dir/"
+    fi
     local win_path
     win_path=$(wslpath -w "$dst_dir/$file")
     # Install font for the current user. It'll appear in "Font settings".
@@ -127,10 +129,6 @@ function win_install_fonts() {
       "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" \
       /v "${file%.*} (TrueType)"  /t REG_SZ /d "$win_path" /f 2>/dev/null
   done
-  # Install font for the use with Windows Command Prompt. Requires reboot.
-  reg.exe add \
-    "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Console\\TrueTypeFont" \
-    /v 1337 /t REG_SZ /d "MesloLGS NF" /f 2>/dev/null
 }
 
 # Install a decent monospace font.
