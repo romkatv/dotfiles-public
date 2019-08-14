@@ -36,6 +36,7 @@ function late-init() {
   run-tracked +w _zsh_autosuggest_start
   
   add-zsh-hook -d precmd late-init
+  unfunction late-init
 }
 add-zsh-hook precmd late-init
 
@@ -55,9 +56,6 @@ if [[ -d ~/gitstatus ]]; then
 fi
 
 source ~/dotfiles/history.zsh
-
-[[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
-
 source ~/dotfiles/bindings.zsh
 source ~/dotfiles/completions.zsh
 
@@ -109,3 +107,5 @@ setopt EXTENDED_HISTORY        # write timestamps to history
 
 # path=($HOME/.nodenv/bin $path)
 # eval "$(nodenv init -)"
+
+[[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
