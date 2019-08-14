@@ -14,17 +14,16 @@ else
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=005'  # the default is outside of 8 color range
 fi
 
-[[ $TERM == xterm* ]] || : ${PURE_POWER_MODE:=portable}
-
 source ~/dotfiles/functions.zsh
 
 path+=~/dotfiles/fzf/bin
 FZF_COMPLETION_TRIGGER=',,'
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
+[[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
+
 # Disallow `x` alias.
 run-tracked -a source $ZSH/plugins/extract/extract.plugin.zsh
-run-tracked    source $ZSH/plugins/command-not-found/command-not-found.plugin.zsh
 run-tracked    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 
 function late-init() {
