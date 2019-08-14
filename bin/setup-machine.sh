@@ -41,7 +41,6 @@ function install_packages() {
     gawk
     gedit
     git
-    gunzip
     gzip
     htop
     jq
