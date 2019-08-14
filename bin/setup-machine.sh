@@ -30,6 +30,7 @@ readonly WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
 function install_packages() {
   local PACKAGES=(
     ascii
+    bzip2
     build-essential
     clang-format
     command-not-found
@@ -40,6 +41,8 @@ function install_packages() {
     gawk
     gedit
     git
+    gunzip
+    gzip
     htop
     jq
     libxml2-utils
@@ -48,11 +51,14 @@ function install_packages() {
     p7zip-full
     p7zip-rar
     perl
+    pigz
     tree
     unrar
+    unzip
     wget
     x11-utils
     xsel
+    xz-utils
     zsh
   )
 
