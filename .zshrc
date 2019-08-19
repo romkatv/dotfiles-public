@@ -5,13 +5,17 @@ autoload -Uz add-zsh-hook run-help zargs zmv zcp zln is-at-least
 ZSH=~/dotfiles/oh-my-zsh
 ZSH_CUSTOM=$ZSH/custom
 
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 ZSH_HIGHLIGHT_MAXLENGTH=1024
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
 if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
-  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'  # the default is hard to see
+  # The default is hard to see.
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
+  typeset -A ZSH_HIGHLIGHT_STYLES=(comment fg=244)
 else
-  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=005'  # the default is outside of 8 color range
+  # The default is outside of 8 color range.
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
+  typeset -A ZSH_HIGHLIGHT_STYLES=(comment fg=5)
 fi
 
 source ~/dotfiles/functions.zsh
