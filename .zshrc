@@ -11,11 +11,10 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
   # The default is hard to see.
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=244'
-  typeset -A ZSH_HIGHLIGHT_STYLES=(comment fg=244)
+  typeset -A ZSH_HIGHLIGHT_STYLES=(comment fg=96)
 else
   # The default is outside of 8 color range.
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
-  typeset -A ZSH_HIGHLIGHT_STYLES=(comment fg=5)
 fi
 
 source ~/dotfiles/functions.zsh
