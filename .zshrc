@@ -46,9 +46,9 @@ add-zsh-hook precmd late-init
 if (( ${THEME:-1} )); then
   [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
   if [[ -d ~/powerlevel10k ]]; then
-    run-tracked source ~/powerlevel10k/powerlevel10k.zsh-theme
+    run-tracked +e source ~/powerlevel10k/powerlevel10k.zsh-theme
   else
-    run-tracked source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+    run-tracked +e source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
   fi
 fi
 
