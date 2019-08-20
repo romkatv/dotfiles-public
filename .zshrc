@@ -20,7 +20,7 @@ fi
 source ~/dotfiles/functions.zsh
 
 path+=~/dotfiles/fzf/bin
-FZF_COMPLETION_TRIGGER=',,'
+FZF_COMPLETION_TRIGGER=
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 [[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found

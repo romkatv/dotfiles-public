@@ -219,8 +219,9 @@
     AltLeft       cd-back                              # cd into the previous directory
     AltRight      cd-forward                           # cd into the next directory
     AltUp         cd-up                                # cd ..
+    Tab           expand-or-complete-with-dots         # completion with '...' while running
     AltDown       fzf-cd-widget                        # fzf cd
-    Tab           fzf-completion                       # fzf completion
+    Ctrl-G        fzf-completion                       # fzf completion
     Ctrl-R        fzf-history-widget-unique            # fzf history
     Ctrl-T        fzf-file-widget                      # fzf file picker
   )
