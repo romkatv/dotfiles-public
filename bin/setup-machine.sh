@@ -23,6 +23,18 @@ auto-indent=true
 show-tabs-mode='auto'
 side-panel-visible=true"
 
+# These are obtained by running 'dconf dump /org/gnome/meld/'.
+readonly MELD_PREFERENCES="[/]
+indent-width=2
+highlight-current-line=true
+folder-columns=[('size', true), ('modification time', true), ('permissions', true)]
+show-line-numbers=true
+wrap-mode='none'
+vc-commit-margin=100
+insert-spaces-instead-of-tabs=false
+highlight-syntax=true
+draw-spaces=['space', 'tab', 'nbsp', 'leading', 'text', 'trailing']"
+
 # '1' if running under Windows Subsystem for Linux, '0' otherwise.
 readonly WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
 
@@ -172,6 +184,7 @@ function set_preferences() {
     return
   fi
   with_dbus dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
+  with_dbus dconf load '/org/gnome/meld/' <<<"$MELD_PREFERENCES"
 }
 
 if [[ "$(id -u)" == 0 ]]; then
