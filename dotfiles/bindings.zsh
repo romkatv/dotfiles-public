@@ -132,7 +132,7 @@
   function cd-forward() { cd-rotate -0 }
   function cd-up() { cd .. && redraw-prompt }
 
-  autoload -U edit-command-line up-line-or-beginning-search down-line-or-beginning-search
+  autoload -Uz edit-command-line up-line-or-beginning-search down-line-or-beginning-search
 
   zle -N edit-command-line
   zle -N up-line-or-beginning-search
@@ -147,8 +147,9 @@
   zle -N fzf-history-widget-unique
 
   fzf_default_completion=expand-or-complete-with-dots
+  # Deny bindings. We have our own.
   run-tracked -b  source ~/dotfiles/fzf/shell/completion.zsh
-  # Deny fzf-redraw-prompt function. We have our own.
+  # Deny fzf-redraw-prompt function override. We have our own.
   run-tracked -bf source ~/dotfiles/fzf/shell/key-bindings.zsh
 
   zmodload zsh/terminfo
@@ -221,9 +222,8 @@
     AltUp         cd-up                                # cd ..
     Tab           expand-or-complete-with-dots         # completion with '...' while running
     AltDown       fzf-cd-widget                        # fzf cd
-    Ctrl-G        fzf-completion                       # fzf completion
+    Ctrl-T        fzf-completion                       # fzf completion
     Ctrl-R        fzf-history-widget-unique            # fzf history
-    Ctrl-T        fzf-file-widget                      # fzf file picker
   )
 
   local key widget
