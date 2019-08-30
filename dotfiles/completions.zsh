@@ -4,9 +4,6 @@
 # Which is released under MIT license:
 # https://github.com/sorin-ionescu/prezto/blob/6f603df7a641fb136b8b168d75e905fef60a00cf/LICENSE.
 
-# Load and initialize the completion system ignoring insecure directories with a
-# cache time of 20 hours, so it should almost always regenerate the first time a
-# shell is opened each day.
 autoload -Uz compinit
 compinit
 
