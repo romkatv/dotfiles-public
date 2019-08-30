@@ -7,10 +7,12 @@ alias gedit='gedit &>/dev/null'
 alias d2u='dos2unix'
 alias u2d='unix2dos'
 
-# If you want some random config file to be versioned in the dotfiles-public git repo, type
-# `dotfiles-public add <random-file>`. Use `commit`, `push`, etc., as with normal git.
-alias dotfiles-public='git --git-dir=$HOME/.dotfiles-public/.git --work-tree=$HOME'
-alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$HOME'
+if [[ -d ~/.dotfiles-public ]]; then
+  alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/.git --work-tree="$HOME"'
+fi
+if [[ -d ~/.dotfiles-private ]]; then
+  alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/.git --work-tree="$HOME"'
+fi
 
 alias x='xsel --clipboard -i'  # cut to clipboard
 alias v='xsel --clipboard -o'  # paste from clipboard
@@ -18,7 +20,7 @@ alias c='x && v'               # copy to clipboard
 
 if (( WSL )); then
   hash -d r=/mnt/d/r
-  hash -d h=$(wslpath $(win_env USERPROFILE))
+  hash -d h="$(wslpath "$(win_env USERPROFILE)")"
 fi
 
 function sync-dotfiles() {
@@ -52,18 +54,23 @@ function sync-dotfiles() {
   }
 
   {
-    pushd ~
+    {
+      pushd ~
 
-    _sync-dotfiles-repo public
+      (( !$+aliases[dotfiles-public] )) || _sync-dotfiles-repo public
 
-    [[ ! -f $HISTFILE ]] || {
-      dotfiles-private add -f $HISTFILE
-      local s && s="$(dotfiles-private status --porcelain $HISTFILE)"
-      [[ -z $s ]] || dotfiles-private commit -m 'fresh history' $HISTFILE
+      (( !$+aliases[dotfiles-private] )) || {
+        [[ ! -f $HISTFILE ]] || {
+          dotfiles-private add $HISTFILE
+          local s && s="$(dotfiles-private status --porcelain $HISTFILE)"
+          [[ -z $s ]] || dotfiles-private commit -m 'fresh history' $HISTFILE
+        }
+        _sync-dotfiles-repo private
+      }
+    } always {
+      popd
     }
-    _sync-dotfiles-repo private
   } always {
-    popd
     unfunction _sync-dotfiles-{public,private,repo}
   }
 }
