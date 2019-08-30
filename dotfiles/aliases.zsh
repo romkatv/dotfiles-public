@@ -8,7 +8,7 @@ alias d2u='dos2unix'
 alias u2d='unix2dos'
 
 # If you want some random config file to be versioned in the dotfiles-public git repo, type
-# `dotfiles-public add -f <random-file>`. Use `commit`, `push`, etc., as with normal git.
+# `dotfiles-public add <random-file>`. Use `commit`, `push`, etc., as with normal git.
 alias dotfiles-public='git --git-dir=$HOME/.dotfiles-public/.git --work-tree=$HOME'
 alias dotfiles-private='git --git-dir=$HOME/.dotfiles-private/.git --work-tree=$HOME'
 
