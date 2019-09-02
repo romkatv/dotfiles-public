@@ -79,6 +79,7 @@ fi
 READNULLCMD=$PAGER             # use the default pager instead of `more`
 WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
+PROMPT_EOL_MARK='%K{red} %k'
 
 setopt ALWAYS_TO_END           # full completions move cursor to the end
 setopt AUTO_CD                 # `dirname` is equivalent to `cd dirname`
