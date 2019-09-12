@@ -1,6 +1,9 @@
 () {
   zmodload zsh/terminfo
   autoload -Uz add-zle-hook-widget
+  autoload -Uz edit-command-line
+  autoload -Uz up-line-or-beginning-search
+  autoload -Uz down-line-or-beginning-search
 
   typeset -g __local_searching __local_savecursor
 
@@ -104,15 +107,11 @@
     emulate -L zsh
     zle || return
     local f
-    for f in precmd ${(@)precmd_functions:#*p9k*}; do
+    for f in precmd $precmd_functions; do
       (( $+functions[$f] )) && $f
     done
-    powerlevel9k_refresh_prompt_inplace
     zle .reset-prompt && zle -R
   }
-
-  # Override the stock fzf-redraw-prompt with a better implementation.
-  function fzf-redraw-prompt() { redraw-prompt }
 
   function cd-rotate() {
     emulate -L zsh
@@ -132,8 +131,6 @@
   function cd-forward() { cd-rotate -0 }
   function cd-up() { cd .. && redraw-prompt }
 
-  autoload -Uz edit-command-line up-line-or-beginning-search down-line-or-beginning-search
-
   zle -N edit-command-line
   zle -N up-line-or-beginning-search
   zle -N down-line-or-beginning-search
@@ -148,11 +145,8 @@
 
   fzf_default_completion=expand-or-complete-with-dots
   # Deny bindings. We have our own.
-  run-tracked -b  source ~/dotfiles/fzf/shell/completion.zsh
-  # Deny fzf-redraw-prompt function override. We have our own.
-  run-tracked -bf source ~/dotfiles/fzf/shell/key-bindings.zsh
-
-  zmodload zsh/terminfo
+  run-tracked -b source ~/dotfiles/fzf/shell/completion.zsh
+  run-tracked -b source ~/dotfiles/fzf/shell/key-bindings.zsh
 
   if (( $+terminfo[smkx] && $+terminfo[rmkx] )); then
     function enable-term-application-mode() { echoti smkx }
