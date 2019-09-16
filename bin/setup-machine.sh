@@ -88,14 +88,14 @@ function install_packages() {
 
 # If this user's login shell is not already "zsh", attempt to switch.
 function change_shell() {
-  test "${SHELL##*/}" != "zsh" || return 0
+  [[ "$SHELL" != */zsh ]] || return 0
   chsh -s "$(grep -E '/zsh$' /etc/shells | tail -1)"
 }
 
 # Install Visual Studio Code.
 function install_vscode() {
-  test $WSL -eq 0 || return 0
-  test ! -f /usr/bin/code || return 0
+  [[ $WSL == 0 ]] || return 0
+  [[ ! -f /usr/bin/code ]] || return 0
   local VSCODE_DEB=$(mktemp)
   curl -L 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$VSCODE_DEB"
   sudo apt install "$VSCODE_DEB"
@@ -103,6 +103,7 @@ function install_vscode() {
 }
 
 function install_ripgrep() {
+  [[ ! -f /usr/bin/rg ]] || return 0 
   local deb="$(mktemp)"
   curl -fsSL 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb' > "$deb"
   sudo dpkg -i "$deb"
@@ -110,29 +111,28 @@ function install_ripgrep() {
 }
 
 function install_fzf() {
+  [[ ! ~/dotfiles/fzf/bin/fzf ]] || return 0
   ~/dotfiles/fzf/install --bin
 }
 
 # Avoid clock snafu when dual-booting Windows and Linux.
 # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
 function fix_clock() {
-  test $WSL -eq 0 || return 0
+  [[ $WSL == 0 ]] || return 0
   timedatectl set-local-rtc 1 --adjust-system-clock
 }
 
 # Set the shared memory size limit to 64GB (the default is 32GB).
 function fix_shm() {
-  test $WSL -eq 0 || return 0
+  [[ $WSL == 0 ]] || return 0
   ! grep -qF '# My custom crap' /etc/fstab || return 0
-  sudo bash -c '
-    echo "# My custom crap" >>/etc/fstab
-    echo "tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0" >>/etc/fstab
-  '
+  sudo tee -a /etc/fstab >/dev/null <<<'# My custom crap
+tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0'
 }
 
 function win_install_fonts() {
   local dst_dir
-  dst_dir=$(wslpath $(cmd.exe /c "echo %LOCALAPPDATA%\Microsoft\\Windows\\Fonts" 2>/dev/null | sed 's/\r$//'))
+  dst_dir=$(wslpath $(cmd.exe /c 'echo %LOCALAPPDATA%\Microsoft\Windows\Fonts' 2>/dev/null | sed 's/\r$//'))
   mkdir -p "$dst_dir"
   local src
   for src in "$@"; do
@@ -143,9 +143,9 @@ function win_install_fonts() {
     local win_path
     win_path=$(wslpath -w "$dst_dir/$file")
     # Install font for the current user. It'll appear in "Font settings".
-    reg.exe add \
-      "HKCU\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Fonts" \
-      /v "${file%.*} (TrueType)"  /t REG_SZ /d "$win_path" /f 2>/dev/null
+    reg.exe add                                                 \
+      'HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts' \
+      /v "${file%.*} (TrueType)" /t REG_SZ /d "$win_path" /f 2>/dev/null
   done
 }
 
@@ -157,7 +157,7 @@ function install_fonts() {
 }
 
 function fix_dbus() {
-  test $WSL -eq 1 || return 0
+  [[ $WSL == 1 ]] || return 0
   sudo dbus-uuidgen --ensure
 }
 
@@ -167,8 +167,11 @@ function fix_gcc() {
 }
 
 function with_dbus() {
-  [[ -z "${DBUS_SESSION_BUS_ADDRESS+X}" ]] && set -- dbus-launch "$@"
-  "$@"
+  if [[ -z "${DBUS_SESSION_BUS_ADDRESS+X}" ]]; then
+    dbus-launch "$@"
+  else
+    "$@"
+  fi
 }
 
 # Set preferences for various applications.
@@ -189,7 +192,7 @@ function set_preferences() {
 }
 
 if [[ "$(id -u)" == 0 ]]; then
-  echo "setup-machine.sh: please run as non-root" >&2
+  echo "$BASH_SOURCE: please run as non-root" >&2
   exit 1
 fi
 
@@ -209,7 +212,5 @@ fix_gcc
 set_preferences
 
 change_shell
-
-[[ -f "$HOME"/.z ]] || touch "$HOME"/.z
 
 echo SUCCESS
