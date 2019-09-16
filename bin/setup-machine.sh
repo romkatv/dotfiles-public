@@ -56,6 +56,7 @@ function install_packages() {
     gzip
     htop
     jq
+    lftp
     libxml2-utils
     meld
     nano
