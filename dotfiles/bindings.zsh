@@ -72,9 +72,6 @@
     zle .set-local-history 0
   }
 
-  # Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
-  function my-expand-alias() { zle _expand_alias }
-
   # Shows '...' while completing. No `emulate -L zsh` to pick up dotglob if it's set.
   function expand-or-complete-with-dots() {
     local c=$(( ${+terminfo[rmam]} && ${+terminfo[smam]} ))
@@ -134,7 +131,6 @@
   zle -N edit-command-line
   zle -N up-line-or-beginning-search
   zle -N down-line-or-beginning-search
-  zle -N my-expand-alias
   zle -N expand-or-complete-with-dots
   zle -N up-line-or-beginning-search-local
   zle -N down-line-or-beginning-search-local
@@ -161,9 +157,9 @@
   #
   # For example:
   #
-  #   CtrlUp '\e[1;5A \e[A'
+  #   Up '\eOA \e[A'
   #
-  # Now, any widget in `bindings` that binds to CtrlUp will be bound to '\e[1;5A' and '\e[A'.
+  # Now, any widget in `bindings` that binds to Up will be bound to '\eOA' and '\e[A'.
   local -A key_code=(
     Ctrl          '^'
     CtrlDel       '\e[3;5~'
@@ -208,7 +204,7 @@
     Down          down-line-or-beginning-search-local  # next command in local history
     CtrlUp        up-line-or-beginning-search          # prev command in global history
     CtrlDown      down-line-or-beginning-search        # next command in global history
-    Ctrl-' '      my-expand-alias                      # expand alias
+    Ctrl-' '      _expand_alias                        # expand alias
     ShiftTab      reverse-menu-complete                # previous in completion menu
     Ctrl-E        edit-command-line                    # edit command line in $EDITOR
     AltLeft       cd-back                              # cd into the previous directory
@@ -260,10 +256,9 @@
     up-line-or-history
     down-line-or-history
     accept-line
+    fzf-history-widget-unique            # my addition
     up-line-or-beginning-search-local    # my addition
     down-line-or-beginning-search-local  # my addition
-    my-expand-alias                      # my addition
-    edit-command-line                    # my addition
   )
   typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
     forward-word
