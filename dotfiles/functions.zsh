@@ -201,15 +201,15 @@ if (( WSL )); then
   function win_env() {
     emulate -L zsh
     (( ARGC == 1 && $#1 )) || { echo 'usage: win_env <name>' >&2; return 1 }
-    local val && val=$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %$1%") || return
+    local val && val="$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %$1%")" || return
     echo -E - ${val%$'\r'}
   }
   # The same as double-cliking on file/dir $1 in Windows Explorer.
   function xopen() {
     emulate -L zsh
     (( ARGC == 1 && $#1 )) || { echo 'usage: xopen <path>' >&2; return 1 }
-    local arg && arg=$(wslpath -w "$1") || return
-    /mnt/c/Windows/System32/cmd.exe /c start "$arg"
+    local arg && arg="$(wslpath -w "$1")" || return
+    ( cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c start "$arg" )
   }
 else
   # The same as double-cliking on file/dir $1 in X File Manager.

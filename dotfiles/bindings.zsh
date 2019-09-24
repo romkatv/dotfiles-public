@@ -90,21 +90,16 @@
   #   - `awk` to remove duplicate
   #   - preview pane with syntax highlighting
   function fzf-history-widget-unique() {
-    local selected num
+    local selected
     setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
     local preview='echo -E {} | cut -c8- | xargs -0 echo -e | bat -l bash --color always -pp'
-    selected=( $(
+    selected="$(
       fc -rl 1 |
       awk '!_[substr($0, 8)]++' |
       $(__fzfcmd) +m -n2..,.. --tiebreak=index --height=80% --preview-window=down:50% \
-        --query=$LBUFFER --preview=$preview ) )
+        --query=$LBUFFER --preview=$preview )"
     local ret=$?
-    if [ -n "$selected" ]; then
-      num=$selected[1]
-      if [ -n "$num" ]; then
-        zle vi-fetch-history -n $num
-      fi
-    fi
+    [[ -n "$selected" ]] && zle vi-fetch-history -n $selected
     zle .reset-prompt
     return $ret
   }
