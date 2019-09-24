@@ -117,7 +117,6 @@ function install_bat() {
 }
 
 function install_fzf() {
-  [[ ! ~/dotfiles/fzf/bin/fzf ]] || return 0
   ~/dotfiles/fzf/install --bin
 }
 
