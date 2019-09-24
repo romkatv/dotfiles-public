@@ -103,7 +103,6 @@ function install_vscode() {
 }
 
 function install_ripgrep() {
-  [[ ! -f /usr/bin/rg ]] || return 0 
   local deb="$(mktemp)"
   curl -fsSL 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb' > "$deb"
   sudo dpkg -i "$deb"
