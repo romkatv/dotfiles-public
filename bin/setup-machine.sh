@@ -110,6 +110,13 @@ function install_ripgrep() {
   rm "$deb"
 }
 
+function install_bat() {
+  local deb="$(mktemp)"
+  curl -fsSL 'https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb' > "$deb"
+  sudo dpkg -i "$deb"
+  rm "$deb"
+}
+
 function install_fzf() {
   [[ ! ~/dotfiles/fzf/bin/fzf ]] || return 0
   ~/dotfiles/fzf/install --bin
@@ -201,6 +208,7 @@ umask g-w,o-w
 install_packages
 install_vscode
 install_ripgrep
+install_bat
 install_fzf
 install_fonts
 
