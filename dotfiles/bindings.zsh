@@ -85,13 +85,19 @@
     zle redisplay
   }
 
-  # The same as fzf-history-widget from fzf but with extra `awk` to remove duplicate
-  # history entries.
+  # Similar to fzf-history-widget. Extras:
+  #
+  #   - `awk` to remove duplicate
+  #   - preview pane with syntax highlighting
   function fzf-history-widget-unique() {
     local selected num
     setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
-    selected=( $(fc -rl 1 | awk '!_[substr($0, 8)]++' |
-      FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --tiebreak=index --bind=ctrl-r:toggle-sort $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" $(__fzfcmd)) )
+    local preview='/bin/echo -E {} | cut -c8- | xargs -0 /bin/echo -e | bat -l bash --color always -pp'
+    selected=( $(
+      fc -rl 1 |
+      awk '!_[substr($0, 8)]++' |
+      $(__fzfcmd) +m -n2..,.. --tiebreak=index --height=80% --preview-window=down:50% \
+        --query=$LBUFFER --preview=$preview ) )
     local ret=$?
     if [ -n "$selected" ]; then
       num=$selected[1]
