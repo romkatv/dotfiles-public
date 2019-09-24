@@ -92,7 +92,7 @@
   function fzf-history-widget-unique() {
     local selected num
     setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
-    local preview='/bin/echo -E {} | cut -c8- | xargs -0 /bin/echo -e | bat -l bash --color always -pp'
+    local preview='echo -E {} | cut -c8- | xargs -0 echo -e | bat -l bash --color always -pp'
     selected=( $(
       fc -rl 1 |
       awk '!_[substr($0, 8)]++' |
