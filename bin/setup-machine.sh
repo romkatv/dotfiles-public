@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Sets up environment. Must be run after bootstrap-dotfiles.sh. Can be run multiple times;
-# it won't do things that have already been done.
+# Sets up environment. Must be run after bootstrap-dotfiles.sh. Can be run multiple times.
 
 set -xueE -o pipefail
 
