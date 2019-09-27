@@ -208,7 +208,7 @@ if (( WSL )); then
   function xopen() {
     emulate -L zsh
     (( ARGC == 1 && $#1 )) || { echo 'usage: xopen <path>' >&2; return 1 }
-    local arg && arg="$(wslpath -w "$1")" || return
+    local arg && arg="$(wslpath -wa "$1")" || return
     ( cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c start "$arg" )
   }
 else
