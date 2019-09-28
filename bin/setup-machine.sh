@@ -119,6 +119,13 @@ function install_fzf() {
   ~/dotfiles/fzf/install --bin
 }
 
+function install_bitwarden() {
+  [[ $WSL == 0 ]] || return 0
+  [[ ! -x ~/bin/bitwarden ]] || return 0
+  curl -fsSLo ~/bin/bitwarden 'https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=appimage'
+  chmod +x ~/bin/bitwarden
+}
+
 # Avoid clock snafu when dual-booting Windows and Linux.
 # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
 function fix_clock() {
@@ -207,6 +214,7 @@ install_vscode
 install_ripgrep
 install_bat
 install_fzf
+install_bitwarden
 install_fonts
 
 fix_clock
