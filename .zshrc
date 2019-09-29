@@ -87,8 +87,7 @@ setopt AUTO_LIST               # automatically list choices on ambiguous complet
 setopt AUTO_MENU               # show completion menu on a successive tab press
 setopt AUTO_PARAM_SLASH        # if completed parameter is a directory, add a trailing slash
 setopt AUTO_PUSHD              # `cd` pushes directories to the directory stack
-setopt COMPLETE_IN_WORD        # complete from both ends of a word
-setopt EXTENDED_GLOB           # needed for file modification glob modifiers with compinit
+setopt COMPLETE_IN_WORD        # complete from the cursor rather than from the end of the word
 setopt EXTENDED_GLOB           # (#qx) glob qualifier and more
 setopt EXTENDED_HISTORY        # write timestamps to history
 setopt GLOB_DOTS               # glob matches files starting with dot; `*` becomes `*(D)`
@@ -97,7 +96,7 @@ setopt HIST_FIND_NO_DUPS       # don't show dups when searching history
 setopt HIST_IGNORE_DUPS        # don't add dups to history
 setopt HIST_IGNORE_SPACE       # don't add commands starting with space to history
 setopt HIST_REDUCE_BLANKS      # remove junk whitespace from commands before adding to history
-setopt HIST_VERIFY             # if a cmd triggers history expansion, show it instead of running
+setopt HIST_VERIFY             # if a command triggers history expansion, show it instead of running
 setopt INTERACTIVE_COMMENTS    # allow comments in command line
 setopt MULTIOS                 # allow multiple redirections for the same fd
 setopt NO_BANG_HIST            # disable old history syntax
