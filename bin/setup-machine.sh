@@ -214,7 +214,7 @@ install_vscode
 install_ripgrep
 install_bat
 install_fzf
-install_bitwarden
+# install_bitwarden
 install_fonts
 
 fix_clock
