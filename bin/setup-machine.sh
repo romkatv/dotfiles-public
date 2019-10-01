@@ -70,6 +70,7 @@ function install_packages() {
     x11-utils
     xsel
     xz-utils
+    zip
     zsh
   )
 
