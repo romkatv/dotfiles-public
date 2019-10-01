@@ -145,9 +145,14 @@
   zle -N fzf-history-widget-unique
 
   fzf_default_completion=expand-or-complete-with-dots
-  # Deny bindings. We have our own.
-  run-tracked -b source ~/dotfiles/fzf/shell/completion.zsh
-  run-tracked -b source ~/dotfiles/fzf/shell/key-bindings.zsh
+
+  # Deny fzf bindings. We have our own.
+  function _source-fzf() {
+    source ~/dotfiles/fzf/shell/completion.zsh
+    source ~/dotfiles/fzf/shell/key-bindings.zsh
+  }
+  run-tracked -b _source-fzf
+  unfunction _source-fzf
 
   if (( $+terminfo[smkx] && $+terminfo[rmkx] )); then
     function enable-term-application-mode() { echoti smkx }

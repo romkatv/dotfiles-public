@@ -25,18 +25,17 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 [[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
 
-# Disallow `x` alias.
-run-tracked -a source $ZSH/plugins/extract/extract.plugin.zsh
-run-tracked    source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+source $ZSH/plugins/extract/extract.plugin.zsh
+source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 
 function late-init() {
   emulate -L zsh
 
   # Must be sourced after all widgets have been defined but before zsh-autosuggestions.
-  run-tracked +w source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+  source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
-  run-tracked    source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-  run-tracked +w _zsh_autosuggest_start
+  source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+  _zsh_autosuggest_start
   
   add-zsh-hook -d precmd late-init
   unfunction late-init
@@ -46,9 +45,9 @@ add-zsh-hook precmd late-init
 if (( ${THEME:-1} )); then
   [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
   if [[ -d ~/powerlevel10k ]]; then
-    run-tracked +e source ~/powerlevel10k/powerlevel10k.zsh-theme
+    source ~/powerlevel10k/powerlevel10k.zsh-theme
   else
-    run-tracked +e source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+    source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
   fi
 fi
 
@@ -61,6 +60,7 @@ fi
 source ~/dotfiles/history.zsh
 source ~/dotfiles/bindings.zsh
 source ~/dotfiles/completions.zsh
+source ~/dotfiles/ssh-agent.zsh
 
 # Disable highlighting of text pasted into the command line.
 zle_highlight=('paste:none')
