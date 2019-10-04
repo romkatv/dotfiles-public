@@ -128,4 +128,4 @@ setopt SHARE_HISTORY           # write and import history on every command
 # path=($HOME/.nodenv/bin $path)
 # eval "$(nodenv init -)"
 
-jit-source $HOME/.zshrc-private
+jit-source $HOME/.zshrc-private || true

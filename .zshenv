@@ -31,7 +31,7 @@ fi
 if (( WSL )); then
   export DISPLAY=:0
   export WINDOWS_EDITOR='/mnt/c/Program Files/Notepad++/notepad++.exe'
-  export WIN_TMPDIR=$(wslpath ${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %TMP%")%$'\r'})
+  export WIN_TMPDIR="$(wslpath "${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %TMP%")%$'\r'}")"
   export LIBGL_ALWAYS_INDIRECT=1
 fi
 
