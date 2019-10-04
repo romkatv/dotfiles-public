@@ -48,43 +48,45 @@ function sync-dotfiles() {
   emulate -L zsh
   setopt err_return no_unset xtrace
 
-  function _sync-dotfiles-public() { dotfiles-public "$@" }
-  function _sync-dotfiles-private() { dotfiles-private "$@" }
+  function _sync-dotfiles-git() {
+    local which=$1
+    shift
+    git --git-dir=$HOME/.dotfiles-$which/.git --work-tree=$HOME "$@"
+  }
 
   function _sync-dotfiles-repo() {
-    local git=_sync-dotfiles-$1
     local -i dirty
-    local s && s="$($git status --porcelain --untracked-files=no)"
+    local s && s="$(_sync-dotfiles-git $1 status --porcelain --untracked-files=no)"
     [[ -z $s ]] || {
       dirty=1
-      $git stash
+      _sync-dotfiles-git $1 stash
     }
 
-    $git pull --rebase --no-recurse-submodules
+    _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules
 
-    ! $git remote get-url upstream &>/dev/null || {
-      $git fetch upstream
-      $git merge upstream/master
+    ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
+      _sync-dotfiles-git $1 fetch upstream
+      _sync-dotfiles-git $1 merge upstream/master
     }
 
-    $git push
-    (( !dirty )) || $git stash pop
+    _sync-dotfiles-git $1 push
+    (( !dirty )) || _sync-dotfiles-git $1 stash pop
 
-    $git pull --recurse-submodules
-    $git submodule update --init
+    _sync-dotfiles-git $1 pull --recurse-submodules
+    _sync-dotfiles-git $1 submodule update --init
   }
 
   {
     {
       pushd ~
 
-      (( !$+aliases[dotfiles-public] )) || _sync-dotfiles-repo public
+      (( ! -d ~/.dotfiles-public )) || _sync-dotfiles-repo public
 
-      (( !$+aliases[dotfiles-private] )) || {
+      (( ! -d ~/.dotfiles-private )) || {
         [[ ! -f $HISTFILE ]] || {
-          dotfiles-private add $HISTFILE
-          local s && s="$(dotfiles-private status --porcelain $HISTFILE)"
-          [[ -z $s ]] || dotfiles-private commit -m 'fresh history' $HISTFILE
+          _sync-dotfiles-git private add $HISTFILE
+          local s && s="$(_sync-dotfiles-git private status --porcelain $HISTFILE)"
+          [[ -z $s ]] || _sync-dotfiles-git private commit -m 'fresh history' $HISTFILE
         }
         _sync-dotfiles-repo private
       }
@@ -92,6 +94,6 @@ function sync-dotfiles() {
       popd
     }
   } always {
-    unfunction _sync-dotfiles-{public,private,repo}
+    unfunction _sync-dotfiles-{git,repo}
   }
 }
