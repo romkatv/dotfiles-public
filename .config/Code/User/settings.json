@@ -22,5 +22,8 @@
     "window.zoomLevel": 0,
     "terminal.integrated.fontFamily": "MesloLGS NF",
     "editor.detectIndentation": false,
-    "workbench.colorTheme": "Visual Studio Dark"
+    "workbench.colorTheme": "Visual Studio Dark",
+    "files.exclude": {
+      "**/*.zwc": true
+    }
 }
