@@ -147,12 +147,10 @@
   fzf_default_completion=expand-or-complete-with-dots
 
   # Deny fzf bindings. We have our own.
-  function _source-fzf() {
-    source ~/dotfiles/fzf/shell/completion.zsh
-    source ~/dotfiles/fzf/shell/key-bindings.zsh
-  }
-  run-tracked -b _source-fzf
-  unfunction _source-fzf
+  function bindkey() {}
+  jit-source ~/dotfiles/fzf/shell/completion.zsh
+  jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
+  unfunction bindkey
 
   if (( $+terminfo[smkx] && $+terminfo[rmkx] )); then
     function enable-term-application-mode() { echoti smkx }

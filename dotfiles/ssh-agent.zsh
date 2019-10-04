@@ -32,4 +32,3 @@
   ssh-agent -st 20h >$env_file
   source $env_file >/dev/null
 }
-

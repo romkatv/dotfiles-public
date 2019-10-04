@@ -5,18 +5,16 @@
 # https://github.com/sorin-ionescu/prezto/blob/6f603df7a641fb136b8b168d75e905fef60a00cf/LICENSE.
 
 autoload -Uz compinit
-compinit
 
 () {
-  local zcompdump=${ZDOTDIR:-$HOME}/.zcompdump
-  if [[ -s $zcompdump && (! -s $zcompdump.zwc || $zcompdump -nt $zcompdump.zwc ) ]]; then
-    zcompile $zcompdump
-  fi
+  local f=${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
+  compinit -C -d $f
+  [[ ${(%):-%#} == '#' || $f.zwc -nt $f ]] || zcompile $f
 }
- 
+
 # Use caching to make completion for commands such as dpkg and apt usable.
 zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path "${ZDOTDIR:-$HOME}/.zcompcache"
+zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME:-~/.cache}/.zcompcache-$ZSH_VERSION"
 
 # Case-insensitive (all), partial-word, and then substring completion.
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'

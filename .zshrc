@@ -17,24 +17,36 @@ else
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
 fi
 
-source ~/dotfiles/functions.zsh
+function jit() { [[ ${(%):-%#} == '#' || $1.zwc -nt $1 || ! -w ${1:h} ]] || zcompile $1 }
+
+function jit-source() {
+  emulate -L zsh
+  [[ -e $1 ]] || return
+  jit $1
+  source $1
+}
+
+jit ~/.zshrc
+jit ~/.zshenv
+
+jit-source ~/dotfiles/functions.zsh
 
 path+=~/dotfiles/fzf/bin
 FZF_COMPLETION_TRIGGER=
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
-[[ -r /etc/zsh_command_not_found ]] && source /etc/zsh_command_not_found
+jit-source /etc/zsh_command_not_found
 
-source $ZSH/plugins/extract/extract.plugin.zsh
-source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+jit-source $ZSH/plugins/extract/extract.plugin.zsh
+jit-source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 
 function late-init() {
   emulate -L zsh
 
   # Must be sourced after all widgets have been defined but before zsh-autosuggestions.
-  source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+  jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 
-  source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+  jit-source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
   _zsh_autosuggest_start
   
   add-zsh-hook -d precmd late-init
@@ -43,11 +55,11 @@ function late-init() {
 add-zsh-hook precmd late-init
 
 if (( ${THEME:-1} )); then
-  [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+  jit-source ~/.p10k.zsh
   if [[ -d ~/powerlevel10k ]]; then
-    source ~/powerlevel10k/powerlevel10k.zsh-theme
+    jit-source ~/powerlevel10k/powerlevel10k.zsh-theme
   else
-    source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
+    jit-source ~/dotfiles/powerlevel10k/powerlevel10k.zsh-theme
   fi
 fi
 
@@ -57,10 +69,10 @@ if [[ -d ~/gitstatus ]]; then
   [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
 fi
 
-source ~/dotfiles/history.zsh
-source ~/dotfiles/bindings.zsh
-source ~/dotfiles/completions.zsh
-source ~/dotfiles/ssh-agent.zsh
+jit-source ~/dotfiles/history.zsh
+jit-source ~/dotfiles/bindings.zsh
+jit-source ~/dotfiles/completions.zsh
+(( WSL )) && jit-source ~/dotfiles/ssh-agent.zsh
 
 # Disable highlighting of text pasted into the command line.
 zle_highlight=('paste:none')
@@ -70,7 +82,7 @@ function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
 add-zsh-hook precmd set-term-title
 
 (( $+aliases[run-help] )) && unalias run-help
-source ~/dotfiles/aliases.zsh
+jit-source ~/dotfiles/aliases.zsh
 
 if is-at-least 5.7.2 || [[ $ZSH_PATCHLEVEL =~ '^zsh-5\.7\.1-([0-9]+)-' && $match[1] -ge 50 ]]; then
   ZLE_RPROMPT_INDENT=0         # don't leave an empty space after right prompt
@@ -116,4 +128,4 @@ setopt SHARE_HISTORY           # write and import history on every command
 # path=($HOME/.nodenv/bin $path)
 # eval "$(nodenv init -)"
 
-[[ -f $HOME/.zshrc-private ]] && source $HOME/.zshrc-private
+jit-source $HOME/.zshrc-private
