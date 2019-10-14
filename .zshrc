@@ -1,5 +1,17 @@
 emulate zsh
 
+function jit() { [[ ${(%):-%#} == '#' || $1.zwc -nt $1 || ! -w ${1:h} ]] || zcompile $1 }
+
+function jit-source() {
+  emulate -L zsh
+  [[ -e $1 ]] || return
+  jit $1
+  source $1
+}
+
+jit-source ~/dotfiles/instant-zsh.zsh
+instant-zsh-pre "%B%39F${${(V)${(%):-%~}//\%/%%}//\//%b%31F/%B%39F}%b%f"$'\n'"%76F❯%f "
+
 autoload -Uz add-zsh-hook run-help zargs zmv zcp zln is-at-least
 
 ZSH=~/dotfiles/oh-my-zsh
@@ -16,15 +28,6 @@ else
   # The default is outside of 8 color range.
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
 fi
-
-function jit() { [[ ${(%):-%#} == '#' || $1.zwc -nt $1 || ! -w ${1:h} ]] || zcompile $1 }
-
-function jit-source() {
-  emulate -L zsh
-  [[ -e $1 ]] || return
-  jit $1
-  source $1
-}
 
 jit ~/.zshrc
 jit ~/.zshenv
@@ -80,6 +83,7 @@ zle_highlight=('paste:none')
 # On every prompt, set terminal title to "user@host: cwd".
 function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
 add-zsh-hook precmd set-term-title
+set-term-title
 
 (( $+aliases[run-help] )) && unalias run-help
 jit-source ~/dotfiles/aliases.zsh
@@ -131,3 +135,5 @@ setopt SHARE_HISTORY           # write and import history on every command
 # path=($HOME/.ebcli-virtual-env/executables $HOME/.pyenv/versions/3.7.2/bin $path)
 
 jit-source ~/.zshrc-private || true
+
+instant-zsh-post
