@@ -128,4 +128,6 @@ setopt SHARE_HISTORY           # write and import history on every command
 # path=($HOME/.nodenv/bin $path)
 # eval "$(nodenv init -)"
 
-jit-source $HOME/.zshrc-private || true
+# path=($HOME/.ebcli-virtual-env/executables $HOME/.pyenv/versions/3.7.2/bin $path)
+
+jit-source ~/.zshrc-private || true
