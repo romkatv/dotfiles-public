@@ -12,7 +12,7 @@ export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 typeset -gaU cdpath fpath mailpath path
-path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin ${path[@]})
+path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path[@])
 
 # This affects every invocation of `less`.
 #
@@ -33,10 +33,6 @@ if (( WSL )); then
   export WINDOWS_EDITOR='/mnt/c/Program Files/Notepad++/notepad++.exe'
   export WIN_TMPDIR="$(wslpath "${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %TMP%")%$'\r'}")"
   export LIBGL_ALWAYS_INDIRECT=1
-fi
-
-if (( $+commands[dircolors] )); then
-  eval "$(command dircolors -b)"
 fi
 
 typeset -g MACHINE_ID=${(%):-%m}-${${${WSL:#0}:+wsl}:-linux}-${HOME:t}
