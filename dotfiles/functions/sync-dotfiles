@@ -1,0 +1,51 @@
+emulate -L zsh
+setopt err_return no_unset xtrace
+
+function _sync-dotfiles-git() {
+  local which=$1
+  shift
+  git --git-dir=$HOME/.dotfiles-$which/.git --work-tree=$HOME "$@"
+}
+
+function _sync-dotfiles-repo() {
+  local -i dirty
+  local s && s="$(_sync-dotfiles-git $1 status --porcelain --untracked-files=no)"
+  [[ -z $s ]] || {
+    dirty=1
+    _sync-dotfiles-git $1 stash
+  }
+
+  _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules
+
+  ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
+    _sync-dotfiles-git $1 fetch upstream
+    _sync-dotfiles-git $1 merge upstream/master
+  }
+
+  _sync-dotfiles-git $1 push
+  (( !dirty )) || _sync-dotfiles-git $1 stash pop
+
+  _sync-dotfiles-git $1 pull --recurse-submodules
+  _sync-dotfiles-git $1 submodule update --init
+}
+
+{
+  {
+    pushd ~
+
+    (( ! -d ~/.dotfiles-public )) || _sync-dotfiles-repo public
+
+    (( ! -d ~/.dotfiles-private )) || {
+      [[ ! -f $HISTFILE ]] || {
+        _sync-dotfiles-git private add $HISTFILE
+        local s && s="$(_sync-dotfiles-git private status --porcelain $HISTFILE)"
+        [[ -z $s ]] || _sync-dotfiles-git private commit -m 'fresh history' $HISTFILE
+      }
+      _sync-dotfiles-repo private
+    }
+  } always {
+    popd
+  }
+} always {
+  unfunction _sync-dotfiles-{git,repo}
+}

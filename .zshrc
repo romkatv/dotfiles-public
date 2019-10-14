@@ -12,6 +12,8 @@ function jit-source() {
 jit-source ~/dotfiles/instant-zsh.zsh
 instant-zsh-pre "%B%39F${${(V)${(%):-%~}//\%/%%}//\//%b%31F/%B%39F}%b%f"$'\n'"%76F❯%f "
 
+fpath+=~/dotfiles/functions
+autoload -Uz ~/dotfiles/functions/*(.:t)
 autoload -Uz add-zsh-hook run-help zargs zmv zcp zln is-at-least
 
 ZSH=~/dotfiles/oh-my-zsh
