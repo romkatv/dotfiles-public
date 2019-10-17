@@ -14,10 +14,6 @@
 	path = dotfiles/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
 	branch = master
-[submodule "dotfiles/oh-my-zsh"]
-	path = dotfiles/oh-my-zsh
-	url = https://github.com/robbyrussell/oh-my-zsh.git
-	branch = master
 [submodule "dotfiles/gitstatus"]
 	path = dotfiles/gitstatus
 	url = https://github.com/romkatv/gitstatus.git
