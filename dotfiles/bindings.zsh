@@ -76,14 +76,17 @@
   function my-expand-alias() { zle _expand_alias }
 
   # Shows '...' while completing. No `emulate -L zsh` to pick up dotglob if it's set.
-  function expand-or-complete-with-dots() {
-    local c=$(( ${+terminfo[rmam]} && ${+terminfo[smam]} ))
-    (( c )) && echoti rmam          || true
-    print -Pn "%{%F{red}......%f%}" || true
-    (( c )) && echoti smam          || true
-    zle expand-or-complete
-    zle redisplay
-  }
+  if (( ${+terminfo[rmam]} && ${+terminfo[smam]} )); then
+    function expand-or-complete-with-dots() {
+      echo -nE - ${terminfo[rmam]}${(%):-"%F{red}......%f"}${terminfo[smam]}
+      zle expand-or-complete
+      zle redisplay
+    }
+  else
+    function expand-or-complete-with-dots() {
+      zle expand-or-complete
+    }
+  fi
 
   # Similar to fzf-history-widget. Extras:
   #
