@@ -152,15 +152,6 @@
   jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
   unfunction bindkey
 
-  if (( $+terminfo[smkx] && $+terminfo[rmkx] )); then
-    function enable-term-application-mode() { echoti smkx }
-    function disable-term-application-mode() { echoti rmkx }
-    zle -N enable-term-application-mode
-    zle -N disable-term-application-mode
-    add-zle-hook-widget line-init enable-term-application-mode
-    add-zle-hook-widget line-finish disable-term-application-mode
-  fi
-
   # Note: You can specify several codes separated by space. All of them will be bound.
   #
   # For example:
