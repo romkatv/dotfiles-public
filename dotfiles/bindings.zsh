@@ -184,16 +184,16 @@
     Tab           '\t'
     Backspace     '^?'
     Delete        '\e[3~'
-    Insert        "$terminfo[kich1]"
-    Home          "$terminfo[khome]"
-    End           "$terminfo[kend]"
-    PageUp        "$terminfo[kpp]"
-    PageDown      "$terminfo[knp]"
-    Up            "$terminfo[kcuu1]"
-    Left          "$terminfo[kcub1]"
-    Down          "$terminfo[kcud1]"
-    Right         "$terminfo[kcuf1]"
-    ShiftTab      "$terminfo[kcbt]"
+    Insert        '\e[2~'
+    Home          '\eOH \e[H'
+    End           '\eOF \e[F'
+    PageUp        '\e[5~ '
+    PageDown      '\e[6~'
+    Up            '\eOA \e[A'
+    Left          '\eOD \e[D'
+    Down          '\eOB \e[B'
+    Right         '\eOC \e[C'
+    ShiftTab      '\e[Z'
   )
 
   local -a bindings=(
