@@ -17,8 +17,10 @@ fpath+=~/dotfiles/functions
 autoload -Uz ~/dotfiles/functions/*(.:t)
 autoload -Uz add-zsh-hook run-help zargs zmv zcp zln is-at-least
 
-ZSH=~/dotfiles/oh-my-zsh
-ZSH_CUSTOM=$ZSH/custom
+# On every prompt, set terminal title to "user@host: cwd".
+function set-term-title() { print -n -- ${(%):-'\e]0;%n@%m: %~\a'} }
+add-zsh-hook precmd set-term-title
+set-term-title
 
 ZSH_HIGHLIGHT_MAXLENGTH=1024
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
@@ -43,7 +45,6 @@ export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 jit-source /etc/zsh_command_not_found
 
-jit-source $ZSH/plugins/extract/extract.plugin.zsh
 jit-source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 
 function late-init() {
@@ -82,11 +83,6 @@ jit-source ~/dotfiles/completions.zsh
 
 # Disable highlighting of text pasted into the command line.
 zle_highlight=('paste:none')
-
-# On every prompt, set terminal title to "user@host: cwd".
-function set-term-title() { print -Pn '\e]0;%n@%m: %~\a' }
-add-zsh-hook precmd set-term-title
-set-term-title
 
 (( $+aliases[run-help] )) && unalias run-help
 jit-source ~/dotfiles/aliases.zsh
