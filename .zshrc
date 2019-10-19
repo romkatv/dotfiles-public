@@ -1,11 +1,11 @@
 emulate zsh
 
+function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
+set-term-title
+
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-
-function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
-set-term-title
 
 typeset -gaU cdpath fpath mailpath path
 path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
