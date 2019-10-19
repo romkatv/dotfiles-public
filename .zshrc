@@ -1,6 +1,6 @@
 emulate zsh
 
-function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
+function set-term-title() { [[ ! -t 1 ]] || print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
 set-term-title
 
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
