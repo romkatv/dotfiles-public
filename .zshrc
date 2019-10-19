@@ -1,14 +1,18 @@
 emulate zsh
 
-function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
-set-term-title
-
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-umask 0002
-ulimit -c unlimited
+function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
+set-term-title
+
+typeset -gaU cdpath fpath mailpath path
+path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
+
+fpath+=~/dotfiles/functions
+autoload -Uz ~/dotfiles/functions/*(.:t) run-help zmv zcp zln is-at-least add-zsh-hook
+add-zsh-hook precmd set-term-title
 
 function command_not_found_handler() {
   emulate -L zsh
@@ -25,19 +29,22 @@ function jit-source() {
   source $1
 }
 
+umask 0002
+ulimit -c unlimited
+
 jit ~/.zshrc
 jit ~/.zshenv
 
-if [[ -r /proc/version && "$(</proc/version)" == *Microsoft* ]]; then
+if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
   export WSL=1
-  typeset -g MACHINE_ID=${(%):-%m}-wsl-${HOME:t}
   export DISPLAY=:0
   export WINDOWS_EDITOR='/mnt/c/Program Files/Notepad++/notepad++.exe'
   export WIN_TMPDIR="$(wslpath "${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %TMP%")%$'\r'}")"
   export LIBGL_ALWAYS_INDIRECT=1
+  MACHINE_ID=${(%):-%m}-wsl-${HOME:t}
 else
   export WSL=0
-  typeset -g MACHINE_ID=${(%):-%m}-linux-${HOME:t}
+  MACHINE_ID=${(%):-%m}-linux-${HOME:t}
 fi
 
 export EDITOR=~/bin/redit
@@ -59,15 +66,6 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
   export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
 fi
 
-typeset -gaU cdpath fpath mailpath path
-path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
-
-fpath+=~/dotfiles/functions
-autoload -Uz ~/dotfiles/functions/*(.:t)
-autoload -Uz add-zsh-hook run-help zargs zmv zcp zln is-at-least
-
-add-zsh-hook precmd set-term-title
-
 ZSH_HIGHLIGHT_MAXLENGTH=1024
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
@@ -83,20 +81,6 @@ fi
 path+=~/dotfiles/fzf/bin
 FZF_COMPLETION_TRIGGER=
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
-
-function late-init() {
-  emulate -L zsh
-
-  # Must be sourced after all widgets have been defined but before zsh-autosuggestions.
-  jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
-
-  jit-source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
-  _zsh_autosuggest_start
-  
-  add-zsh-hook -d precmd late-init
-  unfunction late-init
-}
-add-zsh-hook precmd late-init
 
 if (( ${THEME:-1} )); then
   jit-source ~/.p10k.zsh
@@ -123,6 +107,8 @@ zle_highlight=('paste:none')
 
 (( $+aliases[run-help] )) && unalias run-help
 jit-source ~/dotfiles/aliases.zsh
+
+jit-source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 
 if is-at-least 5.7.2 || [[ $ZSH_PATCHLEVEL =~ '^zsh-5\.7\.1-([0-9]+)-' && $match[1] -ge 50 ]]; then
   ZLE_RPROMPT_INDENT=0         # don't leave an empty space after right prompt
@@ -170,8 +156,7 @@ setopt SHARE_HISTORY           # write and import history on every command
 
 # path=($HOME/.ebcli-virtual-env/executables $HOME/.pyenv/versions/3.7.2/bin $path)
 
-jit-source ~/.zshrc-private || true
+jit-source ~/.zshrc-private
 
-# slow-init() { sleep 1; add-zsh-hook -d precmd slow-init }
-# add-zsh-hook precmd slow-init
-# sleep 1
+# Must be sourced after all widgets have been defined but before zsh-autosuggestions.
+jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh || true
