@@ -5,7 +5,10 @@
 
 set -xueEo pipefail
 
-readonly GITHUB_USER=romkatv
+if [[ -z "${GITHUB_USERNAME:-}" ]]; then
+  echo "ERROR: GITHUB_USERNAME not set" >&2
+  exit 1
+fi
 
 function get_repo_uri() {
   echo "git@github.com:$GITHUB_USER/$1.git"
