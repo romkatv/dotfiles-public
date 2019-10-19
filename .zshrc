@@ -1,5 +1,21 @@
 emulate zsh
 
+function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
+set-term-title
+
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+umask 0002
+ulimit -c unlimited
+
+function command_not_found_handler() {
+  emulate -L zsh
+  [[ -x /usr/lib/command-not-found ]] || return 1
+  /usr/lib/command-not-found -- $1
+}
+
 function jit() { [[ ${(%):-%#} == '#' || $1.zwc -nt $1 || ! -w ${1:h} ]] || zcompile $1 }
 
 function jit-source() {
@@ -9,18 +25,48 @@ function jit-source() {
   source $1
 }
 
-PROMPT_EOL_MARK='%K{red} %k'   # mark the missing \n at the end of a comand output with a red block
-jit-source ~/dotfiles/instant-zsh.zsh
-instant-zsh-pre "%B%39F${${(V)${(%):-%~}//\%/%%}//\//%b%31F/%B%39F}%b%f"$'\n'"%76F❯%f "
+jit ~/.zshrc
+jit ~/.zshenv
+
+if [[ -r /proc/version && "$(</proc/version)" == *Microsoft* ]]; then
+  export WSL=1
+  typeset -g MACHINE_ID=${(%):-%m}-wsl-${HOME:t}
+  export DISPLAY=:0
+  export WINDOWS_EDITOR='/mnt/c/Program Files/Notepad++/notepad++.exe'
+  export WIN_TMPDIR="$(wslpath "${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %TMP%")%$'\r'}")"
+  export LIBGL_ALWAYS_INDIRECT=1
+else
+  export WSL=0
+  typeset -g MACHINE_ID=${(%):-%m}-linux-${HOME:t}
+fi
+
+export EDITOR=~/bin/redit
+export PAGER=less
+export GOPATH=$HOME/go
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+
+# This affects every invocation of `less`.
+#
+#   -i   case-insensitive search unless search string contains uppercase letters
+#   -R   color
+#   -F   exit if there is less than one page of content
+#   -X   keep content on screen after exit
+#   -M   show more info at the bottom prompt line
+#   -x4  tabs are 4 instead of 8
+export LESS=-iRFXMx4
+
+if (( $#commands[(i)lesspipe(|.sh)] )); then
+  export LESSOPEN="| /usr/bin/env $commands[(i)lesspipe(|.sh)] %s 2>&-"
+fi
+
+typeset -gaU cdpath fpath mailpath path
+path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
 
 fpath+=~/dotfiles/functions
 autoload -Uz ~/dotfiles/functions/*(.:t)
 autoload -Uz add-zsh-hook run-help zargs zmv zcp zln is-at-least
 
-# On every prompt, set terminal title to "user@host: cwd".
-function set-term-title() { print -n -- ${(%):-'\e]0;%n@%m: %~\a'} }
 add-zsh-hook precmd set-term-title
-set-term-title
 
 ZSH_HIGHLIGHT_MAXLENGTH=1024
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
@@ -34,18 +80,9 @@ else
   ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
 fi
 
-jit ~/.zshrc
-jit ~/.zshenv
-
-jit-source ~/dotfiles/functions.zsh
-
 path+=~/dotfiles/fzf/bin
 FZF_COMPLETION_TRIGGER=
 export FZF_DEFAULT_COMMAND='rg --files --hidden'
-
-jit-source /etc/zsh_command_not_found
-
-jit-source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 
 function late-init() {
   emulate -L zsh
@@ -91,6 +128,7 @@ if is-at-least 5.7.2 || [[ $ZSH_PATCHLEVEL =~ '^zsh-5\.7\.1-([0-9]+)-' && $match
   ZLE_RPROMPT_INDENT=0         # don't leave an empty space after right prompt
 fi
 
+PROMPT_EOL_MARK='%K{red} %k'   # mark the missing \n at the end of a comand output with a red block
 READNULLCMD=$PAGER             # use the default pager instead of `more`
 WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
@@ -134,4 +172,6 @@ setopt SHARE_HISTORY           # write and import history on every command
 
 jit-source ~/.zshrc-private || true
 
-instant-zsh-post
+# slow-init() { sleep 1; add-zsh-hook -d precmd slow-init }
+# add-zsh-hook precmd slow-init
+# sleep 1
