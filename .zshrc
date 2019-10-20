@@ -160,3 +160,5 @@ jit-source ~/.zshrc-private
 
 # Must be sourced after all widgets have been defined but before zsh-autosuggestions.
 jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh || true
+
+(( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
