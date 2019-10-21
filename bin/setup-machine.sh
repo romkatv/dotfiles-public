@@ -35,11 +35,11 @@ highlight-syntax=true
 draw-spaces=['space', 'tab', 'nbsp', 'leading', 'text', 'trailing']"
 
 # '1' if running under Windows Subsystem for Linux, '0' otherwise.
-readonly WSL=$(grep -q Microsoft /proc/version && echo 1 || echo 0)
+readonly WSL="$(grep -q Microsoft /proc/version && echo 1 || echo 0)"
 
 # Install a bunch of debian packages.
 function install_packages() {
-  local PACKAGES=(
+  local packages=(
     ascii
     bzip2
     build-essential
@@ -75,14 +75,14 @@ function install_packages() {
   )
 
   if [[ "$WSL" == 1 ]]; then
-    PACKAGES+=(dbus-x11)
+    packages+=(dbus-x11)
   else
-    PACKAGES+=(gnome-tweak-tool iotop)
+    packages+=(gnome-tweak-tool iotop)
   fi
 
   sudo apt update
   sudo apt upgrade -y
-  sudo apt install -y "${PACKAGES[@]}"
+  sudo apt install -y "${packages[@]}"
   sudo apt autoremove -y
 }
 
@@ -96,15 +96,15 @@ function change_shell() {
 function install_vscode() {
   [[ $WSL == 0 ]] || return 0
   [[ ! -f /usr/bin/code ]] || return 0
-  local VSCODE_DEB=$(mktemp)
-  curl -L 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$VSCODE_DEB"
-  sudo apt install "$VSCODE_DEB"
-  rm "$VSCODE_DEB"
+  local deb="$(mktemp)"
+  curl -L 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$deb"
+  sudo apt install "$deb"
+  rm "$deb"
 }
 
 function install_ripgrep() {
   local deb="$(mktemp)"
-  curl -fsSL 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb' > "$deb"
+  curl -fsSL 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb' >"$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
 }
@@ -118,13 +118,6 @@ function install_bat() {
 
 function install_fzf() {
   ~/dotfiles/fzf/install --bin
-}
-
-function install_bitwarden() {
-  [[ $WSL == 0 ]] || return 0
-  [[ ! -x ~/bin/bitwarden ]] || return 0
-  curl -fsSLo ~/bin/bitwarden 'https://vault.bitwarden.com/download/?app=desktop&platform=linux&variant=appimage'
-  chmod +x ~/bin/bitwarden
 }
 
 # Avoid clock snafu when dual-booting Windows and Linux.
@@ -143,17 +136,17 @@ tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0'
 }
 
 function win_install_fonts() {
-  local dst_dir
-  dst_dir=$(wslpath $(cmd.exe /c 'echo %LOCALAPPDATA%\Microsoft\Windows\Fonts' 2>/dev/null | sed 's/\r$//'))
+  local dst_dir="$(cmd.exe /c 'echo %LOCALAPPDATA%\Microsoft\Windows\Fonts' 2>/dev/null | sed 's/\r$//')"
+  dst_dir="$(wslpath "$dst_dir")"
   mkdir -p "$dst_dir"
   local src
   for src in "$@"; do
-    local file=$(basename "$src")
+    local file="$(basename "$src")"
     if [[ ! -f "$dst_dir/$file" ]]; then
       cp -f "$src" "$dst_dir/"
     fi
     local win_path
-    win_path=$(wslpath -w "$dst_dir/$file")
+    win_path="$(wslpath -w "$dst_dir/$file")"
     # Install font for the current user. It'll appear in "Font settings".
     reg.exe add                                                 \
       'HKCU\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts' \
@@ -164,7 +157,7 @@ function win_install_fonts() {
 # Install a decent monospace font.
 function install_fonts() {
   if [[ $WSL == 1 ]]; then
-    win_install_fonts "$HOME"/.local/share/fonts/NerdFonts/*.ttf
+    win_install_fonts ~/.local/share/fonts/NerdFonts/*.ttf
   fi
 }
 
@@ -215,7 +208,6 @@ install_vscode
 install_ripgrep
 install_bat
 install_fzf
-# install_bitwarden
 install_fonts
 
 fix_clock
