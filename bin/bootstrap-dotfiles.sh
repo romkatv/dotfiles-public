@@ -82,7 +82,7 @@ function clone_repo() {
   trap "restore_files '$backup_dir'" INT TERM EXIT
 
   pushd "$HOME"
-  xargs -0 rm -f <<<"$files"
+  tr '\n' '\0' <<<"$files" | xargs -0 rm -f
   popd
 
   git clone --bare "$(get_repo_uri "$repo")" "$git_dir"
