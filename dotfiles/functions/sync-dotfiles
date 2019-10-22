@@ -36,7 +36,7 @@ function _sync-dotfiles-repo() {
     (( ! -d ~/.dotfiles-public )) || _sync-dotfiles-repo public
 
     (( ! -d ~/.dotfiles-private )) || {
-      [[ ! -f $HISTFILE ]] || {
+      [[ ! -f ${HISTFILE:-} ]] || {
         _sync-dotfiles-git private add $HISTFILE
         local s && s="$(_sync-dotfiles-git private status --porcelain $HISTFILE)"
         [[ -z $s ]] || _sync-dotfiles-git private commit -m 'fresh history' $HISTFILE
