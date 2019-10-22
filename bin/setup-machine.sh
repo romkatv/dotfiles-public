@@ -161,6 +161,13 @@ function install_fonts() {
   fi
 }
 
+function install_clean_tmp() {
+  sudo cp ~/bin/clean-tmp /usr/local/bin/clean-tmp-su
+  sudo chmod 755 /usr/local/bin/clean-tmp-su
+  sudo tee /etc/sudoers.d/"$USER" >/dev/null <<<"$USER ALL=(ALL) NOPASSWD: /usr/local/bin/clean-tmp-su"
+  sudo chmod 440 /etc/sudoers.d/"$USER"
+}
+
 function fix_dbus() {
   [[ $WSL == 1 ]] || return 0
   sudo dbus-uuidgen --ensure
@@ -209,6 +216,7 @@ install_ripgrep
 install_bat
 install_fzf
 install_fonts
+install_clean_tmp
 
 fix_clock
 fix_shm

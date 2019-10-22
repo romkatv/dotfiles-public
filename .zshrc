@@ -42,6 +42,7 @@ if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
   export WIN_TMPDIR="$(wslpath "${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c "echo %TMP%")%$'\r'}")"
   export LIBGL_ALWAYS_INDIRECT=1
   MACHINE_ID=${(%):-%m}-wsl-${HOME:t}
+  sudo /usr/local/bin/clean-tmp-su
 else
   export WSL=0
   MACHINE_ID=${(%):-%m}-linux-${HOME:t}
