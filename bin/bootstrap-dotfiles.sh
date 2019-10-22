@@ -18,8 +18,8 @@ function list_files() {
   set -eE
   local repo=$1
   local tmp
-  tmp=$(mktemp -d)
-  git clone "$(get_repo_uri "$repo")" "$tmp"
+  tmp="$(mktemp -d)"
+  git clone --depth=1 "$(get_repo_uri "$repo")" "$tmp"
   pushd "$tmp" &>/dev/null
   if ! git rev-parse --verify master &>/dev/null; then
     git checkout -b master
@@ -27,7 +27,7 @@ function list_files() {
     git push -u origin master
   fi
   local files
-  files=$(git ls-tree -r --name-only master)
+  files="$(git ls-tree -r --name-only master)"
   popd &>/dev/null
   rm -rf "$tmp"
   echo "$files"
@@ -76,7 +76,7 @@ function clone_repo() {
 
   local backup_dir="$HOME/$repo.original"
   local files
-  files=$(list_files "$repo")
+  files="$(list_files "$repo")"
   backup_files "$files" "$backup_dir"
 
   trap "restore_files '$backup_dir'" INT TERM EXIT
@@ -102,3 +102,8 @@ fi
 
 clone_repo dotfiles-public
 clone_repo dotfiles-private
+
+if [[ "$GITHUB_USERNAME" != romkatv ]]; then
+  git --git-dir="$HOME"/.dotfiles-public/.git --work-tree="$HOME" \
+    remote add upstream 'https://github.com/romkatv/dotfiles-public.git'
+fi
