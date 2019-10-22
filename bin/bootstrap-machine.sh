@@ -51,6 +51,9 @@ sudo apt install -y git curl
 bootstrap="$(curl -fsSL "https://raw.githubusercontent.com/$GITHUB_USERNAME/dotfiles-public/master/bin/bootstrap-dotfiles.sh")"
 bash -c "$bootstrap"
 
+sudo apt install -y zsh
+zsh ~/dotfiles/functions/sync-dotfiles
+
 bash ~/bin/setup-machine.sh
 
 if [[ -f ~/bin/setup-machine-private.sh ]]; then
