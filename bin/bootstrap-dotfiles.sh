@@ -11,7 +11,7 @@ if [[ -z "${GITHUB_USERNAME:-}" ]]; then
 fi
 
 function get_repo_uri() {
-  echo "git@github.com:$GITHUB_USER/$1.git"
+  echo "git@github.com:$GITHUB_USERNAME/$1.git"
 }
 
 function list_files() {
