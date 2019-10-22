@@ -48,7 +48,7 @@ END
 sudo apt autoremove -y
 
 sudo apt install -y git curl
-bootstrap="$(curl -fsSL "https://raw.githubusercontent.com/$GITHUB_USERNAME/dotfiles-public/master/bin/bootstrap-dotfiles.sh")"
+bootstrap="$(curl -fsSL "https://raw.githubusercontent.com/"$GITHUB_USERNAME"/dotfiles-public/master/bin/bootstrap-dotfiles.sh")"
 bash -c "$bootstrap"
 
 sudo apt install -y zsh
