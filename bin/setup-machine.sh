@@ -81,7 +81,7 @@ function install_packages() {
   fi
 
   sudo apt update
-  sudo apt upgrade -y
+  sudo bash -c 'DEBIAN_FRONTEND=noninteractive apt -o DPkg::options::=--force-confdef -o DPkg::options::=--force-confold upgrade -y'
   sudo apt install -y "${packages[@]}"
   sudo apt autoremove -y
 }
