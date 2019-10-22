@@ -57,7 +57,7 @@ zsh ~/dotfiles/functions/sync-dotfiles
 bash ~/bin/setup-machine.sh
 
 if [[ -f ~/bin/setup-machine-private.sh ]]; then
-  bash ~/bin/setup-machine-private.sh
+  bash ~/bin/bootstrap-machine-private.sh
 fi
 
 if [[ -t 0 ]] && grep -q Microsoft /proc/version; then
