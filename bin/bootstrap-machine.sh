@@ -31,15 +31,16 @@ if [[ ! -f ~/.ssh/id_rsa || ! -f ~/.ssh/id_rsa.pub ]]; then
   fi
 
   chmod 600 ~/.ssh/id_rsa
-  ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-  chmod 644 ~/.ssh/id_rsa.pub
 fi
 
-if [[ -z "${SSH_AGENT_PID:-}" || "$(ps -p "$SSH_AGENT_PID" -o comm=)" != "ssh-agent" ]]; then
-  ssh_agent="$(ssh-agent -st 20h)"
-  eval "$ssh_agent"
-fi
+ssh_agent="$(ssh-agent -st 20h)"
+eval "$ssh_agent"
+trap 'ssh-agent -k >/dev/null' INT TERM EXIT
 ssh-add ~/.ssh/id_rsa
+if [[ ! -e ~/.ssh/id_rsa.pub ]]; then
+  ssh-add -L >~/.ssh/id_rsa.pub
+  chmod 644 ~/.ssh/id_rsa.pub
+fi
 
 sudo apt update
 sudo bash <<END
