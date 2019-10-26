@@ -1,8 +1,5 @@
 emulate zsh
 
-function set-term-title() { [[ ! -t 1 ]] || print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' }
-set-term-title
-
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -12,6 +9,9 @@ path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
 
 fpath+=~/dotfiles/functions
 autoload -Uz ~/dotfiles/functions/*(.:t) run-help zmv zcp zln is-at-least add-zsh-hook
+
+function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' >$TTY }
+set-term-title
 add-zsh-hook precmd set-term-title
 
 function command_not_found_handler() {
@@ -162,4 +162,3 @@ jit-source ~/.zshrc-private
 # Must be sourced after all widgets have been defined but before zsh-autosuggestions.
 jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh || true
 
-(( ! ${+functions[p10k-instant-prompt-finalize]} )) || p10k-instant-prompt-finalize
