@@ -159,6 +159,5 @@ setopt SHARE_HISTORY           # write and import history on every command
 
 jit-source ~/.zshrc-private
 
-# Must be sourced after all widgets have been defined but before zsh-autosuggestions.
+# Must be sourced after all widgets have been defined.
 jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh || true
-
