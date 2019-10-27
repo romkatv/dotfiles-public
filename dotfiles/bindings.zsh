@@ -112,7 +112,7 @@
     zle || return
     local f
     for f in precmd $precmd_functions; do
-      (( $+functions[$f] )) && $f
+      (( $+functions[$f] )) && $f &>/dev/null
     done
     zle .reset-prompt && zle -R
   }
