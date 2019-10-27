@@ -9,17 +9,27 @@ shopt -s histappend
 shopt -s checkwinsize
 shopt -s globstar
 
-command -v lesspipe &>/dev/null && eval "$(SHELL=/bin/sh lesspipe)"
-command -v dircolors &>/dev/null && eval "$(dircolors -b)"
+if command -v lesspipe &>/dev/null; then
+  export LESSOPEN="| /usr/bin/env lesspipe %s 2>&-"
+fi
 
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
+alias diff='diff --color=auto'
+alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
+alias clang-format='clang-format -style=file'
+alias ls='ls --color=auto --group-directories-first'
+alias tree='tree -aC -I .git --dirsfirst'
+alias gedit='gedit &>/dev/null'
 
-if [ -f /usr/share/bash-completion/bash_completion ]; then
+alias x='xclip -selection clipboard -in'          # cut to clipboard
+alias v='xclip -selection clipboard -out'         # paste from clipboard
+alias c='xclip -selection clipboard -in -filter'  # copy clipboard
+
+alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/.git --work-tree="$HOME"'
+alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/.git --work-tree="$HOME"'
+
+if [[ -f /usr/share/bash-completion/bash_completion ]]; then
   source /usr/share/bash-completion/bash_completion
-elif [ -f /etc/bash_completion ]; then
+elif [[ -f /etc/bash_completion ]]; then
   source /etc/bash_completion
 fi
 
