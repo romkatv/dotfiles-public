@@ -109,7 +109,6 @@
 
   function redraw-prompt() {
     emulate -L zsh
-    zle || return
     local f
     for f in precmd $precmd_functions; do
       (( $+functions[$f] )) && $f &>/dev/null
@@ -155,6 +154,23 @@
   jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
   unfunction bindkey
 
+  # If NumLock is off, translate keys to make them appear the same as with NumLock on.
+  bindkey -s '\eOM' '^M'  # enter
+  bindkey -s '\eOk' '+'
+  bindkey -s '\eOm' '-'
+  bindkey -s '\eOj' '*'
+  bindkey -s '\eOo' '/'
+  bindkey -s '\eOX' '='
+
+  # If someone switches our terminal to application mode (smkx), translate keys to make
+  # them appear the same as in raw mode (rmkx).
+  bindkey -s '\eOH' '\e[H'  # home
+  bindkey -s '\eOF' '\e[F'  # end
+  bindkey -s '\eOA' '\e[A'  # up
+  bindkey -s '\eOB' '\e[B'  # down
+  bindkey -s '\eOD' '\e[D'  # left
+  bindkey -s '\eOC' '\e[C'  # right
+
   # Note: You can specify several codes separated by space. All of them will be bound.
   #
   # For example:
@@ -179,14 +195,14 @@
     Backspace     '^?'
     Delete        '\e[3~'
     Insert        '\e[2~'
-    Home          '\eOH \e[H'
-    End           '\eOF \e[F'
+    Home          '\e[H'
+    End           '\e[F'
     PageUp        '\e[5~ '
     PageDown      '\e[6~'
-    Up            '\eOA \e[A'
-    Left          '\eOD \e[D'
-    Down          '\eOB \e[B'
-    Right         '\eOC \e[C'
+    Up            '\e[A'
+    Down          '\e[B'
+    Left          '\e[D'
+    Right         '\e[C'
     ShiftTab      '\e[Z'
   )
 
