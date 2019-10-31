@@ -1,18 +1,12 @@
 #!/bin/bash
 
-function all_win() {
-  for f in "$@"; do
-    if ! wslpath -w "$f" &>/dev/null; then
-      return 1
-    fi
-  done
-}
+readonly np='/mnt/c/Program Files/Notepad++/notepad++.exe'
 
-if test "$WSL" -eq 1 && all_win "$@" && test -f "$WINDOWS_EDITOR"; then
-  nohup "$HOME"/bin/np -multiInst -notabbar -nosession "$@" &>/dev/null
-elif xprop -root &>/dev/null; then
+if [[ "$WSL" == 1 && ($# == 1 && "$1" == /mnt/?/* || $# == 0) && -x "$np" ]] && win_path="$(wslpath -w "$1")"; then
+  "$np" -multiInst -notabbar -nosession "$win_path" &>/dev/null
+elif command -v gedit &>/dev/null && command -v xprop &>/dev/null && xprop -root &>/dev/null; then
   # Have X server at $DISPLAY.
-  nohup gedit --wait "$@" &>/dev/null
+  gedit --wait "$@" &>/dev/null
 else
   nano "$@"
 fi
