@@ -10,9 +10,15 @@ path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
 fpath+=~/dotfiles/functions
 autoload -Uz ~/dotfiles/functions/*(.:t) run-help zmv zcp zln is-at-least add-zsh-hook
 
-function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' >$TTY }
-set-term-title
-(( BENCH )) || add-zsh-hook precmd set-term-title
+if (( BENCH )); then
+  print -rn -- $'\e]0;BENCH\a' >$TTY
+else
+  function set-term-title-precmd() { print -rn -- $'\e]0;'${(V%):-'%~'}$'\a' >$TTY }
+  function set-term-title-preexec() { print -rn -- $'\e]0;'${(V%)1}$'\a' >$TTY }
+  add-zsh-hook preexec set-term-title-preexec
+  add-zsh-hook precmd set-term-title-precmd
+  set-term-title-precmd
+fi
 
 function command_not_found_handler() {
   emulate -L zsh
