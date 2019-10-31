@@ -98,7 +98,7 @@ function install_vscode() {
   [[ ! -f /usr/bin/code ]] || return 0
   local deb="$(mktemp)"
   curl -L 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$deb"
-  sudo apt install "$deb"
+  sudo dpkg -i "$deb"
   rm "$deb"
 }
 
