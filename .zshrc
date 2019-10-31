@@ -12,7 +12,7 @@ autoload -Uz ~/dotfiles/functions/*(.:t) run-help zmv zcp zln is-at-least add-zs
 
 function set-term-title() { print -rn -- $'\e]0;'${(V%):-'%n@%m: %~'}$'\a' >$TTY }
 set-term-title
-add-zsh-hook precmd set-term-title
+(( BENCH )) || add-zsh-hook precmd set-term-title
 
 function command_not_found_handler() {
   emulate -L zsh
@@ -109,7 +109,23 @@ zle_highlight=('paste:none')
 (( $+aliases[run-help] )) && unalias run-help
 jit-source ~/dotfiles/aliases.zsh
 
-jit-source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+if (( BENCH )); then
+  jit-source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+  function bench() {
+    emulate -L zsh
+    local on_done
+    if (( $+commands[gsettings] )); then
+      gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 1 || return
+      on_done=_bench_restore_key_repeat_interval
+      function _bench_restore_key_repeat_interval() {
+        gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
+      }
+    fi
+    zsh-prompt-benchmark ${1:-2} ${2:-2} $on_done
+  }
+else
+  jit-source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+fi
 
 if is-at-least 5.7.2 || [[ $ZSH_PATCHLEVEL =~ '^zsh-5\.7\.1-([0-9]+)-' && $match[1] -ge 50 ]]; then
   ZLE_RPROMPT_INDENT=0         # don't leave an empty space after right prompt
@@ -160,4 +176,6 @@ setopt SHARE_HISTORY           # write and import history on every command
 jit-source ~/.zshrc-private
 
 # Must be sourced after all widgets have been defined.
-jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh || true
+(( BENCH )) || jit-source ~/dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+
+true
