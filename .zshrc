@@ -81,7 +81,7 @@ function jit-source() {
   source $1
 }
 
-umask 0002
+umask 0022
 ulimit -c unlimited
 
 jit ~/.zshrc

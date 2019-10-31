@@ -74,7 +74,7 @@ function install_packages() {
     zsh
   )
 
-  if [[ "$WSL" == 1 ]]; then
+  if (( WSL )); then
     packages+=(dbus-x11)
   else
     packages+=(gnome-tweak-tool iotop)
@@ -94,24 +94,31 @@ function change_shell() {
 
 # Install Visual Studio Code.
 function install_vscode() {
-  [[ $WSL == 0 ]] || return 0
-  [[ ! -f /usr/bin/code ]] || return 0
-  local deb="$(mktemp)"
-  curl -L 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$deb"
+  (( !WSL )) || return 0
+  ! command -v code &>/dev/null || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSL 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
 }
 
 function install_ripgrep() {
-  local deb="$(mktemp)"
-  curl -fsSL 'https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb' >"$deb"
+  local v="11.0.2"
+  ! command -v rg &>/dev/null || [[ "$(rg --version)" != *" $v "* ]] || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${v}/ripgrep_${v}_amd64.deb" >"$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
 }
 
 function install_bat() {
-  local deb="$(mktemp)"
-  curl -fsSL 'https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_amd64.deb' > "$deb"
+  local v="0.12.1"
+  ! command -v bat &>/dev/null || [[ "$(bat --version)" != *" $v" ]] || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${v}/bat_${v}_amd64.deb" > "$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
 }
@@ -123,13 +130,13 @@ function install_fzf() {
 # Avoid clock snafu when dual-booting Windows and Linux.
 # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
 function fix_clock() {
-  [[ $WSL == 0 ]] || return 0
+  (( !WSL )) || return 0
   timedatectl set-local-rtc 1 --adjust-system-clock
 }
 
 # Set the shared memory size limit to 64GB (the default is 32GB).
 function fix_shm() {
-  [[ $WSL == 0 ]] || return 0
+  (( !WSL )) || return 0
   ! grep -qF '# My custom crap' /etc/fstab || return 0
   sudo tee -a /etc/fstab >/dev/null <<<'# My custom crap
 tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0'
@@ -156,9 +163,7 @@ function win_install_fonts() {
 
 # Install a decent monospace font.
 function install_fonts() {
-  if [[ $WSL == 1 ]]; then
-    win_install_fonts ~/.local/share/fonts/NerdFonts/*.ttf
-  fi
+  (( !WSL )) || win_install_fonts ~/.local/share/fonts/NerdFonts/*.ttf
 }
 
 function install_clean_tmp() {
@@ -169,7 +174,7 @@ function install_clean_tmp() {
 }
 
 function fix_dbus() {
-  [[ $WSL == 1 ]] || return 0
+  (( WSL )) || return 0
   sudo dbus-uuidgen --ensure
 }
 
@@ -188,19 +193,17 @@ function with_dbus() {
 
 # Set preferences for various applications.
 function set_preferences() {
-  if [[ $WSL == 0 ]]; then
-    # It doesn't work on WSL.
+  if (( !WSL )); then
     gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS NF 11'
   fi
-  if [[ "${DISPLAY+X}" == "" ]]; then
+  if [[ -z "${DISPLAY+X}" ]]; then
     export DISPLAY=:0
   fi
-  if ! xprop -root &>/dev/null; then
-    # No X server at $DISPLAY.
-    return
+  if xprop -root &>/dev/null; then
+    # Have X server at $DISPLAY.
+    with_dbus dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
+    with_dbus dconf load '/org/gnome/meld/' <<<"$MELD_PREFERENCES"
   fi
-  with_dbus dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
-  with_dbus dconf load '/org/gnome/meld/' <<<"$MELD_PREFERENCES"
 }
 
 if [[ "$(id -u)" == 0 ]]; then
