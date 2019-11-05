@@ -124,7 +124,7 @@ function install_packages() {
   if (( WSL )); then
     packages+=(dbus-x11)
   else
-    packages+=(gnome-tweak-tool iotop)
+    packages+=(gnome-tweak-tool iotop tilix)
   fi
 
   sudo apt update
@@ -242,6 +242,7 @@ function with_dbus() {
 function set_preferences() {
   if (( !WSL )); then
     gsettings set org.gnome.desktop.interface monospace-font-name 'MesloLGS NF 11'
+    sudo update-alternatives --set x-terminal-emulator /usr/bin/tilix.wrapper
   fi
   if [[ -z "${DISPLAY+X}" ]]; then
     export DISPLAY=:0
@@ -250,7 +251,9 @@ function set_preferences() {
     # Have X server at $DISPLAY.
     with_dbus dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
     with_dbus dconf load '/org/gnome/meld/' <<<"$MELD_PREFERENCES"
-    with_dbus dconf load '/com/gexperts/Tilix/' <<<"$TILIX_PREFERENCES"
+    if (( !WSL )); then
+      with_dbus dconf load '/com/gexperts/Tilix/' <<<"$TILIX_PREFERENCES"
+    fi
   fi
 }
 
