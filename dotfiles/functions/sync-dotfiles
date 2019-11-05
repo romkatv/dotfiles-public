@@ -33,9 +33,9 @@ function _sync-dotfiles-repo() {
   {
     pushd ~
 
-    (( ! -d ~/.dotfiles-public )) || _sync-dotfiles-repo public
+    [[ ! -d ~/.dotfiles-public ]] || _sync-dotfiles-repo public
 
-    (( ! -d ~/.dotfiles-private )) || {
+    [[ ! -d ~/.dotfiles-private ]] || {
       [[ ! -f ${HISTFILE:-} ]] || {
         _sync-dotfiles-git private add $HISTFILE
         local s && s="$(_sync-dotfiles-git private status --porcelain $HISTFILE)"
