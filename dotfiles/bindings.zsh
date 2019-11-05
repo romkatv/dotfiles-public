@@ -97,8 +97,8 @@ function fzf-history-widget-unique() {
   selected="$(
     fc -rl 1 |
     awk '!_[substr($0, 8)]++' |
-    $(__fzfcmd) +m -n2..,.. --tiebreak=index --height=80% --preview-window=down:50% \
-      --query=$LBUFFER --preview=$preview )"
+    $(__fzfcmd) +m -n2..,.. --tiebreak=index --height=80% --preview-window=down:25%:wrap \
+      --query=$LBUFFER --preview=$preview --bind=alt-j:preview-down,alt-k:preview-up)"
   local ret=$?
   [[ -n "$selected" ]] && zle vi-fetch-history -n $selected
   zle .reset-prompt
