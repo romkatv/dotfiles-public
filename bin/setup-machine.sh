@@ -34,6 +34,50 @@ insert-spaces-instead-of-tabs=false
 highlight-syntax=true
 draw-spaces=['space', 'tab', 'nbsp', 'leading', 'text', 'trailing']"
 
+readonly TILIX_PREFERENCES="[profiles/2b7c4080-0ddd-46c5-8f23-563fd3ba789d]
+foreground-color='#EEEEEEEEECEC'
+rewrap-on-resize=true
+visible-name='Default'
+palette=['#000000', '#CC0000', '#4D9A05', '#C3A000', '#3464A3', '#754F7B', '#05979A', '#D3D6CF', '#545652', '#EF2828', '#89E234', '#FBE84F', '#729ECF', '#AC7EA8', '#34E2E2', '#EDEDEB']
+bold-is-bright=false
+default-size-columns=174
+default-size-rows=45
+show-scrollbar=false
+use-system-font=true
+use-custom-command=false
+use-theme-colors=false
+exit-action='close'
+scrollback-lines=1000000
+
+[/]
+quake-specific-monitor=0
+unsafe-paste-alert=false
+tab-position='top'
+use-overlay-scrollbar=false
+sidebar-on-right=false
+terminal-title-style='none'
+theme-variant='dark'
+session-name='\${title}'
+use-tabs=true
+new-instance-mode='new-window'
+enable-wide-handle=false
+app-title='\${activeTerminalTitle}'
+quake-hide-headerbar=false
+quake-window-position='top'
+warn-vte-config-issue=false
+control-click-titlebar=true
+terminal-title-show-when-single=true
+window-style='disable-csd-hide-toolbar'
+
+[keybindings]
+session-add-right='<Alt>r'
+session-resize-terminal-up='<Shift>Up'
+session-resize-terminal-left='<Shift>Left'
+session-add-down='<Alt>d'
+session-resize-terminal-down='<Shift>Down'
+session-resize-terminal-right='<Shift>Right'
+"
+
 # '1' if running under Windows Subsystem for Linux, '0' otherwise.
 readonly WSL="$(grep -q Microsoft /proc/version && echo 1 || echo 0)"
 
@@ -203,6 +247,7 @@ function set_preferences() {
     # Have X server at $DISPLAY.
     with_dbus dconf load '/org/gnome/gedit/preferences/' <<<"$GEDIT_PREFERENCES"
     with_dbus dconf load '/org/gnome/meld/' <<<"$MELD_PREFERENCES"
+    with_dbus dconf load '/com/gexperts/Tilix/' <<<"$TILIX_PREFERENCES"
   fi
 }
 
