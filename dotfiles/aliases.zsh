@@ -1,7 +1,7 @@
 alias diff='diff --color=auto'
 alias grep='grep --color=auto --exclude-dir={.bzr,CVS,.git,.hg,.svn}'
 alias clang-format='clang-format -style=file'
-alias ls='ls --color=auto --group-directories-first'
+alias ls='ls --color=auto --group-directories-first -A'
 alias tree='tree -aC -I .git --dirsfirst'
 alias gedit='gedit &>/dev/null'
 
