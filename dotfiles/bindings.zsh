@@ -153,45 +153,45 @@ jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
 unfunction bindkey
 
 # If NumLock is off, translate keys to make them appear the same as with NumLock on.
-bindkey -s '\eOM' '^M'  # enter
-bindkey -s '\eOk' '+'
-bindkey -s '\eOm' '-'
-bindkey -s '\eOj' '*'
-bindkey -s '\eOo' '/'
-bindkey -s '\eOX' '='
+bindkey -s '^[OM' '^M'  # enter
+bindkey -s '^[Ok' '+'
+bindkey -s '^[Om' '-'
+bindkey -s '^[Oj' '*'
+bindkey -s '^[Oo' '/'
+bindkey -s '^[OX' '='
 
 # If someone switches our terminal to application mode (smkx), translate keys to make
 # them appear the same as in raw mode (rmkx).
-bindkey -s '\eOH' '\e[H'  # home
-bindkey -s '\eOF' '\e[F'  # end
-bindkey -s '\eOA' '\e[A'  # up
-bindkey -s '\eOB' '\e[B'  # down
-bindkey -s '\eOD' '\e[D'  # left
-bindkey -s '\eOC' '\e[C'  # right
+bindkey -s '^[OH' '^[[H'  # home
+bindkey -s '^[OF' '^[[F'  # end
+bindkey -s '^[OA' '^[[A'  # up
+bindkey -s '^[OB' '^[[B'  # down
+bindkey -s '^[OD' '^[[D'  # left
+bindkey -s '^[OC' '^[[C'  # right
 
 bindkey '^?'      backward-delete-char                # bs         delete one char backward
-bindkey '\e[3~'   delete-char                         # delete     delete one char forward
-bindkey '\e[H'    beginning-of-line                   # home       go to the beginning of line
-bindkey '\e[F'    end-of-line                         # end        go to the end of line
-bindkey '\e[1;5C' forward-word                        # ctrl+right go forward one word
-bindkey '\e[1;5D' backward-word                       # ctrl+left  go backward one word
+bindkey '^[[3~'   delete-char                         # delete     delete one char forward
+bindkey '^[[H'    beginning-of-line                   # home       go to the beginning of line
+bindkey '^[[F'    end-of-line                         # end        go to the end of line
+bindkey '^[[1;5C' forward-word                        # ctrl+right go forward one word
+bindkey '^[[1;5D' backward-word                       # ctrl+left  go backward one word
 bindkey '^H'      backward-kill-word                  # ctrl+bs    delete previous word
-bindkey '\e[3;5~' kill-word                           # ctrl+del   delete next word
+bindkey '^[[3;5~' kill-word                           # ctrl+del   delete next word
 bindkey '^J'      backward-kill-line                  # ctrl+j     delete everything before cursor
-bindkey '\e[D'    backward-char                       # left       move cursor one char backward
-bindkey '\e[C'    forward-char                        # right      move cursor one char forward
-bindkey '\e[A'    up-line-or-beginning-search-local   # up         prev command in local history
-bindkey '\e[B'    down-line-or-beginning-search-local # down       next command in local history
-bindkey '\e[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
-bindkey '\e[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
+bindkey '^[[D'    backward-char                       # left       move cursor one char backward
+bindkey '^[[C'    forward-char                        # right      move cursor one char forward
+bindkey '^[[A'    up-line-or-beginning-search-local   # up         prev command in local history
+bindkey '^[[B'    down-line-or-beginning-search-local # down       next command in local history
+bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
+bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
 bindkey '^ '      my-expand-alias                     # ctrl+space expand alias
-bindkey '\e[Z'    reverse-menu-complete               # shift+tab  previous in completion menu
+bindkey '^[[Z'    reverse-menu-complete               # shift+tab  previous in completion menu
 bindkey '^E'      edit-command-line                   # ctrl+e     edit command line in $EDITOR
-bindkey '\e[1;3D' cd-back                             # alt+left   cd into the previous directory
-bindkey '\e[1;3C' cd-forward                          # alt+right  cd into the next directory
-bindkey '\e[1;3A' cd-up                               # alt+up     cd ..
+bindkey '^[[1;3D' cd-back                             # alt+left   cd into the previous directory
+bindkey '^[[1;3C' cd-forward                          # alt+right  cd into the next directory
+bindkey '^[[1;3A' cd-up                               # alt+up     cd ..
 bindkey '\t'      expand-or-complete-with-dots        # tab        completion with '...'
-bindkey '\e[1;3B' fzf-cd-widget                       # alt+down   fzf cd
+bindkey '^[[1;3B' fzf-cd-widget                       # alt+down   fzf cd
 bindkey '^T'      fzf-completion                      # ctrl+t     fzf completion
 bindkey '^R'      fzf-history-widget-unique           # ctrl+r     fzf history
 
