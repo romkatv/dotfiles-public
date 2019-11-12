@@ -104,7 +104,11 @@ WORDCHARS=''                   # only alphanums make up words in word-based zle 
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
 
 if (( ${THEME:-1} )); then
-  jit-source ~/.p10k.zsh
+  if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
+    jit-source ~/.p10k.zsh
+  else
+    jit-source ~/.p10k-portable.zsh
+  fi
   if [[ -d ~/powerlevel10k ]]; then
     jit-source ~/powerlevel10k/powerlevel10k.zsh-theme
   else
