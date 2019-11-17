@@ -3,7 +3,7 @@
 emulate -L zsh
 
 if (( ! WSL )); then
-  echo -E - "win_env: only works on WSL" >&2
+  echo -E - "win-env: only works on WSL" >&2
   return 1
 fi
 
