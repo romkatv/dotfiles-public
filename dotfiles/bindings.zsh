@@ -91,18 +91,18 @@ fi
 #   - `awk` to remove duplicate
 #   - preview pane with syntax highlighting
 function fzf-history-widget-unique() {
-  local selected
-  setopt localoptions noglobsubst noposixbuiltins pipefail 2> /dev/null
+  emulate -L zsh -o pipefail
   local preview='echo -E {} | cut -c8- | xargs -0 echo -e | bat -l bash --color always -pp'
+  local selected
   selected="$(
     fc -rl 1 |
     awk '!_[substr($0, 8)]++' |
-    $(__fzfcmd) +m -n2..,.. --tiebreak=index --height=80% --preview-window=down:25%:wrap \
+    fzf +m -n2..,.. --tiebreak=index --height=80% --preview-window=down:25%:wrap \
       --query=$LBUFFER --preview=$preview --bind=alt-j:preview-down,alt-k:preview-up)"
   local ret=$?
   [[ -n "$selected" ]] && zle vi-fetch-history -n $selected
   zle .reset-prompt
-  return $ret
+  return ret
 }
 
 function redraw-prompt() {
@@ -168,6 +168,10 @@ bindkey -s '^[OA' '^[[A'  # up
 bindkey -s '^[OB' '^[[B'  # down
 bindkey -s '^[OD' '^[[D'  # left
 bindkey -s '^[OC' '^[[C'  # right
+
+# TTY sends different key codes. Translate them to regular.
+bindkey -s '^[[1~' '^[[H'  # home
+bindkey -s '^[[4~' '^[[F'  # end
 
 bindkey '^?'      backward-delete-char                # bs         delete one char backward
 bindkey '^[[3~'   delete-char                         # delete     delete one char forward
