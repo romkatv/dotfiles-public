@@ -103,12 +103,48 @@ READNULLCMD=$PAGER             # use the default pager instead of `more`
 WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
 
+function _dotfiles-precmd() {
+  if [[ ${(%):-%/} == ~ ]]; then
+    export GIT_DIR=~/.dotfiles-${DOTFILES:-public}/.git
+    export GIT_WORK_TREE=~
+  else
+    unset GIT_DIR
+    unset GIT_WORK_TREE
+  fi
+}
+add-zsh-hook precmd _dotfiles-precmd
+
+function prompt_git_dir() {
+  [[ -n $GIT_DIR ]] || return
+  local repo=${${GIT_DIR:h:t}//\%/%%}
+  local fg=196
+  case $repo in
+    .dotfiles-public)
+      repo=".public"
+      fg=227
+    ;;
+    .dotfiles-private)
+      repo=".private"
+      fg=087
+    ;;
+  esac
+  p10k segment -b 0 -f $fg -t $repo
+}
+
 if (( ${THEME:-1} )); then
   if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
     jit-source ~/.p10k.zsh
   else
     jit-source ~/.p10k-portable.zsh
   fi
+  () {
+    local -i nl=POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[(i)newline]
+    if (( nl <= $#POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS )); then
+      POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[nl]=(git_dir newline)
+    else
+      POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(git_dir)
+    fi
+  }
   if [[ -d ~/powerlevel10k ]]; then
     jit-source ~/powerlevel10k/powerlevel10k.zsh-theme
   else

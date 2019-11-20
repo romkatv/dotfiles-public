@@ -132,6 +132,15 @@ function cd-back() { cd-rotate +1 }
 function cd-forward() { cd-rotate -0 }
 function cd-up() { cd .. && redraw-prompt }
 
+function toggle-dotfiles() {
+  if [[ ${DOTFILES:-public} == public ]]; then
+    DOTFILES=private
+  else
+    DOTFILES=public
+  fi
+  redraw-prompt
+}
+
 zle -N edit-command-line
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
@@ -143,6 +152,7 @@ zle -N cd-back
 zle -N cd-forward
 zle -N cd-up
 zle -N fzf-history-widget-unique
+zle -N toggle-dotfiles
 
 fzf_default_completion=expand-or-complete-with-dots
 
@@ -198,6 +208,7 @@ bindkey '\t'      expand-or-complete-with-dots        # tab        completion wi
 bindkey '^[[1;3B' fzf-cd-widget                       # alt+down   fzf cd
 bindkey '^T'      fzf-completion                      # ctrl+t     fzf completion
 bindkey '^R'      fzf-history-widget-unique           # ctrl+r     fzf history
+bindkey '^P'      toggle-dotfiles                     # ctrl+p     toggle public/private dotfiles
 
 typeset -g ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
 typeset -g ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
