@@ -22,6 +22,7 @@ function clone_repo() {
 
   git --git-dir="$git_dir" init
   git --git-dir="$git_dir" config core.bare false
+  git --git-dir="$git_dir" config status.showuntrackedfiles no
   git --git-dir="$git_dir" remote add origin "$uri"
   git --git-dir="$git_dir" fetch
   git --git-dir="$git_dir" reset origin/master
