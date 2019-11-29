@@ -103,15 +103,13 @@ READNULLCMD=$PAGER             # use the default pager instead of `more`
 WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
 
-function _dotfiles-precmd() {
+function _dotfiles-chpwd() {
   emulate -L zsh
-  if [[ ${(%):-%~} == '~' && -n $DOTFILES ]]; then
-    export GIT_DIR=~/.dotfiles-$DOTFILES
-  else
-    unset GIT_DIR
-  fi
+  [[ -z $DOTFILES ]] && return
+  [[ ${(%):-%~} == '~' ]] && export GIT_DIR=~/.dotfiles-$DOTFILES || unset GIT_DIR
 }
-add-zsh-hook precmd _dotfiles-precmd
+add-zsh-hook precmd _dotfiles-chpwd
+unset GIT_DIR
 
 function prompt_git_dir() {
   emulate -L zsh

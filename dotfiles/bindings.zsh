@@ -133,6 +133,7 @@ function cd-forward() { cd-rotate -0 }
 function cd-up() { cd .. && redraw-prompt }
 
 function toggle-dotfiles() {
+  unset GIT_DIR
   case $DOTFILES in
     '')      DOTFILES=public;;
     public)  DOTFILES=private;;
