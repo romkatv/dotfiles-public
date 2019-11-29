@@ -53,6 +53,7 @@ jit ~/.zshenv
 if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
   export WSL=1
   export DISPLAY=:0
+  export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
   sudo /usr/local/bin/clean-tmp-su
 else
