@@ -74,7 +74,7 @@ These steps need to be done once per Windows installation. You don't need to rep
     - Uncheck the rest.
   - Tab *Font*:
     - Set font to *MesloLGS NF*.
-    - Set *Size* to 24.
+    - Set *Size* to 20.
   - Tab *Layout*:
     - Set *Screen Buffer Size > Height* to 9999.
     - Check *Wrap text output on resize*.
