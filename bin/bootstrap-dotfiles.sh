@@ -16,7 +16,7 @@ function clone_repo() {
   local uri="git@github.com:$GITHUB_USERNAME/$repo.git"
 
   if [[ -e "$git_dir" ]]; then
-    echo "Error: git directory already exists: $git_dir" >&2
+    rm -rf "$git_dir"
     return 1
   fi
 
