@@ -88,6 +88,7 @@ readonly WSL="$(grep -q Microsoft /proc/version && echo 1 || echo 0)"
 function install_packages() {
   local packages=(
     ascii
+    autoconf
     bzip2
     build-essential
     clang-format
@@ -103,7 +104,9 @@ function install_packages() {
     htop
     jq
     lftp
+    libncurses-dev
     libxml2-utils
+    man
     meld
     nano
     p7zip-full
@@ -117,6 +120,7 @@ function install_packages() {
     x11-utils
     xsel
     xz-utils
+    yodl
     zip
     zsh
   )
@@ -135,8 +139,11 @@ function install_packages() {
 
 # If this user's login shell is not already "zsh", attempt to switch.
 function change_shell() {
-  [[ "$SHELL" != */zsh ]] || return 0
-  chsh -s "$(grep -E '/zsh$' /etc/shells | tail -1)"
+  local shell=/usr/local/bin/zsh
+  [[ -x "$shell" ]] || shell=/bin/zsh
+  [[ -x "$shell" ]]
+  [[ "$SHELL" != "$shell" ]] || return 0
+	chsh -s "$shell" || chsh -s "$shell" || chsh -s "$shell" || return
 }
 
 # Install Visual Studio Code.
@@ -172,6 +179,25 @@ function install_bat() {
 
 function install_fzf() {
   ~/dotfiles/fzf/install --bin
+}
+
+function install_zsh() {
+  local v="zsh-5.7.1-173-g8962a40"
+  if [[ -x /usr/local/bin/zsh ]]; then
+    [[ "$(/usr/local/bin/zsh -c 'typeset ZSH_PATCHLEVEL')" != "$v" ]] || return 0
+  fi
+  local repo
+  tmp="$(mktemp -d)"
+  git clone -b fix-winchanged 'https://github.com/romkatv/zsh.git' "$tmp"
+  pushd "$tmp"
+  ./Util/preconfig
+  ./configure
+  sudo make -j 20 install
+  popd
+  sudo rm -rf "$tmp"
+  if ! grep -qE '^/usr/local/bin/zsh$' /etc/shells; then
+    sudo tee -a /etc/shells <<</usr/local/bin/zsh >/dev/null
+  fi
 }
 
 # Avoid clock snafu when dual-booting Windows and Linux.
@@ -279,6 +305,7 @@ fix_gcc
 
 set_preferences
 
+install_zsh
 change_shell
 
 echo SUCCESS
