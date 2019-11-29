@@ -118,18 +118,8 @@ function prompt_git_dir() {
   [[ -n $GIT_DIR ]] || return
   local repo=${GIT_DIR:t}
   [[ $repo == .git ]] && repo=${GIT_DIR:h:t}
-  local fg=196
-  case $repo in
-    .dotfiles-public)
-      repo=".public"
-      fg=227
-    ;;
-    .dotfiles-private)
-      repo=".private"
-      fg=087
-    ;;
-  esac
-  p10k segment -b 0 -f $fg -t ${repo//\%/%%}
+  [[ $repo == .dotfiles-(public|private) ]] && repo=${repo#.dotfiles-}
+  p10k segment -b 0 -f 87 -t ${repo//\%/%%}
 }
 
 if (( ${THEME:-1} )); then
