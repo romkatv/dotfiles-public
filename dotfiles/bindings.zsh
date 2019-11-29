@@ -107,7 +107,12 @@ function fzf-history-widget-unique() {
 
 function redraw-prompt() {
   emulate -L zsh
-  local f
+  local chpwd=${1:-0} f
+  if (( chpwd )); then
+    for f in chpwd $chpwd_functions; do
+      (( $+functions[$f] )) && $f &>/dev/null
+    done
+  fi
   for f in precmd $precmd_functions; do
     (( $+functions[$f] )) && $f &>/dev/null
   done
@@ -120,17 +125,13 @@ function cd-rotate() {
     popd -q $1
   done
   if (( $#dirstack )); then
-    local f
-    for f in chpwd $chpwd_functions; do
-      (( $+functions[$f] )) && $f
-    done
-    redraw-prompt
+    redraw-prompt 1
   fi
 }
 
 function cd-back() { cd-rotate +1 }
 function cd-forward() { cd-rotate -0 }
-function cd-up() { cd .. && redraw-prompt }
+function cd-up() { cd .. && redraw-prompt 1 }
 
 function toggle-dotfiles() {
   emulate -L zsh
@@ -148,7 +149,7 @@ function toggle-dotfiles() {
       unset GIT_WORK_TREE
     ;;
   esac
-  redraw-prompt
+  redraw-prompt 0
 }
 
 zle -N edit-command-line
