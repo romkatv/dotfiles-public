@@ -16,8 +16,7 @@ function clone_repo() {
   local uri="git@github.com:$GITHUB_USERNAME/$repo.git"
 
   if [[ -e "$git_dir" ]]; then
-    rm -rf "$git_dir"
-    return 1
+    return 0
   fi
 
   git --git-dir="$git_dir" init
