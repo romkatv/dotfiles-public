@@ -7,7 +7,7 @@ if [[ -z "${GITHUB_USERNAME:-}" ]]; then
   exit 1
 fi
 
-umask 0002
+umask 0022
 
 if [[ ! -f ~/.ssh/id_rsa || ! -f ~/.ssh/id_rsa.pub ]]; then
   if ! grep -q Microsoft /proc/version 2>/dev/null; then
