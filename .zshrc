@@ -104,19 +104,20 @@ WORDCHARS=''                   # only alphanums make up words in word-based zle 
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
 
 function _dotfiles-precmd() {
-  if [[ ${(%):-%/} == ~ ]]; then
-    export GIT_DIR=~/.dotfiles-${DOTFILES:-public}/.git
-    export GIT_WORK_TREE=~
+  emulate -L zsh
+  if [[ ${(%):-%~} == '~' && -n $DOTFILES ]]; then
+    export GIT_DIR=~/.dotfiles-$DOTFILES
   else
     unset GIT_DIR
-    unset GIT_WORK_TREE
   fi
 }
 add-zsh-hook precmd _dotfiles-precmd
 
 function prompt_git_dir() {
+  emulate -L zsh
   [[ -n $GIT_DIR ]] || return
-  local repo=${${GIT_DIR:h:t}//\%/%%}
+  local repo=${GIT_DIR:t}
+  [[ $repo == .git ]] && repo=${GIT_DIR:h:t}
   local fg=196
   case $repo in
     .dotfiles-public)
@@ -128,7 +129,7 @@ function prompt_git_dir() {
       fg=087
     ;;
   esac
-  p10k segment -b 0 -f $fg -t $repo
+  p10k segment -b 0 -f $fg -t ${repo//\%/%%}
 }
 
 if (( ${THEME:-1} )); then
@@ -138,12 +139,8 @@ if (( ${THEME:-1} )); then
     jit-source ~/.p10k-portable.zsh
   fi
   () {
-    local -i nl=POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[(i)newline]
-    if (( nl <= $#POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS )); then
-      POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[nl]=(git_dir newline)
-    else
-      POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(git_dir)
-    fi
+    local -i vcs=POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)vcs]
+    (( vcs )) && POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs]=(git_dir vcs)
   }
   if [[ -d ~/powerlevel10k ]]; then
     jit-source ~/powerlevel10k/powerlevel10k.zsh-theme

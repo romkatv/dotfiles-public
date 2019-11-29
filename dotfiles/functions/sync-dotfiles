@@ -2,9 +2,7 @@ emulate -L zsh
 setopt err_return no_unset xtrace
 
 function _sync-dotfiles-git() {
-  local which=$1
-  shift
-  git --git-dir=$HOME/.dotfiles-$which/.git --work-tree=$HOME "$@"
+  git --git-dir=$HOME/.dotfiles-$1 "${@[2,-1]}"
 }
 
 function _sync-dotfiles-repo() {
@@ -15,7 +13,8 @@ function _sync-dotfiles-repo() {
     _sync-dotfiles-git $1 stash
   }
 
-  _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules
+  _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules ||
+    _sync-dotfiles-git $1 pull --no-recurse-submodules
 
   ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
     _sync-dotfiles-git $1 fetch upstream

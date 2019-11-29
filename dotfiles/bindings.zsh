@@ -133,11 +133,11 @@ function cd-forward() { cd-rotate -0 }
 function cd-up() { cd .. && redraw-prompt }
 
 function toggle-dotfiles() {
-  if [[ ${DOTFILES:-public} == public ]]; then
-    DOTFILES=private
-  else
-    DOTFILES=public
-  fi
+  case $DOTFILES in
+    '')      DOTFILES=public;;
+    public)  DOTFILES=private;;
+    private) DOTFILES=;;
+  esac
   redraw-prompt
 }
 
