@@ -110,7 +110,7 @@ function prompt_git_dir() {
   local repo=${GIT_DIR:t}
   [[ $repo == .git ]] && repo=${GIT_DIR:h:t}
   [[ $repo == .dotfiles-(public|private) ]] && repo=${repo#.dotfiles-}
-  p10k segment -b 0 -f 87 -t ${repo//\%/%%}
+  p10k segment -b 0 -f 208 -t ${repo//\%/%%}
 }
 
 if (( ${THEME:-1} )); then
