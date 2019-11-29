@@ -9,6 +9,15 @@ This needs to be done once per user.
 
 #### Set up dotfiles-private repo.
 - Go to https://github.com/new and create an empty `dotfiles-private` repo. Make it private.
+- Open the newly created repo in GitHub UI and click *Create new file*.
+  - Name: `.ssh/config`.
+  - Content:
+```text
+Host *
+  ServerAliveInterval 60
+  AddKeysToAgent yes
+```
+- Click *Commit new file* at the bottom.
 
 #### Set up ssh keys.
 - Generate a pair of ssh keys -- `rsa_id` and `rsa_id.pub` -- and add `rsa_id.pub` to github.com. See https://help.github.com/en/articles/connecting-to-github-with-ssh for details. Use a strong passphrase.
