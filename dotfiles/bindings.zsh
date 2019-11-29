@@ -133,11 +133,20 @@ function cd-forward() { cd-rotate -0 }
 function cd-up() { cd .. && redraw-prompt }
 
 function toggle-dotfiles() {
-  unset GIT_DIR
-  case $DOTFILES in
-    '')      DOTFILES=public;;
-    public)  DOTFILES=private;;
-    private) DOTFILES=;;
+  emulate -L zsh
+  case $GIT_DIR in
+    '')
+      export GIT_DIR=~/.dotfiles-public
+      export GIT_WORK_TREE=~
+    ;;
+    ~/.dotfiles-public)
+      export GIT_DIR=~/.dotfiles-private
+      export GIT_WORK_TREE=~
+    ;;
+    *)
+      unset GIT_DIR
+      unset GIT_WORK_TREE
+    ;;
   esac
   redraw-prompt
 }
