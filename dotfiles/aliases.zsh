@@ -5,8 +5,8 @@ alias ls='ls --color=auto --group-directories-first -A'
 alias tree='tree -aC -I .git --dirsfirst'
 alias gedit='gedit &>/dev/null'
 
-alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public'
-alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private'
+alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public --work-tree="$HOME"'
+alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private --work-tree="$HOME"'
 
 if (( WSL )); then
   hash -d r=/mnt/d/r
