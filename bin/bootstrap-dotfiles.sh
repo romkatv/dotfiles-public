@@ -12,10 +12,10 @@ fi
 
 function clone_repo() {
   local repo=$1
-  local git_dir="$HOME/.$repo/"
+  local git_dir="$HOME/.$repo"
   local uri="git@github.com:$GITHUB_USERNAME/$repo.git"
 
-  if test -d "$git_dir"; then
+  if [[ -e "$git_dir" ]]; then
     echo "Error: git directory already exists: $git_dir" >&2
     return 1
   fi
