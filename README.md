@@ -79,8 +79,12 @@ These steps need to be done once per Windows installation. You don't need to rep
     - Set *Screen Buffer Size > Height* to 9999.
     - Check *Wrap text output on resize*.
     - Set window size and position the way you like it.
+  - Tab *Colors*:
+    - Click *Screen Background*, then click on the leftmost colored square (black) and set all color componets to `24`.
   - Tab *Terminal*:
+    - Set *Cursor Shape* to *Solid Box*.
     - Check *Disable Scroll-Forward*.
+    - Check *Use Separate Background* and set all its color components to `0`.
 
 ### Maintenance
 Run this command occasionally.
