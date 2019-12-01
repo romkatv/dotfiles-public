@@ -68,6 +68,7 @@ These steps need to be done once per Windows installation. You don't need to rep
 
 - Click *Start > Ubuntu*.
 - Pin *Ubuntu* to taskbar.
+- Position and resize the window to your liking.
 - Open *Properties* in the menu of *Ubuntu* and make the following changes:
   - Tab *Options*:
     - Check *Quick Edit Mode*, *Use Ctrl+Shift+C/V as Copy/Paste*, *Enable line wrapping selection* and *Extended text selection keys*.
@@ -78,7 +79,7 @@ These steps need to be done once per Windows installation. You don't need to rep
   - Tab *Layout*:
     - Set *Screen Buffer Size > Height* to 9999.
     - Check *Wrap text output on resize*.
-    - Set window size and position the way you like it.
+    - Uncheck *Let system position window*.
   - Tab *Colors*:
     - Click *Screen Background*, then click on the leftmost colored square (black) and set all color componets to `24`.
   - Tab *Terminal*:
