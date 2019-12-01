@@ -139,11 +139,14 @@ function install_packages() {
 
 # If this user's login shell is not already "zsh", attempt to switch.
 function change_shell() {
-  local shell=/usr/local/bin/zsh
-  [[ -x "$shell" ]] || shell=/bin/zsh
-  [[ -x "$shell" ]]
-  [[ "$SHELL" != "$shell" ]] || return 0
-	chsh -s "$shell" || chsh -s "$shell" || chsh -s "$shell" || return
+  local current
+  current="$(getent passwd $USER | cut -d: -f7)"
+  local new=/usr/local/bin/zsh
+  [[ -x "$new" ]] || new=/bin/zsh
+  [[ -x "$new" ]]
+
+  [[ "$current" != "$new" ]] || return 0
+	chsh -s "$new" || chsh -s "$new" || chsh -s "$new" || return
 }
 
 # Install Visual Studio Code.
