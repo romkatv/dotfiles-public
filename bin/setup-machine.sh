@@ -184,7 +184,7 @@ function install_fzf() {
 function install_zsh() {
   local v="zsh-5.7.1-173-g8962a40"
   if [[ -x /usr/local/bin/zsh ]]; then
-    [[ "$(/usr/local/bin/zsh -c 'typeset ZSH_PATCHLEVEL')" != "$v" ]] || return 0
+    [[ "$(/usr/local/bin/zsh -c 'echo $ZSH_PATCHLEVEL')" != "$v" ]] || return 0
   fi
   local repo
   tmp="$(mktemp -d)"
