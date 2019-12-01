@@ -1,4 +1,4 @@
-emulate -L zsh -o err_return -o no_unset -o pushd_silent
+emulate -L zsh -o err_return -o no_unset -o pushd_silent -o no_prompt_subst
 
 local merge=1 OPTIND OPTARG
 while getopts ":hm" opt; do
@@ -36,12 +36,19 @@ function _sync-dotfiles-repo() {
     _sync-dotfiles-git $1 stash
   }
 
-  _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules ||
-    _sync-dotfiles-git $1 pull --no-recurse-submodules
+  _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules || {
+    print -Pr -- "%F{red}sync-dotfiles%f: failed to pull %Bdotfiles-$1%b" >&2
+    _sync-dotfiles-git $1 status
+    return 1
+  }
 
   (( ! merge )) || ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
     _sync-dotfiles-git $1 fetch upstream
-    _sync-dotfiles-git $1 merge upstream/master
+    _sync-dotfiles-git $1 merge --no-edit upstream/master || {
+      print -Pr -- "%F{red}sync-dotfiles%f: failed to merge upstream %Bdotfiles-$1%b" >&2
+      _sync-dotfiles-git $1 status
+      return 1
+    }
   }
 
   _sync-dotfiles-git $1 push
