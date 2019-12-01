@@ -1,5 +1,28 @@
-emulate -L zsh
-setopt err_return no_unset xtrace
+emulate -L zsh -o err_return -o no_unset -o pushd_silent
+
+local merge=1 OPTIND OPTARG
+while getopts ":hm" opt; do
+  case $opt in
+    *h)
+      print -r -- $'Usage: sync-dotfiles [{+|-}m]\nSynchronize local dotfiles with GitHub.'
+      return 0
+    ;;
+    \?) print -r -- "sync-dotfiles: invalid option: $OPTARG" >&2;            return 1;;
+    :)  print -r -- "sync-dotfiles: missing required argument: $OPTARG" >&2; return 1;;
+    m)  merge=0;;
+    +m) merge=1;;
+  esac
+done
+
+(( OPTIND > ARGC )) || {
+  print -r -- "sync-dotfiles: unexpected positional argument: ${*[OPTIND]}" >&2
+  return 1
+}
+
+[[ -z ${GIT_DIR:-} ]] || {
+  print -r -- "sync-dotfiles: unset GIT_DIR and retry" >&2
+  return 1
+}
 
 function _sync-dotfiles-git() {
   git --git-dir=$HOME/.dotfiles-$1 "${@[2,-1]}"
@@ -16,7 +39,7 @@ function _sync-dotfiles-repo() {
   _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules ||
     _sync-dotfiles-git $1 pull --no-recurse-submodules
 
-  ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
+  (( ! merge )) || ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
     _sync-dotfiles-git $1 fetch upstream
     _sync-dotfiles-git $1 merge upstream/master
   }
