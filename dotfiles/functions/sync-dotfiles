@@ -19,66 +19,50 @@ done
   return 1
 }
 
-[[ -z ${GIT_DIR:-} ]] || {
-  print -r -- "sync-dotfiles: unset GIT_DIR and retry" >&2
-  return 1
-}
-
-function _sync-dotfiles-git() {
-  git --git-dir=$HOME/.dotfiles-$1 "${@[2,-1]}"
-}
-
 function _sync-dotfiles-repo() {
-  local -i dirty
-  local s && s="$(_sync-dotfiles-git $1 status --porcelain --untracked-files=no)"
-  [[ -z $s ]] || {
-    dirty=1
-    _sync-dotfiles-git $1 stash
-  }
+  local repo=${${GIT_DIR:t}#.} dirty=0 s
+  s="$(git status --porcelain --untracked-files=no)"
+  [[ -z $s ]] || { dirty=1; git stash }
 
-  print -Pr -- "%F{yellow}sync-dotfiles%f: pulling %Bdotfiles-$1%b" >&2
-  _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules || {
-    print -Pr -- "%F{red}sync-dotfiles%f: failed to pull %Bdotfiles-$1%b" >&2
-    _sync-dotfiles-git $1 status
+  print -Pr -- "%F{yellow}sync-dotfiles%f: pulling %B$repo%b" >&2
+  git pull --rebase --no-recurse-submodules || {
+    print -Pr -- "%F{red}sync-dotfiles%f: failed to pull %B$repo%b" >&2
+    git status
     return 1
   }
 
-  (( ! merge )) || ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
-    print -Pr -- "%F{yellow}sync-dotfiles%f: merging upstream %Bdotfiles-$1%b" >&2
-    _sync-dotfiles-git $1 fetch upstream
-    _sync-dotfiles-git $1 merge --no-edit upstream/master || {
-      print -Pr -- "%F{red}sync-dotfiles%f: failed to merge upstream %Bdotfiles-$1%b" >&2
-      _sync-dotfiles-git $1 status
+  (( ! merge )) || ! git remote get-url upstream &>/dev/null || {
+    print -Pr -- "%F{yellow}sync-dotfiles%f: merging upstream %B$repo%b" >&2
+    git fetch upstream
+    git merge --no-edit upstream/master || {
+      print -Pr -- "%F{red}sync-dotfiles%f: failed to merge upstream %B$repo%b" >&2
+      git status
       return 1
     }
   }
 
-  print -Pr -- "%F{yellow}sync-dotfiles%f: pushing %Bdotfiles-$1%b" >&2
-  _sync-dotfiles-git $1 push
-  (( !dirty )) || _sync-dotfiles-git $1 stash pop
+  print -Pr -- "%F{yellow}sync-dotfiles%f: pushing %B$repo%b" >&2
+  git push
+  (( !dirty )) || git stash pop
 
-  print -Pr -- "%F{yellow}sync-dotfiles%f: pulling submodules from %Bdotfiles-$1%b" >&2
-  _sync-dotfiles-git $1 pull --recurse-submodules
-  _sync-dotfiles-git $1 submodule update --init
+  print -Pr -- "%F{yellow}sync-dotfiles%f: pulling submodules from %B$repo%b" >&2
+  git pull --recurse-submodules
+  git submodule update --init
 }
 
 {
-  {
-    pushd ~
+  pushd ~
 
-    [[ ! -d ~/.dotfiles-public ]] || _sync-dotfiles-repo public
+  local -x GIT_DIR=~/.dotfiles-public
+  _sync-dotfiles-repo
 
-    [[ ! -d ~/.dotfiles-private ]] || {
-      [[ ! -f ${HISTFILE:-} ]] || {
-        _sync-dotfiles-git private add $HISTFILE
-        local s && s="$(_sync-dotfiles-git private status --porcelain $HISTFILE)"
-        [[ -z $s ]] || _sync-dotfiles-git private commit -m 'fresh history' $HISTFILE
-      }
-      _sync-dotfiles-repo private
-    }
-  } always {
-    popd
+  GIT_DIR=~/.dotfiles-private
+  [[ ! -f ${HISTFILE:-} ]] || {
+    git add $HISTFILE
+    local s && s="$(git status --porcelain $HISTFILE)"
+    [[ -z $s ]] || git commit -m 'fresh history' $HISTFILE
   }
+  _sync-dotfiles-repo dotfiles-private
 } always {
-  unfunction _sync-dotfiles-{git,repo}
+  popd
 }
