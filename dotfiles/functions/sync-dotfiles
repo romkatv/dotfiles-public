@@ -36,6 +36,7 @@ function _sync-dotfiles-repo() {
     _sync-dotfiles-git $1 stash
   }
 
+  print -Pr -- "%F{yellow}sync-dotfiles%f: pulling %Bdotfiles-$1%b" >&2
   _sync-dotfiles-git $1 pull --rebase --no-recurse-submodules || {
     print -Pr -- "%F{red}sync-dotfiles%f: failed to pull %Bdotfiles-$1%b" >&2
     _sync-dotfiles-git $1 status
@@ -43,6 +44,7 @@ function _sync-dotfiles-repo() {
   }
 
   (( ! merge )) || ! _sync-dotfiles-git $1 remote get-url upstream &>/dev/null || {
+    print -Pr -- "%F{yellow}sync-dotfiles%f: merging upstream %Bdotfiles-$1%b" >&2
     _sync-dotfiles-git $1 fetch upstream
     _sync-dotfiles-git $1 merge --no-edit upstream/master || {
       print -Pr -- "%F{red}sync-dotfiles%f: failed to merge upstream %Bdotfiles-$1%b" >&2
@@ -51,9 +53,11 @@ function _sync-dotfiles-repo() {
     }
   }
 
+  print -Pr -- "%F{yellow}sync-dotfiles%f: pushing %Bdotfiles-$1%b" >&2
   _sync-dotfiles-git $1 push
   (( !dirty )) || _sync-dotfiles-git $1 stash pop
 
+  print -Pr -- "%F{yellow}sync-dotfiles%f: pulling submodules from %Bdotfiles-$1%b" >&2
   _sync-dotfiles-git $1 pull --recurse-submodules
   _sync-dotfiles-git $1 submodule update --init
 }
