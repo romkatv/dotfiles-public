@@ -46,7 +46,7 @@ function jit-source() {
 
 umask 0022
 ulimit -c unlimited
-stty -ixon  # disable ctrl+s (stops all output to the terminal) and ctrl+q (resumes it)
+stty -ixon <$TTY >$TTY  # disable ctrl+s (stops all output to the terminal) and ctrl+q (resumes it)
 
 jit ~/.zshrc
 jit ~/.zshenv
