@@ -79,6 +79,8 @@ These steps need to be done once per Windows installation. You don't need to rep
     - Set *Screen Buffer Size > Height* to 9999.
     - Check *Wrap text output on resize*.
     - Set window size and position the way you like it.
+  - Tab *Terminal*:
+    - Check *Disable Scroll-Forward*.
 
 ### Maintenance
 Run this command occasionally.
