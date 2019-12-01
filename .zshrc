@@ -166,13 +166,20 @@ else
   jit-source ~/dotfiles/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 fi
 
-# export PYENV_ROOT="$HOME/.pyenv"
+# export PYENV_ROOT=~/.pyenv
 # path=("$PYENV_ROOT/bin" $path)
 # eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
 
+# export RBENV_ROOT=~/.rbenv
 # path=($HOME/.rbenv/bin $path)
 # eval "$(rbenv init -)"
+
+# export GOENV_ROOT=~/.goenv
+# path=($HOME/.goenv/bin $path)
+# eval "$(goenv init -)"
+# [[ -n $GOROOT ]] && path=($GOROOT/bin $path)
+# [[ -n $GOPATH ]] && path=($path $GOPATH/bin)
 
 # path=($HOME/.nodenv/bin $path)
 # eval "$(nodenv init -)"
