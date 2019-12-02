@@ -8,7 +8,7 @@ autoload -Uz compinit
 
 () {
   local f=${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
-  compinit -C -d $f
+  compinit -d $f
   [[ ${(%):-%#} == '#' || $f.zwc -nt $f ]] || zcompile $f
 }
 
