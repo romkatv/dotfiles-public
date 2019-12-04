@@ -22,7 +22,3 @@
 	path = dotfiles/fzf
 	url = https://github.com/junegunn/fzf.git
 	branch = master
-[submodule "dotfiles/zimfw"]
-	path = dotfiles/zimfw
-	url = https://github.com/zimfw/zimfw.git
-	branch = master
