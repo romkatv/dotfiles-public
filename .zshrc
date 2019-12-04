@@ -7,7 +7,7 @@ fi
 typeset -gaU cdpath fpath mailpath path
 path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
 
-fpath+=~/dotfiles/functions
+fpath+=(~/dotfiles/functions ~/dotfiles/archive)
 autoload -Uz ${^${(M)fpath:#~/*}}/[^_]*(N:t) run-help zmv zcp zln is-at-least add-zsh-hook
 
 if (( BENCH )); then
