@@ -22,3 +22,7 @@
 	path = dotfiles/fzf
 	url = https://github.com/junegunn/fzf.git
 	branch = master
+[submodule "dotfiles/archive"]
+	path = dotfiles/archive
+	url = https://github.com/romkatv/archive
+	branch = master
