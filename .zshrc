@@ -86,7 +86,7 @@ if zmodload zsh/terminfo && (( terminfo[colors] >= 256 )); then
   typeset -A ZSH_HIGHLIGHT_STYLES=(comment fg=96)
 else
   # The default is outside of 8 color range.
-  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
+  ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=black,bold'
 fi
 
 path+=~/dotfiles/fzf/bin
