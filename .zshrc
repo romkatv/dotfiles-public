@@ -7,7 +7,8 @@ fi
 typeset -gaU cdpath fpath mailpath path
 path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
 
-fpath+=(~/dotfiles/functions ~/dotfiles/archive)
+fpath+=~/dotfiles/functions
+[[ -d ~/archive ]] && fpath+=~/archive || fpath+=~/dotfiles/archive
 autoload -Uz ${^${(M)fpath:#~/*}}/[^_]*(N:t) run-help zmv zcp zln is-at-least add-zsh-hook
 
 if (( BENCH )); then
@@ -150,7 +151,11 @@ zle_highlight=('paste:none')
 jit-source ~/dotfiles/aliases.zsh
 
 if (( BENCH )); then
-  jit-source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+  if [[ -d ~/zsh-prompt-benchmark ]]; then
+    jit-source ~/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+  else
+    jit-source ~/dotfiles/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+  fi
   function bench() {
     emulate -L zsh
     local on_done
