@@ -190,6 +190,8 @@ fi
 # path=($HOME/.nodenv/bin $path)
 # eval "$(nodenv init -)"
 
+# path+=(/usr/lib/dart/bin ~/.pub-cache/bin)
+
 # path=($HOME/.ebcli-virtual-env/executables $HOME/.pyenv/versions/3.7.2/bin $path)
 
 jit-source ~/.zshrc-private
