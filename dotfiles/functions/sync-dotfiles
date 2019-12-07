@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 emulate -L zsh -o err_return -o no_unset -o pushd_silent -o no_prompt_subst
 
 local merge=1 OPTIND OPTARG
@@ -25,7 +27,7 @@ function _sync-dotfiles-repo() {
   [[ -z $s ]] || { dirty=1; git stash }
 
   print -Pr -- "%F{yellow}sync-dotfiles%f: pulling %B$repo%b" >&2
-  git pull --rebase --no-recurse-submodules || git pull --no-edit --no-recurse-submodules {
+  git pull --rebase --no-recurse-submodules || git pull --no-edit --no-recurse-submodules || {
     print -Pr -- "%F{red}sync-dotfiles%f: failed to pull %B$repo%b" >&2
     git status
     return 1
