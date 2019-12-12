@@ -118,6 +118,7 @@ function install_packages() {
     unzip
     wget
     x11-utils
+    xclip
     xsel
     xz-utils
     yodl

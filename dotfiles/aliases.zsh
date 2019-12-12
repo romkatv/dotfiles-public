@@ -8,15 +8,13 @@ alias gedit='gedit &>/dev/null'
 alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public --work-tree="$HOME"'
 alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private --work-tree="$HOME"'
 
+alias x='xclip -selection clipboard -in'          # cut to clipboard
+alias v='xclip -selection clipboard -out'         # paste from clipboard
+alias c='xclip -selection clipboard -in -filter'  # copy clipboard
+
 if (( WSL )); then
   hash -d r=/mnt/d/r
   hash -d h="$(wslpath "$(win-env USERPROFILE)")"
-  alias x='xsel --clipboard -i'                     # cut to clipboard
-  alias v='xsel --clipboard -o'                     # paste from clipboard
-  alias c='{ x && v }'                              # copy to clipboard
   alias np='"/mnt/c/Program Files/Notepad++/notepad++.exe"'
-else
-  alias x='xclip -selection clipboard -in'          # cut to clipboard
-  alias v='xclip -selection clipboard -out'         # paste from clipboard
-  alias c='xclip -selection clipboard -in -filter'  # copy clipboard
 fi
+
