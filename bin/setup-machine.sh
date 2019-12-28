@@ -244,6 +244,7 @@ function install_fonts() {
 }
 
 function install_clean_tmp() {
+  (( WSL )) || return 0
   sudo cp ~/bin/clean-tmp /usr/local/bin/clean-tmp-su
   sudo chmod 755 /usr/local/bin/clean-tmp-su
   sudo tee /etc/sudoers.d/"$USER" >/dev/null <<<"$USER ALL=(ALL) NOPASSWD: /usr/local/bin/clean-tmp-su"
