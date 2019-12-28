@@ -287,6 +287,11 @@ function set_preferences() {
   fi
 }
 
+function disable_motd_news() {
+  (( !WSL )) || return 0
+  sudo systemctl disable motd-news.timer
+}
+
 if [[ "$(id -u)" == 0 ]]; then
   echo "$BASH_SOURCE: please run as non-root" >&2
   exit 1
@@ -301,6 +306,8 @@ install_bat
 install_fzf
 install_fonts
 install_clean_tmp
+
+disable_motd_news
 
 fix_clock
 fix_shm
