@@ -129,7 +129,7 @@ function install_packages() {
   if (( WSL )); then
     packages+=(dbus-x11)
   else
-    packages+=(gnome-tweak-tool iotop tilix)
+    packages+=(gnome-tweak-tool imagemagick iotop tilix)
   fi
 
   sudo apt update
@@ -262,6 +262,18 @@ function fix_gcc() {
   sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
 }
 
+# Increase imagemagic memory and disk limits.
+function fix_imagemagic() {
+  (( !WSL )) || return 0
+  local cfg=/etc/ImageMagick-6/policy.xml k v kv
+  [[ -f "$cfg" ]]
+  for kv in "memory 16GiB" "map 32GiB" "width 128KP" "height 128KP" "area 8GiB" "disk 64GiB"; do
+    read k v <<<"$kv"
+    grep -qE 'name="'$k'" value="[^"]*"' "$cfg"
+    sudo sed -i 's/name="'$k'" value="[^"]*"/name="'$k'" value="'$v'"/' "$cfg"
+  done
+}
+
 function with_dbus() {
   if [[ -z "${DBUS_SESSION_BUS_ADDRESS+X}" ]]; then
     dbus-launch "$@"
@@ -315,6 +327,7 @@ fix_clock
 fix_shm
 fix_dbus
 fix_gcc
+fix_imagemagic
 
 set_preferences
 
