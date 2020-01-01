@@ -77,7 +77,7 @@ function my-expand-alias() { zle _expand_alias }
 if (( ${+terminfo[rmam]} && ${+terminfo[smam]} )); then
   function expand-or-complete-with-dots() {
     echo -nE - ${terminfo[rmam]}${(%):-"%F{red}......%f"}${terminfo[smam]}
-    zle expand-or-complete
+    zle fzf-tab-complete
     zle redisplay
   }
 else
@@ -171,6 +171,7 @@ fzf_default_completion=expand-or-complete-with-dots
 function bindkey() {}
 jit-source ~/dotfiles/fzf/shell/completion.zsh
 jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
+jit-source ~/dotfiles/fzf-tab/fzf-tab.zsh
 unfunction bindkey
 
 # If NumLock is off, translate keys to make them appear the same as with NumLock on.
@@ -258,4 +259,5 @@ typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   vi-find-next-char-skip
   forward-char               # my addition
   vi-forward-char            # my addition
+  fzf-tab-complete           # my addition
 )
