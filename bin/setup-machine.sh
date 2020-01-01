@@ -70,15 +70,15 @@ terminal-title-show-when-single=true
 window-style='disable-csd-hide-toolbar'
 
 [keybindings]
-session-resize-terminal-left='<Shift>Left'
-session-switch-to-terminal-down='disabled'
 session-add-right='<Alt>r'
-session-resize-terminal-up='<Shift>Up'
 session-add-down='<Alt>d'
-session-resize-terminal-down='<Shift>Down'
+session-resize-terminal-left='disabled'
+session-switch-to-terminal-down='disabled'
+session-resize-terminal-up='disabled'
+session-resize-terminal-down='disabled'
 session-switch-to-terminal-right='disabled'
 session-switch-to-terminal-up='disabled'
-session-resize-terminal-right='<Shift>Right'
+session-resize-terminal-right='disabled'
 session-switch-to-terminal-left='disabled'"
 
 # '1' if running under Windows Subsystem for Linux, '0' otherwise.
