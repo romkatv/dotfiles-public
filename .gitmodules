@@ -26,3 +26,7 @@
 	path = dotfiles/archive
 	url = https://github.com/romkatv/archive
 	branch = master
+[submodule "dotfiles/fzf-tab"]
+	path = dotfiles/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git
+	branch = master
