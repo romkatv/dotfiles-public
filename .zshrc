@@ -181,6 +181,18 @@ fi
 # path=($HOME/.rbenv/bin $path)
 # eval "$(rbenv init -)"
 
+# export LUAENV_ROOT=~/.luaenv
+# path=($HOME/.luaenv/bin $path)
+# eval "$(luaenv init -)"
+
+# export JENV_ROOT=~/.jenv
+# path=($HOME/.jenv/bin $path)
+# eval "$(jenv init -)"
+
+# export PLENV_ROOT=~/.plenv
+# path=($HOME/.plenv/bin $path)
+# eval "$(plenv init -)"
+
 # export GOENV_ROOT=~/.goenv
 # path=($HOME/.goenv/bin $path)
 # eval "$(goenv init -)"
