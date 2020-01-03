@@ -239,3 +239,4 @@ setopt NO_FLOW_CONTROL         # disable start/stop characters in shell editor
 setopt NO_MENU_COMPLETE        # do not autoselect the first completion entry
 setopt PATH_DIRS               # perform path search even on command names with slashes
 setopt SHARE_HISTORY           # write and import history on every command
+setopt C_BASES                 # print hex/oct numbers as 0xFF/077 instead of 16#FF/8#77
