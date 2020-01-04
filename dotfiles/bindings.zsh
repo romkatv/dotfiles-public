@@ -192,6 +192,8 @@ jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
 jit-source ~/dotfiles/fzf-tab/fzf-tab.zsh
 unfunction bindkey
 
+bindkey -e
+
 # If NumLock is off, translate keys to make them appear the same as with NumLock on.
 bindkey -s '^[OM' '^M'  # enter
 bindkey -s '^[Ok' '+'
