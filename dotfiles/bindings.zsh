@@ -133,6 +133,24 @@ function cd-back() { cd-rotate +1 }
 function cd-forward() { cd-rotate -0 }
 function cd-up() { cd .. && redraw-prompt 1 }
 
+function my-pound-insert() {
+  emulate -L zsh -o extended_glob
+  local lines=("${(@f)BUFFER}")
+  local uncommented=(${lines:#'#'*})
+  if (( $#uncommented )); then
+    local MATCH
+    BUFFER="${(pj:\n:)${(@)lines:/(#m)*/#${MATCH#\#}}}"
+    zle accept-line
+  else
+    local lbuf=$LBUFFER cur=$CURSOR
+    BUFFER="${(pj:\n:)${(@)lines#\#}}"
+    if (( $#lbuf )); then
+      lines=("${(@f)lbuf[1,-2]}")
+      CURSOR=$((cur-$#lines))
+    fi
+  fi
+}
+
 function toggle-dotfiles() {
   emulate -L zsh
   case $GIT_DIR in
@@ -152,7 +170,6 @@ function toggle-dotfiles() {
   redraw-prompt 0
 }
 
-zle -N edit-command-line
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 zle -N my-expand-alias
@@ -164,6 +181,7 @@ zle -N cd-forward
 zle -N cd-up
 zle -N fzf-history-widget-unique
 zle -N toggle-dotfiles
+zle -N my-pound-insert
 
 fzf_default_completion=expand-or-complete-with-dots
 
@@ -195,24 +213,28 @@ bindkey -s '^[OC' '^[[C'  # right
 bindkey -s '^[[1~' '^[[H'  # home
 bindkey -s '^[[4~' '^[[F'  # end
 
-bindkey '^?'      backward-delete-char                # bs         delete one char backward
-bindkey '^[[3~'   delete-char                         # delete     delete one char forward
-bindkey '^[[H'    beginning-of-line                   # home       go to the beginning of line
-bindkey '^[[F'    end-of-line                         # end        go to the end of line
-bindkey '^[[1;5C' forward-word                        # ctrl+right go forward one word
-bindkey '^[[1;5D' backward-word                       # ctrl+left  go backward one word
-bindkey '^H'      backward-kill-word                  # ctrl+bs    delete previous word
-bindkey '^[[3;5~' kill-word                           # ctrl+del   delete next word
-bindkey '^J'      backward-kill-line                  # ctrl+j     delete everything before cursor
 bindkey '^[[D'    backward-char                       # left       move cursor one char backward
 bindkey '^[[C'    forward-char                        # right      move cursor one char forward
 bindkey '^[[A'    up-line-or-beginning-search-local   # up         prev command in local history
 bindkey '^[[B'    down-line-or-beginning-search-local # down       next command in local history
+bindkey '^[[H'    beginning-of-line                   # home       go to the beginning of line
+bindkey '^[[F'    end-of-line                         # end        go to the end of line
+bindkey '^?'      backward-delete-char                # bs         delete one char backward
+bindkey '^[[3~'   delete-char                         # delete     delete one char forward
+bindkey '^[[1;5C' forward-word                        # ctrl+right go forward one word
+bindkey '^[[1;5D' backward-word                       # ctrl+left  go backward one word
+bindkey '^H'      backward-kill-word                  # ctrl+bs    delete previous word
+bindkey '^[[3;5~' kill-word                           # ctrl+del   delete next word
+bindkey '^K'      kill-line                           # ctrl+k     delete line after cursor
+bindkey '^J'      backward-kill-line                  # ctrl+j     delete line before cursor
+bindkey '^N'      kill-buffer                         # ctrl+n     delete all lines
+bindkey '^_'      undo                                # ctrl+/     undo
+bindkey '^\'      redo                                # ctrl+\     redo
+bindkey '^Y'      my-pound-insert                     # ctrl+y     comment and accept, or uncomment
 bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
 bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
 bindkey '^ '      my-expand-alias                     # ctrl+space expand alias
 bindkey '^[[Z'    reverse-menu-complete               # shift+tab  previous in completion menu
-bindkey '^E'      edit-command-line                   # ctrl+e     edit command line in $EDITOR
 bindkey '^[[1;3D' cd-back                             # alt+left   cd into the previous directory
 bindkey '^[[1;3C' cd-forward                          # alt+right  cd into the next directory
 bindkey '^[[1;3A' cd-up                               # alt+up     cd ..
@@ -246,7 +268,6 @@ typeset -g ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
   up-line-or-beginning-search-local    # my addition
   down-line-or-beginning-search-local  # my addition
   my-expand-alias                      # my addition
-  edit-command-line                    # my addition
 )
 typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   forward-word
