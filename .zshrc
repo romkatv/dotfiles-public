@@ -46,8 +46,7 @@ function jit-source() {
 }
 
 umask 0022
-ulimit -c unlimited
-# stty -ixon <$TTY >$TTY  # disable ctrl+s (stops all output to the terminal) and ctrl+q (resumes it)
+ulimit -c $(((8 << 30) / 512))  # 8GB
 
 jit ~/.zshrc
 jit ~/.zshenv
@@ -229,7 +228,6 @@ setopt HIST_EXPIRE_DUPS_FIRST  # if history needs to be trimmed, evict dups firs
 setopt HIST_FIND_NO_DUPS       # don't show dups when searching history
 setopt HIST_IGNORE_DUPS        # don't add dups to history
 setopt HIST_IGNORE_SPACE       # don't add commands starting with space to history
-setopt HIST_REDUCE_BLANKS      # remove junk whitespace from commands before adding to history
 setopt HIST_VERIFY             # if a command triggers history expansion, show it instead of running
 setopt INTERACTIVE_COMMENTS    # allow comments in command line
 setopt MULTIOS                 # allow multiple redirections for the same fd
