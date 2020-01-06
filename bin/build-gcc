@@ -38,4 +38,4 @@ make install
 cd $dir
 rm -rf $dir/obj
 
-echo "C++ compiler: ${(q)dir}/out/g++" >&2
+echo "C++ compiler: ${(q)dir}/out/bin/g++" >&2
