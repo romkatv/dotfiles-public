@@ -1,0 +1,41 @@
+#!/usr/bin/env zsh
+#
+# Usage:   build-gcc <dir>
+# Example: build-gcc ~/gcc
+
+emulate -L zsh -o err_exit -o no_unset
+
+if [[ $# != 1 || -z $1 ]]; then
+  echo "Usage:   build-gcc <dir>" >&2
+  echo "Example: build-gcc ~/gcc" >&2
+  return 1
+fi
+
+local dir=${1:A}
+
+if [[ -e $dir ]]; then
+  echo -E - "Please remove before retrying: ${(q)dir}" >&2
+  return 1
+fi
+
+mkdir -p $dir/obj
+svn checkout svn://gcc.gnu.org/svn/gcc/trunk $dir/src
+cd $dir/obj
+
+$dir/src/configure           \
+  --prefix=$dir/out          \
+  --disable-multilib       \
+  --enable-shared          \
+  --enable-threads=posix   \
+  --enable-__cxa_atexit    \
+  --enable-clocale=gnu     \
+  --enable-languages=c,c++ \
+  --disable-lto
+
+make -j 20
+make install
+
+cd $dir
+rm -rf $dir/obj
+
+echo "C++ compiler: ${(q)dir}/out/g++" >&2
