@@ -4,7 +4,7 @@
 
 set -xueE -o pipefail
 
-# These are obtained by running 'dconf dump /org/gnome/gedit/preferences/'.
+# These are obtained by running `dconf dump /org/gnome/gedit/preferences/`.
 readonly GEDIT_PREFERENCES="[editor]
 highlight-current-line=true
 display-right-margin=true
@@ -22,7 +22,7 @@ auto-indent=true
 show-tabs-mode='auto'
 side-panel-visible=true"
 
-# These are obtained by running 'dconf dump /org/gnome/meld/'.
+# These are obtained by running `dconf dump /org/gnome/meld/`.
 readonly MELD_PREFERENCES="[/]
 indent-width=2
 highlight-current-line=true
@@ -34,6 +34,7 @@ insert-spaces-instead-of-tabs=false
 highlight-syntax=true
 draw-spaces=['space', 'tab', 'nbsp', 'leading', 'text', 'trailing']"
 
+# These are obtained by running `dconf dump /com/gexperts/Tilix/`.
 readonly TILIX_PREFERENCES="[profiles/2b7c4080-0ddd-46c5-8f23-563fd3ba789d]
 foreground-color='#EEEEEEEEECEC'
 rewrap-on-resize=true
