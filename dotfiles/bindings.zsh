@@ -270,6 +270,7 @@ typeset -g ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
   up-line-or-beginning-search-local    # my addition
   down-line-or-beginning-search-local  # my addition
   my-expand-alias                      # my addition
+  fzf-tab-complete                     # my addition
 )
 typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   forward-word
@@ -282,5 +283,4 @@ typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   vi-find-next-char-skip
   forward-char               # my addition
   vi-forward-char            # my addition
-  fzf-tab-complete           # my addition
 )
