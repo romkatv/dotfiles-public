@@ -72,13 +72,17 @@ window-style='disable-csd-hide-toolbar'
 [keybindings]
 session-add-right='<Alt>r'
 session-add-down='<Alt>d'
+terminal-page-down='<Primary><Shift>Page_Down'
+terminal-page-up='<Primary><Shift>Page_Up'
 session-resize-terminal-left='disabled'
 session-switch-to-terminal-down='disabled'
 session-resize-terminal-up='disabled'
 session-resize-terminal-down='disabled'
 session-switch-to-terminal-right='disabled'
+win-reorder-next-session='disabled'
 session-switch-to-terminal-up='disabled'
 session-resize-terminal-right='disabled'
+win-reorder-previous-session='disabled'
 session-switch-to-terminal-left='disabled'"
 
 # '1' if running under Windows Subsystem for Linux, '0' otherwise.
