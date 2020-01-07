@@ -76,13 +76,12 @@ function my-expand-alias() { zle _expand_alias }
 # Shows '...' while completing. No `emulate -L zsh` to pick up dotglob if it's set.
 if (( ${+terminfo[rmam]} && ${+terminfo[smam]} )); then
   function expand-or-complete-with-dots() {
-    echo -nE - ${terminfo[rmam]}${(%):-"%F{red}......%f"}${terminfo[smam]}
+    echo -nE - ${terminfo[rmam]}${(%):-"%F{red}...%f"}${terminfo[smam]}
     zle fzf-tab-complete
-    zle redisplay
   }
 else
   function expand-or-complete-with-dots() {
-    zle expand-or-complete
+    zle fzf-tab-complete
   }
 fi
 
@@ -97,8 +96,8 @@ function fzf-history-widget-unique() {
   selected="$(
     fc -rl 1 |
     awk '!_[substr($0, 8)]++' |
-    fzf +m -n2..,.. --tiebreak=index --height=80% --preview-window=down:25%:wrap \
-      --query=$LBUFFER --preview=$preview --bind=alt-j:preview-down,alt-k:preview-up)"
+    fzf +m -n2..,.. --tiebreak=index --cycle --height=80% --preview-window=down:25%:wrap \
+      --query=$LBUFFER --preview=$preview)"
   local ret=$?
   [[ -n "$selected" ]] && zle vi-fetch-history -n $selected
   zle .reset-prompt
@@ -184,6 +183,7 @@ zle -N toggle-dotfiles
 zle -N my-pound-insert
 
 fzf_default_completion=expand-or-complete-with-dots
+FZF_TAB_OPTS='--cycle --layout=reverse --tiebreak=begin --bind tab:down,shift-tab:up --height=50%'
 
 # Deny fzf bindings. We have our own.
 function bindkey() {}
