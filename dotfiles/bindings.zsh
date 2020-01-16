@@ -182,17 +182,20 @@ zle -N fzf-history-widget-unique
 zle -N toggle-dotfiles
 zle -N my-pound-insert
 
-fzf_default_completion=expand-or-complete-with-dots
-FZF_TAB_OPTS='--cycle --layout=reverse --tiebreak=begin --bind tab:down,shift-tab:up --height=50%'
+bindkey -e
 
 # Deny fzf bindings. We have our own.
 function bindkey() {}
 jit-source ~/dotfiles/fzf/shell/completion.zsh
 jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
-jit-source ~/dotfiles/fzf-tab/fzf-tab.zsh
 unfunction bindkey
 
-bindkey -e
+FZF_TAB_SHOW_GROUP=brief
+FZF_TAB_SINGLE_GROUP=()
+
+# fzf-tab reads the value of this binding during initialization.
+bindkey '\t' expand-or-complete
+jit-source ~/dotfiles/fzf-tab/fzf-tab.zsh
 
 # If NumLock is off, translate keys to make them appear the same as with NumLock on.
 bindkey -s '^[OM' '^M'  # enter
@@ -283,4 +286,15 @@ typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   vi-find-next-char-skip
   forward-char               # my addition
   vi-forward-char            # my addition
+)
+typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
+  orig-\*
+  beep
+  run-help
+  set-local-history
+  which-command
+  yank
+  yank-pop
+  zle-\*
+  expand-or-complete  # my addition (to make expand-or-complete-with-dots work with fzf-tab)
 )

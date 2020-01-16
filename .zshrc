@@ -138,9 +138,9 @@ if [[ -d ~/gitstatus ]]; then
   [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
 fi
 
-jit-source ~/dotfiles/history.zsh
-jit-source ~/dotfiles/bindings.zsh
 jit-source ~/dotfiles/completions.zsh
+jit-source ~/dotfiles/bindings.zsh
+jit-source ~/dotfiles/history.zsh
 (( WSL )) && jit-source ~/dotfiles/ssh-agent.zsh
 
 # Disable highlighting of text pasted into the command line.
