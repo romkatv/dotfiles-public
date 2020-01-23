@@ -24,9 +24,6 @@ alias x='xclip -selection clipboard -in'          # cut to clipboard
 alias v='xclip -selection clipboard -out'         # paste from clipboard
 alias c='xclip -selection clipboard -in -filter'  # copy clipboard
 
-alias dotfiles-public='git --git-dir="$HOME"/.dotfiles-public/.git --work-tree="$HOME"'
-alias dotfiles-private='git --git-dir="$HOME"/.dotfiles-private/.git --work-tree="$HOME"'
-
 if [[ -f /usr/share/bash-completion/bash_completion ]]; then
   source /usr/share/bash-completion/bash_completion
 elif [[ -f /etc/bash_completion ]]; then
