@@ -133,9 +133,9 @@ if (( ${THEME:-1} )); then
 fi
 
 if [[ -d ~/gitstatus ]]; then
-  GITSTATUS_LOG_LEVEL=DEBUG
-  POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus
-  [[ -f ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
+  : ${GITSTATUS_LOG_LEVEL=DEBUG}
+  : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
+  [[ -f ~/gitstatus/gitstatusd ]] && : ${GITSTATUS_DAEMON=~/gitstatus/gitstatusd}
 fi
 
 jit-source ~/dotfiles/completions.zsh
