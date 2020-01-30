@@ -35,11 +35,13 @@ highlight-syntax=true
 draw-spaces=['space', 'tab', 'nbsp', 'leading', 'text', 'trailing']"
 
 # These are obtained by running `dconf dump /com/gexperts/Tilix/`.
+# Colors are Tango Dark with custom background (#171A1B instead of #2E3436, twice as dark).
 readonly TILIX_PREFERENCES="[profiles/2b7c4080-0ddd-46c5-8f23-563fd3ba789d]
-foreground-color='#EEEEEEEEECEC'
+foreground-color='#EEEEEC'
+background-color='#171A1B'
 rewrap-on-resize=true
 visible-name='Default'
-palette=['#000000', '#CC0000', '#4D9A05', '#C3A000', '#3464A3', '#754F7B', '#05979A', '#D3D6CF', '#545652', '#EF2828', '#89E234', '#FBE84F', '#729ECF', '#AC7EA8', '#34E2E2', '#EDEDEB']
+palette=['#2E3436', '#CC0000', '#4D9A05', '#C3A000', '#3464A3', '#754F7B', '#05979A', '#D3D6CF', '#545652', '#EF2828', '#89E234', '#FBE84F', '#729ECF', '#AC7EA8', '#34E2E2', '#EDEDEB']
 bold-is-bright=false
 default-size-columns=174
 default-size-rows=45
