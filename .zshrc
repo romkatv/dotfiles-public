@@ -201,6 +201,9 @@ fi
 # path=($HOME/.nodenv/bin $path)
 # eval "$(nodenv init -)"
 
+# source ~/.asdf/asdf.sh
+# source ~/.asdf/completions/asdf.bash
+
 # path+=(/usr/lib/dart/bin ~/.pub-cache/bin)
 
 # path=($HOME/.ebcli-virtual-env/executables $HOME/.pyenv/versions/3.7.2/bin $path)
