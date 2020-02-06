@@ -106,6 +106,12 @@ READNULLCMD=$PAGER             # use the default pager instead of `more`
 WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
 ZLE_REMOVE_SUFFIX_CHARS=''     # don't eat space when typing '|' after a tab completion
 
+if [[ -d ~/zsh-defer ]]; then
+  jit-source ~/zsh-defer/zsh-defer.plugin.zsh
+else
+  jit-source ~/dotfiles/zsh-defer/zsh-defer.plugin.zsh
+fi
+
 function prompt_git_dir() {
   emulate -L zsh
   [[ -n $GIT_DIR ]] || return
@@ -123,7 +129,14 @@ if (( ${THEME:-1} )); then
   fi
   () {
     local -i vcs=POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)vcs]
-    (( vcs )) && POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs]=(git_dir vcs)
+    (( vcs )) && POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs,vcs-1]=(git_dir)
+  }
+  function p10k-on-init() {
+    (( POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)git_dir] )) && return
+    local -i vcs=POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)vcs]
+    (( vcs )) || return
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs,vcs-1]=(git_dir)
+    p10k reload
   }
   if [[ -d ~/powerlevel10k ]]; then
     jit-source ~/powerlevel10k/powerlevel10k.zsh-theme
@@ -208,8 +221,7 @@ fi
 
 # path=($HOME/.ebcli-virtual-env/executables $HOME/.pyenv/versions/3.7.2/bin $path)
 
-# jit-source ~/zsh-defer/zsh-defer.plugin.zsh
-# zsh-defer eval "$(direnv hook zsh)"
+# eval "$(direnv hook zsh)"
 
 jit-source ~/.zshrc-private
 
