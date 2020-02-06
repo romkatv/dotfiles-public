@@ -30,3 +30,7 @@
 	path = dotfiles/fzf-tab
 	url = https://github.com/Aloxaf/fzf-tab.git
 	branch = master
+[submodule "dotfiles/zsh-defer"]
+	path = dotfiles/zsh-defer
+	url = https://github.com/romkatv/zsh-defer.git
+	branch = master
