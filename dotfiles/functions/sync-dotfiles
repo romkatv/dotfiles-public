@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-emulate -L zsh -o err_return -o no_unset -o pushd_silent -o no_prompt_subst
+emulate -L zsh -o err_return -o no_unset -o pushd_silent -o no_prompt_subst -o prompt_percent
 
 local merge=1 OPTIND OPTARG
 while getopts ":hm" opt; do
@@ -23,7 +23,7 @@ done
 
 function _sync-dotfiles-repo() {
   local repo=${${GIT_DIR:t}#.} dirty=0 s
-  s="$(git status --porcelain --untracked-files=no)"
+  s="$(git status --porcelain --untracked-files=no --ignore-submodules=dirty)"
   [[ -z $s ]] || { dirty=1; git stash }
 
   print -Pr -- "%F{yellow}sync-dotfiles%f: pulling %B$repo%b" >&2
