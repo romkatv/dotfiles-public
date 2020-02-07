@@ -101,6 +101,7 @@ if is-at-least 5.7.2 || [[ $ZSH_PATCHLEVEL =~ '^zsh-5\.7\.1-([0-9]+)-' && $match
   ZLE_RPROMPT_INDENT=0         # don't leave an empty space after right prompt
 fi
 
+TIMEFMT='user=%U system=%S cpu=%P total=%*E' # more concise output of `time`
 PROMPT_EOL_MARK='%K{red} %k'   # mark the missing \n at the end of a comand output with a red block
 READNULLCMD=$PAGER             # use the default pager instead of `more`
 WORDCHARS=''                   # only alphanums make up words in word-based zle widgets
