@@ -96,5 +96,8 @@
       "zprezto",
       "zpreztorc",
       "zstyle"
-    ]
+    ],
+    "[cpp]": {
+      "editor.defaultFormatter": "ms-vscode.cpptools"
+    }
 }
