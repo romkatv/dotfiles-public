@@ -169,6 +169,8 @@ function toggle-dotfiles() {
   redraw-prompt 0
 }
 
+function my-noop-widget() {}
+
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 zle -N my-expand-alias
@@ -181,6 +183,7 @@ zle -N cd-up
 zle -N fzf-history-widget-unique
 zle -N toggle-dotfiles
 zle -N my-pound-insert
+zle -N my-noop-widget
 
 bindkey -e
 
@@ -248,6 +251,8 @@ bindkey '^[[1;3B' fzf-cd-widget                       # alt+down   fzf cd
 bindkey '^T'      fzf-completion                      # ctrl+t     fzf completion
 bindkey '^R'      fzf-history-widget-unique           # ctrl+r     fzf history
 bindkey '^P'      toggle-dotfiles                     # ctrl+p     toggle public/private dotfiles
+bindkey '^[[5~'   my-noop-widget                      # pageup     do nothing
+bindkey '^[[6~'   my-noop-widget                      # pagedown   do nothing
 
 typeset -g ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
 typeset -g ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
