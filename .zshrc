@@ -128,17 +128,16 @@ if (( ${THEME:-1} )); then
   else
     jit-source ~/.p10k-portable.zsh
   fi
-  () {
-    local -i vcs=POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)vcs]
-    (( vcs )) && POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs,vcs-1]=(git_dir)
-  }
   function p10k-on-init() {
+    emulate -L zsh
     (( POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)git_dir] )) && return
     local -i vcs=POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)vcs]
     (( vcs )) || return
+    unset POWERLEVEL9K_VCS_DISABLED_WORKDIR_PATTERN
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs,vcs-1]=(git_dir)
-    p10k reload
+    (( $+functions[p10k] )) && p10k reload
   }
+  p10k-on-init
   if [[ -d ~/powerlevel10k ]]; then
     jit-source ~/powerlevel10k/powerlevel10k.zsh-theme
   else
