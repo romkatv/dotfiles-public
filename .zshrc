@@ -35,7 +35,7 @@ function command_not_found_handler() {
 
 function jit() {
   emulate -L zsh
-  [[ ${(%):-%#} == '#' || $1.zwc -nt $1 || ! -w ${1:h} ]] || zcompile $1
+  [[ ${(%):-%#} == '#' || $1.zwc -nt $1 || ! -w ${1:h} ]] || zcompile -R $1
 }
 
 function jit-source() {
