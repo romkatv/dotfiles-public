@@ -12,8 +12,7 @@ autoload -Uz compinit
   [[ ${(%):-%#} == '#' || $f.zwc -nt $f ]] || zcompile -R $f
 }
 
-# Case-insensitive (all), partial-word, and then substring completion.
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path ${XDG_CACHE_HOME:-$HOME/.cache}/.zcompcache-$ZSH_VERSION
