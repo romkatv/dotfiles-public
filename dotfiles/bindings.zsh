@@ -71,7 +71,7 @@ function down-line-or-beginning-search-local() {
 }
 
 # Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
-function my-expand-alias() { zle _expand_alias }
+function my-expand-alias() { zle _expand_alias || true }
 
 # Shows '...' while completing. No `emulate -L zsh` to pick up dotglob if it's set.
 if (( ${+terminfo[rmam]} && ${+terminfo[smam]} )); then
@@ -193,6 +193,7 @@ jit-source ~/dotfiles/fzf/shell/completion.zsh
 jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
 unfunction bindkey
 
+FZF_TAB_PREFIX=
 FZF_TAB_SHOW_GROUP=brief
 FZF_TAB_SINGLE_GROUP=()
 FZF_TAB_CONTINUOUS_TRIGGER='alt-enter'
