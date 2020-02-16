@@ -193,7 +193,7 @@ function install_fzf() {
 }
 
 function install_zsh() {
-  local v="zsh-5.7.1-274-ga132b74"
+  local v="zsh-5.8-3-g8f21786"
   if [[ -x /usr/local/bin/zsh ]]; then
     [[ "$(/usr/local/bin/zsh -c 'echo $ZSH_PATCHLEVEL')" != "$v" ]] || return 0
   fi
