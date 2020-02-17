@@ -231,8 +231,6 @@ jit-source ~/.zshrc-private
 emulate zsh
 setopt ALWAYS_TO_END           # full completions move cursor to the end
 setopt AUTO_CD                 # `dirname` is equivalent to `cd dirname`
-setopt AUTO_LIST               # automatically list choices on ambiguous completion
-setopt AUTO_MENU               # show completion menu on a successive tab press
 setopt AUTO_PARAM_SLASH        # if completed parameter is a directory, add a trailing slash
 setopt AUTO_PUSHD              # `cd` pushes directories to the directory stack
 setopt COMPLETE_IN_WORD        # complete from the cursor rather than from the end of the word
@@ -249,7 +247,6 @@ setopt MULTIOS                 # allow multiple redirections for the same fd
 setopt NO_BANG_HIST            # disable old history syntax
 setopt NO_BG_NICE              # don't nice background jobs; not useful and doesn't work on WSL
 setopt NO_FLOW_CONTROL         # disable start/stop characters in shell editor
-setopt NO_MENU_COMPLETE        # do not autoselect the first completion entry
 setopt PATH_DIRS               # perform path search even on command names with slashes
 setopt SHARE_HISTORY           # write and import history on every command
 setopt C_BASES                 # print hex/oct numbers as 0xFF/077 instead of 16#FF/8#77

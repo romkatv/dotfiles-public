@@ -1,72 +1,20 @@
 zmodload zsh/terminfo
-autoload -Uz edit-command-line
 autoload -Uz up-line-or-beginning-search
 autoload -Uz down-line-or-beginning-search
 
-typeset -g __local_searching __local_savecursor
-
-# This zle widget replaces the standard widget bound to Up (up-line-or-beginning-search). The
-# original widget is bound to Ctrl+Up. The only difference between the two is the history they
-# use. The standard widget uses global history while our replacement uses local history.
-#
-# Ideally, this function would be implemented like this:
-#
-#   zle .set-local-history 1
-#   zle .up-line-or-beginning-search
-#   zle .set-local-history 0
-#
-# This doesn't work though. If you type "foo bar" and press Up once, you'll get the last command
-# from local history that starts with "foo bar", such as "foo bar baz". This is great. However, if
-# you press Up again, you'll get the previous command from local history that starts with
-# "foo bar baz" rather than with "foo bar". This is brokarama.
-#
-# We can attempt to fix this by replacing "up-line-or-beginning-search" with "up-line-or-search"
-# but then we'll be cycling through commands that start with "foo" rather than "foo bar". This is
-# craporama.
-#
-# To solve this problem I copied and modified the definition of down-line-or-beginning-search from
-# https://github.com/zsh-users/zsh/blob/master/Functions/Zle/down-line-or-beginning-search. God
-# bless Open Source.
 function up-line-or-beginning-search-local() {
   emulate -L zsh
   local last=$LASTWIDGET
   zle .set-local-history 1
-  if [[ $LBUFFER == *$'\n'* ]]; then
-    zle .up-line-or-history
-    __local_searching=''
-  elif [[ -n $PREBUFFER ]] && zstyle -t ':zle:up-line-or-beginning-search' edit-buffer; then
-    zle .push-line-or-edit
-  else
-    [[ $last = $__local_searching ]] && CURSOR=$__local_savecursor
-    __local_savecursor=$CURSOR
-    __local_searching=$WIDGET
-    zle .history-beginning-search-backward
-    zstyle -T ':zle:up-line-or-beginning-search' leave-cursor && zle .end-of-line
-  fi
+  () { local -h LASTWIDGET=$last; up-line-or-beginning-search "$@" } "$@"
   zle .set-local-history 0
 }
 
-# Same as above but for Down.
 function down-line-or-beginning-search-local() {
   emulate -L zsh
   local last=$LASTWIDGET
   zle .set-local-history 1
-  () {
-    if [[ ${+NUMERIC} -eq 0 && ( $last = $__local_searching || $RBUFFER != *$'\n'* ) ]]; then
-      [[ $last = $__local_searching ]] && CURSOR=$__local_savecursor
-      __local_searching=$WIDGET
-      __local_savecursor=$CURSOR
-      if zle .history-beginning-search-forward; then
-        if [[ $RBUFFER != *$'\n'* ]]; then
-          zstyle -T ':zle:down-line-or-beginning-search' leave-cursor && zle .end-of-line
-        fi
-        return
-      fi
-      [[ $RBUFFER = *$'\n'* ]] || return
-    fi
-    __local_searching=''
-    zle .down-line-or-history
-  }
+  () { local -h LASTWIDGET=$last; down-line-or-beginning-search "$@" } "$@"
   zle .set-local-history 0
 }
 
@@ -91,12 +39,13 @@ fi
 #   - preview pane with syntax highlighting
 function fzf-history-widget-unique() {
   emulate -L zsh -o pipefail
-  local preview='echo -E {} | cut -c8- | xargs -0 echo -e | bat -l bash --color always -pp'
+  local preview='zsh -dfc "setopt extended_glob; echo - \${\${1#*[0-9] }## #}" -- {}'
+  (( $+commands[bat] )) && preview+=' | bat -l bash --color always -pp'
   local selected
   selected="$(
     fc -rl 1 |
     awk '!_[substr($0, 8)]++' |
-    fzf +m -n2..,.. --tiebreak=index --cycle --height=80% --preview-window=down:25%:wrap \
+    fzf +m -n2..,.. --tiebreak=index --cycle --height=80% --preview-window=down:30%:wrap \
       --query=$LBUFFER --preview=$preview)"
   local ret=$?
   [[ -n "$selected" ]] && zle vi-fetch-history -n $selected
@@ -187,11 +136,10 @@ zle -N my-noop-widget
 
 bindkey -e
 
-# Deny fzf bindings. We have our own.
-function bindkey() {}
+fzf_default_completion=expand-or-complete-with-dots
 jit-source ~/dotfiles/fzf/shell/completion.zsh
 jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
-unfunction bindkey
+bindkey -r '^[c'  # remove unwanted binding
 
 FZF_TAB_PREFIX=
 FZF_TAB_SHOW_GROUP=brief
