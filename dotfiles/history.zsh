@@ -6,7 +6,6 @@ fi
 
 typeset -gi HISTSIZE=1000000000
 typeset -gi SAVEHIST=1000000000
-typeset -gi HISTFILESIZE=1000000000
 
 () {
   emulate -L zsh

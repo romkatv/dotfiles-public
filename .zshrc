@@ -9,7 +9,7 @@ path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
 
 fpath+=~/dotfiles/functions
 [[ -d ~/archive ]] && fpath+=~/archive || fpath+=~/dotfiles/archive
-autoload -Uz ${^${(M)fpath:#~/*}}/[^_]*(N:t) run-help zmv zcp zln is-at-least add-zsh-hook
+autoload -Uz ${^${(M)fpath:#~/*}}/[^_]*(N:t) zmv zcp zln is-at-least add-zsh-hook
 
 if (( BENCH )); then
   print -rn -- $'\e]0;BENCH\a' >$TTY
@@ -27,22 +27,25 @@ else
   set-term-title-precmd
 fi
 
-function command_not_found_handler() {
-  emulate -L zsh
-  [[ -x /usr/lib/command-not-found ]] || return 1
-  /usr/lib/command-not-found -- $1
-}
+if [[ -x /usr/lib/command-not-found ]]; then
+  function command_not_found_handler() { /usr/lib/command-not-found -- "$@" }
+fi
 
 function jit() {
   emulate -L zsh
-  [[ ${(%):-%#} == '#' || $1.zwc -nt $1 || ! -w ${1:h} ]] || zcompile -R $1
+  [[ $1.zwc -nt $1 || ! -w ${1:h} ]] && return
+  zmodload -F zsh/files b:zf_mv b:zf_rm
+  local tmp=$1.tmp.$$.zwc
+  {
+    zcompile -R -- $tmp $1 && zf_mv -f -- $tmp $1.zwc || return
+  } always {
+    (( $? )) && zf_rm -f -- $tmp
+  }
 }
 
 function jit-source() {
   emulate -L zsh
-  [[ -e $1 ]] || return
-  jit $1
-  source $1
+  [[ -e $1 ]] && jit $1 && source -- $1
 }
 
 umask 0022
@@ -159,7 +162,6 @@ jit-source ~/dotfiles/history.zsh
 # Disable highlighting of text pasted into the command line.
 zle_highlight=('paste:none')
 
-(( $+aliases[run-help] )) && unalias run-help
 jit-source ~/dotfiles/aliases.zsh
 
 if (( BENCH )); then

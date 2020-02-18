@@ -1,6 +1,7 @@
 zmodload zsh/terminfo
-autoload -Uz up-line-or-beginning-search
-autoload -Uz down-line-or-beginning-search
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search run-help
+
+(( $+aliases[run-help] )) && unalias run-help
 
 function up-line-or-beginning-search-local() {
   emulate -L zsh
@@ -20,6 +21,9 @@ function down-line-or-beginning-search-local() {
 
 # Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
 function my-expand-alias() { zle _expand_alias || true }
+# When using stock run-help with syntax highlighting and autosuggestions, you'll get weird results
+# for `exec` with `exec zsh` as autosuggestion. This fixes one half of the problem.
+function my-run-help() { zle run-help || true }
 
 # Shows '...' while completing. No `emulate -L zsh` to pick up dotglob if it's set.
 if (( ${+terminfo[rmam]} && ${+terminfo[smam]} )); then
@@ -118,11 +122,12 @@ function toggle-dotfiles() {
   redraw-prompt 0
 }
 
-function my-noop-widget() {}
+function my-do-nothing() {}
 
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 zle -N my-expand-alias
+zle -N my-run-help
 zle -N expand-or-complete-with-dots
 zle -N up-line-or-beginning-search-local
 zle -N down-line-or-beginning-search-local
@@ -132,7 +137,7 @@ zle -N cd-up
 zle -N fzf-history-widget-unique
 zle -N toggle-dotfiles
 zle -N my-pound-insert
-zle -N my-noop-widget
+zle -N my-do-nothing
 
 bindkey -e
 
@@ -201,8 +206,10 @@ bindkey '^[[1;3B' fzf-cd-widget                       # alt+down   fzf cd
 bindkey '^T'      fzf-completion                      # ctrl+t     fzf completion
 bindkey '^R'      fzf-history-widget-unique           # ctrl+r     fzf history
 bindkey '^P'      toggle-dotfiles                     # ctrl+p     toggle public/private dotfiles
-bindkey '^[[5~'   my-noop-widget                      # pageup     do nothing
-bindkey '^[[6~'   my-noop-widget                      # pagedown   do nothing
+bindkey '^[[5~'   my-do-nothing                       # pageup     do nothing
+bindkey '^[[6~'   my-do-nothing                       # pagedown   do nothing
+bindkey '^[h'     my-run-help                         # alt+h      help for the command at cursor
+bindkey '^[H'     my-run-help                         # alt+H      help for the command at cursor
 
 typeset -g ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
 typeset -g ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(

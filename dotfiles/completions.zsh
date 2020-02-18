@@ -5,12 +5,8 @@
 # https://github.com/sorin-ionescu/prezto/blob/6f603df7a641fb136b8b168d75e905fef60a00cf/LICENSE.
 
 autoload -Uz compinit
-
-() {
-  local f=${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
-  compinit -d $f
-  [[ ${(%):-%#} == '#' || $f.zwc -nt $f ]] || zcompile -R $f
-}
+compinit -d ${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
+jit ${XDG_CACHE_HOME:-~/.cache}/.zcompdump-$ZSH_VERSION
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 
