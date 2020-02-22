@@ -138,6 +138,7 @@ if (( ${THEME:-1} )); then
     (( vcs )) || return
     unset POWERLEVEL9K_VCS_DISABLED_WORKDIR_PATTERN
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs,vcs-1]=(git_dir)
+    [[ -d ~/gitstatus ]] && : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
     (( $+functions[p10k] )) && p10k reload
   }
   p10k-on-init
