@@ -150,6 +150,7 @@ FZF_TAB_PREFIX=
 FZF_TAB_SHOW_GROUP=brief
 FZF_TAB_SINGLE_GROUP=()
 FZF_TAB_CONTINUOUS_TRIGGER='alt-enter'
+FZF_TAB_CUSTOM_COMPLETIONS=0
 
 # fzf-tab reads the value of this binding during initialization.
 bindkey '\t' expand-or-complete
