@@ -13,10 +13,10 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'l:|=* r:|=*'
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path ${XDG_CACHE_HOME:-$HOME/.cache}/.zcompcache-$ZSH_VERSION
 zstyle ':completion:*:descriptions' format '[%d]'
-zstyle ':completion:*' completer _complete
+#zstyle ':completion:*' completer _complete
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 zstyle ':completion:*' squeeze-slashes true
-zstyle '*' single-ignored show
+zstyle ':completion:*' single-ignored show
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line other
 zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 zstyle ':completion:*:*:*:*:processes' command 'ps -A -o pid,user,command -w'
