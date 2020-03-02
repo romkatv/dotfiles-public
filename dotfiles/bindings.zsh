@@ -19,8 +19,14 @@ function down-line-or-beginning-search-local() {
   zle .set-local-history 0
 }
 
-# Wrap _expand_alias because putting _expand_alias in ZSH_AUTOSUGGEST_CLEAR_WIDGETS won't work.
-function my-expand-alias() { zle _expand_alias || true }
+function my-beginning-of-buffer() { CURSOR=0 }
+function my-end-of-buffer() { CURSOR=$(($#BUFFER  + 1)) }
+
+function my-expand() {
+  zle _expand_alias || true
+  zle .expand-word  || true
+}
+
 # When using stock run-help with syntax highlighting and autosuggestions, you'll get weird results
 # for `exec` with `exec zsh` as autosuggestion. This fixes one half of the problem.
 function my-run-help() { zle run-help || true }
@@ -50,7 +56,7 @@ function fzf-history-widget-unique() {
     fc -rl 1 |
     awk '!_[substr($0, 8)]++' |
     fzf +m -n2..,.. --tiebreak=index --cycle --height=80% --preview-window=down:30%:wrap \
-      --query=$LBUFFER --preview=$preview)"
+      --bind '?:toggle-preview' --query=$LBUFFER --preview=$preview)"
   local ret=$?
   [[ -n "$selected" ]] && zle vi-fetch-history -n $selected
   zle .reset-prompt
@@ -126,7 +132,7 @@ function my-do-nothing() {}
 
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-zle -N my-expand-alias
+zle -N my-expand
 zle -N my-run-help
 zle -N expand-or-complete-with-dots
 zle -N up-line-or-beginning-search-local
@@ -138,6 +144,8 @@ zle -N fzf-history-widget-unique
 zle -N toggle-dotfiles
 zle -N my-pound-insert
 zle -N my-do-nothing
+zle -N my-beginning-of-buffer
+zle -N my-end-of-buffer
 
 bindkey -e
 
@@ -197,8 +205,8 @@ bindkey '^\'      redo                                # ctrl+\     redo
 bindkey '^Y'      my-pound-insert                     # ctrl+y     comment and accept, or uncomment
 bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
 bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
-bindkey '^ '      my-expand-alias                     # ctrl+space expand alias
-bindkey '^[[Z'    reverse-menu-complete               # shift+tab  previous in completion menu
+bindkey '^[[Z'    my-expand                           # shift+tab  expand alias/glob/parameter
+bindkey '^ '      autosuggest-accept               
 bindkey '^[[1;3D' cd-back                             # alt+left   cd into the previous directory
 bindkey '^[[1;3C' cd-forward                          # alt+right  cd into the next directory
 bindkey '^[[1;3A' cd-up                               # alt+up     cd ..
@@ -211,32 +219,36 @@ bindkey '^[[5~'   my-do-nothing                       # pageup     do nothing
 bindkey '^[[6~'   my-do-nothing                       # pagedown   do nothing
 bindkey '^[h'     my-run-help                         # alt+h      help for the command at cursor
 bindkey '^[H'     my-run-help                         # alt+H      help for the command at cursor
+bindkey '^[[1;3H' my-beginning-of-buffer
+bindkey '^[[1;5H' my-beginning-of-buffer
+bindkey '^[[1;3F' my-end-of-buffer
+bindkey '^[[1;5F' my-end-of-buffer
 
 typeset -g ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
 typeset -g ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
-  end-of-line
-  vi-end-of-line
-  vi-add-eol
-  # forward-char     # my removal
-  # vi-forward-char  # my removal
+  # end-of-line
+  # vi-end-of-line
+  # vi-add-eol
+  # forward-char
+  # vi-forward-char
 )
 typeset -g ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
-  history-search-forward
-  history-search-backward
-  history-beginning-search-forward
-  history-beginning-search-backward
-  history-substring-search-up
-  history-substring-search-down
-  up-line-or-beginning-search
-  down-line-or-beginning-search
-  up-line-or-history
-  down-line-or-history
+  #history-search-forward
+  #history-search-backward
+  #history-beginning-search-forward
+  #history-beginning-search-backward
+  #history-substring-search-up
+  #history-substring-search-down
+  #up-line-or-beginning-search
+  #down-line-or-beginning-search
+  #up-line-or-history
+  #down-line-or-history
   accept-line
-  fzf-history-widget-unique            # my addition
-  up-line-or-beginning-search-local    # my addition
-  down-line-or-beginning-search-local  # my addition
-  my-expand-alias                      # my addition
-  fzf-tab-complete                     # my addition
+  # fzf-history-widget-unique            # my addition
+  #up-line-or-beginning-search-local    # my addition
+  #down-line-or-beginning-search-local  # my addition
+  # my-expand                          # my addition
+  # fzf-tab-complete                   # my addition
 )
 typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   forward-word
@@ -247,8 +259,14 @@ typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   vi-forward-blank-word-end
   vi-find-next-char
   vi-find-next-char-skip
-  forward-char               # my addition
-  vi-forward-char            # my addition
+  # my additions
+  forward-char
+  vi-forward-char
+  my-beginning-of-buffer
+  my-end-of-buffer
+  end-of-line
+  vi-end-of-line
+  vi-add-eol
 )
 typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   orig-\*
@@ -260,4 +278,5 @@ typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   yank-pop
   zle-\*
   expand-or-complete  # my addition (to make expand-or-complete-with-dots work with fzf-tab)
+  redisplay           # my addition; not sure if it works
 )
