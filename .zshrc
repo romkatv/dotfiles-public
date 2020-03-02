@@ -10,6 +10,7 @@ path=($HOME/bin $HOME/.local/bin $HOME/.cargo/bin $path)
 fpath+=~/dotfiles/functions
 [[ -d ~/archive ]] && fpath+=~/archive || fpath+=~/dotfiles/archive
 autoload -Uz ${^${(M)fpath:#~/*}}/[^_]*(N:t) zmv zcp zln is-at-least add-zsh-hook
+autoload -Uz ${^fpath}/run-help-*(N:t)
 
 if (( BENCH )); then
   print -rn -- $'\e]0;BENCH\a' >$TTY
