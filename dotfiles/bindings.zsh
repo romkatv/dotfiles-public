@@ -147,22 +147,19 @@ zle -N my-do-nothing
 zle -N my-beginning-of-buffer
 zle -N my-end-of-buffer
 
-bindkey -e
+function bindkey() {}
 
 fzf_default_completion=expand-or-complete-with-dots
 jit-source ~/dotfiles/fzf/shell/completion.zsh
 jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
-bindkey -r '^[c'  # remove unwanted binding
 
-FZF_TAB_PREFIX=
-FZF_TAB_SHOW_GROUP=brief
-FZF_TAB_SINGLE_GROUP=()
-FZF_TAB_CONTINUOUS_TRIGGER='alt-enter'
-FZF_TAB_CUSTOM_COMPLETIONS=0
+zstyle ':fzf-tab:*' prefix ''
+zstyle ':fzf-tab:*' show-group brief
+zstyle ':fzf-tab:*' single-group
+zstyle ':fzf-tab:*' continuous-trigger alt-enter
+jit-source ~/fzf-tab/fzf-tab.zsh
 
-# fzf-tab reads the value of this binding during initialization.
-bindkey '\t' expand-or-complete
-jit-source ~/dotfiles/fzf-tab/fzf-tab.zsh
+unfunction bindkey
 
 # If NumLock is off, translate keys to make them appear the same as with NumLock on.
 bindkey -s '^[OM' '^M'  # enter
@@ -277,6 +274,5 @@ typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   yank
   yank-pop
   zle-\*
-  expand-or-complete  # my addition (to make expand-or-complete-with-dots work with fzf-tab)
   redisplay           # my addition; not sure if it works
 )
