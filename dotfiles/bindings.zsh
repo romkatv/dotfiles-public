@@ -157,7 +157,7 @@ zstyle ':fzf-tab:*' prefix ''
 zstyle ':fzf-tab:*' show-group brief
 zstyle ':fzf-tab:*' single-group
 zstyle ':fzf-tab:*' continuous-trigger alt-enter
-jit-source ~/fzf-tab/fzf-tab.zsh
+jit-source ~/dotfiles/fzf-tab/fzf-tab.zsh
 
 unfunction bindkey
 
