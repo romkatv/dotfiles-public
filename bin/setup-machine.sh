@@ -193,15 +193,15 @@ function install_fzf() {
 }
 
 function install_zsh() {
-  local v="zsh-5.8-3-g8f21786"
+  local v="g8f21786"
   if [[ -x /usr/local/bin/zsh ]]; then
-    [[ "$(/usr/local/bin/zsh -c 'echo $ZSH_PATCHLEVEL')" != "$v" ]] || return 0
+    [[ "$(/usr/local/bin/zsh -c 'echo $ZSH_PATCHLEVEL')" != *-"$v" ]] || return 0
   fi
   local repo
   tmp="$(mktemp -d)"
   git clone 'https://github.com/romkatv/zsh.git' "$tmp"
   pushd "$tmp"
-  git checkout "${v##*-g}"
+  git checkout "$v"
   ./Util/preconfig
   ./configure
   sudo make -j 20 install
