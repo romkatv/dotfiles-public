@@ -21,7 +21,7 @@ else
   }
   function set-term-title-preexec() {
     emulate -L zsh
-    print -rn -- $'\e]0;'${(V%)1}$'\a' >$TTY
+    print -rn -- $'\e]0;'${(V)1}$'\a' >$TTY
   }
   add-zsh-hook preexec set-term-title-preexec
   add-zsh-hook precmd set-term-title-precmd
