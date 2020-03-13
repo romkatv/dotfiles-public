@@ -17,11 +17,11 @@ if (( BENCH )); then
 else
   function set-term-title-precmd() {
     emulate -L zsh
-    print -rn -- $'\e]0;'${(V%):-'%~'}$'\e\\' >$TTY
+    print -rn -- $'\e]0;'${(V%):-'%~'}$'\a' >$TTY
   }
   function set-term-title-preexec() {
     emulate -L zsh
-    print -rn -- $'\e]0;'${(V)1}$'\e\\' >$TTY
+    print -rn -- $'\e]0;'${(V)1}$'\a' >$TTY
   }
   add-zsh-hook preexec set-term-title-preexec
   add-zsh-hook precmd set-term-title-precmd
