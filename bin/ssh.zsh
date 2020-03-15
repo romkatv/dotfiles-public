@@ -166,7 +166,7 @@ ssh -t "$@" '
         if [ "$sum" != "'$git_md5'  -" ]; then
           [ "$sum" = "'$git_sha512'  -" ]                   || exit
         fi
-        tar -pxz <"$archive"                                || exit
+        tar -C "$dir".tmp -pxz <"$archive"                  || exit
         rm -- "$archive"                                    || exit
         mv -- "$dir".tmp "$dir"                             || exit
       fi
