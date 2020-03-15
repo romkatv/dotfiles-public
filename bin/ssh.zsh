@@ -87,6 +87,8 @@ export _zsh_orig_ldpath=$LD_LIBRARY_PATH
 cd -- "$HOME"/.ssh.zsh/zsh || exit
 LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.ssh.zsh/zsh" exec ./zsh-portable "$@"'
 
+print -ru2 -- '[local] connecting: ssh'  "$@"
+
 # Rock 'n roll!
 ssh -t "$@" '
   set -o pipefail 2>/dev/null
@@ -135,4 +137,5 @@ ssh -t "$@" '
     fi
     mv -- ~/.zshrc.tmp ~/.zshrc                             || exit
   fi
+  >&2 echo "[remote] starting zsh..."
   exec zsh -il'
