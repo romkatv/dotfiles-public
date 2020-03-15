@@ -28,7 +28,7 @@ local dump
 local_files=(~/$^local_files(N))
 if (( $#local_files )); then
   print -ru2 -- '[local] archiving files: '${(j:,:)${(@)local_files/#$HOME/'~'}}
-  dump=$(tar -C ~ -pcz -- ${(@)local_files#$HOME/} | base64 -w0) || return
+  dump=$(tar -C ~ -pcz -- ${(@)local_files#$HOME/} | base64) || return
 fi
 
 # Template for checking whether TOOL is available (uname, chmod, etc.).
