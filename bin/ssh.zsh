@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 #
-# Usage: ssh.zsh username@hostname
+# Usage: ssh.zsh [ssh-options] [user@]hostname
 
 emulate zsh -o pipefail -o extended_glob
 
@@ -19,7 +19,7 @@ local required_tools=(uname mkdir rm mv chmod ln tar base64)
 local local_files=(.p10k.zsh)
 
 if (( ARGC == 0 )); then
-  print -ru2 -- 'usage: ssh.zsh username@hostname'
+  print -ru2 -- 'usage: ssh.zsh [ssh-options] [user@]hostname'
   return 1
 fi
 
