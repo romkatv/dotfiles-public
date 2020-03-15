@@ -97,7 +97,7 @@ ssh -t "$@" '
   if ! command -v zsh >/dev/null 2>&1; then
     dir="$HOME"/.ssh.zsh/zsh
     if [ ! -e "$dir" ]; then
-      >&2 echo "[remote] installing zsh..."
+      >&2 echo "[remote] installing zsh"
       rm -rf -- "$dir".tmp                                  || exit
       mkdir -p -- "$dir".tmp                                || exit
       kernel=$(uname -s)                                    || exit
@@ -119,12 +119,12 @@ ssh -t "$@" '
     printf "%s" "$dump" | base64 -d | tar -C ~ -pxz         || exit
   fi
   if [ ! -e ~/.zshrc ]; then
-    >&2 echo "[remote] installing zshrc..."
+    >&2 echo "[remote] installing zshrc"
     >~/.zshrc.tmp fetch '${(q)zshrc_url}'                   || exit
     if ! command -v git >/dev/null 2>&1; then
       dir="$HOME"/.ssh.zsh/git
       if [ ! -e "$dir" ]; then
-        >&2 echo "[remote] installing git..."
+        >&2 echo "[remote] installing git"
         rm -rf -- "$dir".tmp                                || exit
         mkdir -p -- "$dir".tmp                              || exit
         arch=$(uname -m)                                    || exit
@@ -137,5 +137,5 @@ ssh -t "$@" '
     fi
     mv -- ~/.zshrc.tmp ~/.zshrc                             || exit
   fi
-  >&2 echo "[remote] starting zsh..."
+  >&2 echo "[remote] starting zsh"
   exec zsh -il'
