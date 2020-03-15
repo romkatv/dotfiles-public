@@ -8,13 +8,15 @@ emulate zsh -o pipefail -o extended_glob
 local zsh_url='https://github.com/xxh/zsh-portable/raw/50539a52a5f8947c10937fec9649fafa94487624/result/zsh-portable-${kernel}-${arch}.tar.gz'
 # If there is no `git` on the remove machine, install this version to ~/.ssh.zsh/git.
 local git_url='http://s.minos.io/archive/bifrost/${arch}/git-2.7.2-2.tar.gz'
-local git_md5_url='http://s.minos.io/archive/bifrost/${arch}/md5sum.txt'
-local git_sha512_url='http://s.minos.io/archive/bifrost/${arch}/sha512sum.txt'
+# md5 of @git_url; not using http://s.minos.io/archive/bifrost/x86_64/md5sum.txt because it's http.
+local git_md5='4151ed3bf2602dc7125ccddc65235af7'
+# sha512 of @git_url.
+local git_sha512='1d67b643d79f8426ddf7ee799a6bcb92389b534eb39378d6ba67af1202d77a3391dc69a0f0be801773fcd442cae9365d31965071a66d466bdbbd9e37b8441b11'
 # If there is no ~/.zshrc on the remote machine, download this.
 local zshrc_url='https://raw.githubusercontent.com/romkatv/zsh4humans/c7c1a534a79c6537c68a651ab75540459dfa9798/.zshrc'
 
 # Require these tools to be installed on the remote machine.
-local required_tools=(uname mkdir rm mv chmod ln tar base64)
+local required_tools=(uname mkdir rm mv chmod ln tar base64 sed)
 
 # Copy all these files and directories (relative to $HOME) from local machine to remote.
 # Silently skip files that don't exist locally. Override existing files on the remote machine.
@@ -158,21 +160,14 @@ ssh -t "$@" '
         arch=$(uname -m)                                    || exit
         fetch_init                                          || exit
         checksum_init                                       || exit
-        set -x
-        (
-          cd -- "$dir".tmp                                  || exit
-          archive="'${git_url:t}'"
-          >"$archive" $(echo $fetch) "'$git_url'"           || exit
-          sum=$($(echo $checksum) "$archive")               || exit
-          if echo "$checksum" | grep -F md5 >/dev/null; then
-            url="'$git_md5_url'"
-          else
-            url="'$git_sha512_url'"
-          fi
-          $(echo $fetch) "$url" | grep -F "$sum" >/dev/null || exit
-          <"$archive" tar -pxz                              || exit
-          rm -- "$archive"                                  || exit
-        )                                                   || exit
+        archive="$dir".tmp/archive
+        >"$archive" $(echo $fetch) "'$git_url'"             || exit
+        sum=$($(echo $checksum) - <"$archive")              || exit
+        if [ "$sum" != "'$git_md5'  -" ]; then
+          [ "$sum" = "'$git_sha512'  -" ]                   || exit
+        fi
+        tar -pxz <"$archive"                                || exit
+        rm -- "$archive"                                    || exit
         mv -- "$dir".tmp "$dir"                             || exit
       fi
       export PATH="$PATH:$dir/usr/bin"
