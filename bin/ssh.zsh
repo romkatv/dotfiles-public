@@ -7,9 +7,9 @@ emulate zsh -o pipefail -o extended_glob
 # If there is no zsh on the remote machine, install this version to ~/.ssh.zsh/zsh.
 local zsh_url='https://github.com/xxh/zsh-portable/raw/50539a52a5f8947c10937fec9649fafa94487624/result/zsh-portable-${kernel}-${arch}.tar.gz'
 # If there is no `git` on the remove machine, install this version to ~/.ssh.zsh/git.
-local zshrc_url='https://raw.githubusercontent.com/romkatv/zsh4humans/c7c1a534a79c6537c68a651ab75540459dfa9798/.zshrc'
-# If there is no ~/.zshrc on the remote machine, download this.
 local git_url='http://s.minos.io/archive/bifrost/${arch}/git-2.7.2-2.tar.gz'
+# If there is no ~/.zshrc on the remote machine, download this.
+local zshrc_url='https://raw.githubusercontent.com/romkatv/zsh4humans/c7c1a534a79c6537c68a651ab75540459dfa9798/.zshrc'
 
 # Require these tools to be installed on the remote machine.
 local required_tools=(uname mkdir rm mv chmod ln tar base64)
