@@ -96,42 +96,43 @@ ssh -t "$@" '
     dir="$HOME"/.ssh.zsh/zsh
     if [ ! -e "$dir" ]; then
       >&2 echo "[remote] installing zsh..."
-      rm -rf -- "$dir".tmp                              || exit
-      mkdir -p -- "$dir".tmp                            || exit
-      kernel=$(uname -s)                                || exit
-      arch=$(uname -m)                                  || exit
-      fetch "'$zsh_url'" | tar -C "$dir".tmp -pxz       || exit
-      ln -s -- . "$dir".tmp/run                         || exit
-      mkdir -p -- "$dir".tmp/etc                        || exit
-      >"$dir".tmp/etc/zshenv printf "%s" '${(q)zshenv}' || exit
-      rm -- "$dir".tmp/zsh.sh                           || exit
-      mv -- "$dir".tmp/zsh "$dir".tmp/zsh-portable      || exit
-      >"$dir".tmp/zsh printf "%s" '${(q)zsh}'           || exit
-      chmod +x "$dir".tmp/zsh                           || exit
-      mv -- "$dir".tmp "$dir"                           || exit
+      rm -rf -- "$dir".tmp                                  || exit
+      mkdir -p -- "$dir".tmp                                || exit
+      kernel=$(uname -s)                                    || exit
+      arch=$(uname -m)                                      || exit
+      fetch "'$zsh_url'" | tar -C "$dir".tmp -pxz           || exit
+      ln -s -- . "$dir".tmp/run                             || exit
+      mkdir -p -- "$dir".tmp/etc                            || exit
+      >"$dir".tmp/etc/zshenv printf "%s" '${(q)zshenv}'     || exit
+      rm -- "$dir".tmp/zsh.sh                               || exit
+      mv -- "$dir".tmp/zsh "$dir".tmp/zsh-portable          || exit
+      >"$dir".tmp/zsh printf "%s" '${(q)zsh}'               || exit
+      chmod +x "$dir".tmp/zsh                               || exit
+      mv -- "$dir".tmp "$dir"                               || exit
     fi
     export PATH="$PATH:$dir"
   fi
   dump='${(q)dump}'
   if [ -n "$dump" ]; then
-    printf "%s" "$dump" | base64 -d | tar -C ~ -pxz     || exit
+    printf "%s" "$dump" | base64 -d | tar -C ~ -pxz         || exit
   fi
   if [ ! -e ~/.zshrc ]; then
     >&2 echo "[remote] installing zshrc..."
-    >~/.zshrc fetch '${(q)zshrc_url}'                   || exit
+    >~/.zshrc.tmp fetch '${(q)zshrc_url}'                   || exit
     if ! command -v git >/dev/null 2>&1; then
       dir="$HOME"/.ssh.zsh/git
       if [ ! -e "$dir" ]; then
         >&2 echo "[remote] installing git..."
-        rm -rf -- "$dir".tmp                            || exit
-        mkdir -p -- "$dir".tmp                          || exit
-        arch=$(uname -m)                                || exit
-        fetch "'$git_url'" | tar -C "$dir".tmp -pxz     || exit
-        mv -- "$dir".tmp "$dir"                         || exit
+        rm -rf -- "$dir".tmp                                || exit
+        mkdir -p -- "$dir".tmp                              || exit
+        arch=$(uname -m)                                    || exit
+        fetch "'$git_url'" | tar -C "$dir".tmp -pxz         || exit
+        mv -- "$dir".tmp "$dir"                             || exit
       fi
       export PATH="$PATH:$dir/usr/bin"
-      sed "s/ --recurse-submodules -j 8//g" -i ~/.zshrc || exit
-      sed "s/https:/git:/g" -i ~/.zshrc                 || exit
+      sed "s/ --recurse-submodules -j 8//g" -i ~/.zshrc.tmp || exit
+      sed "s/https:/git:/g" -i ~/.zshrc.tmp                 || exit
     fi
+    mv -- ~/.zshrc.tmp ~/.zshrc                             || exit
   fi
   exec zsh -il'
