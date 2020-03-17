@@ -1,6 +1,30 @@
 #!/usr/bin/env zsh
 #
 # Usage: ssh.zsh [ssh-options] [user@]hostname
+#
+# This is a replacement for `ssh [ssh-options] [user@]hostname` that fires
+# up Zsh on the remote machine with a decent config.
+#
+# Here's what it does:
+#
+#   1. If you have `~/.p10k.zsh` on the local machine, it gets archived and
+#      sent to the remote machine. It's easy to customize the list of files
+#      that get sent this way.
+#   2. If there is no Zsh on the remote machine, the version from
+#      https://github.com/romkatv/zsh-bin gets installed to `~/.cache/ssh.zsh`.
+#   3. If there is no `~/.zshrc` on the remote machine, the version from
+#      https://github.com/romkatv/zsh4humans gets installed.
+#   4. zsh4humans needs `git`, so if `~/.zshrc` was pulled from zsh4humans in
+#      the previous step and there is no `git`, the version from
+#      https://github.com/minos-org/minos-static gets installed to
+#      `~/.cache/ssh.zsh`.
+#
+# This gives you fairly good Zsh experience over SSH with history, completions,
+# etc.
+#
+# You can edit `~/.zshrc` on the remote machine -- it won't get overwritten.
+# You can delete `~/.zshrc` and `~/.cache/ssh.zsh` -- they'll be recreated the
+# next time you connect over SSH.
 
 emulate zsh -o pipefail -o extended_glob
 
