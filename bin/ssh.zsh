@@ -37,7 +37,7 @@ local git_md5='4151ed3bf2602dc7125ccddc65235af7'
 # sha512 of @git_url.
 local git_sha512='1d67b643d79f8426ddf7ee799a6bcb92389b534eb39378d6ba67af1202d77a3391dc69a0f0be801773fcd442cae9365d31965071a66d466bdbbd9e37b8441b11'
 # If there is no ~/.zshrc on the remote machine, download this.
-local zshrc_url='https://raw.githubusercontent.com/romkatv/zsh4humans/c7c1a534a79c6537c68a651ab75540459dfa9798/.zshrc'
+local zshrc_url='https://raw.githubusercontent.com/romkatv/zsh4humans/32a177912a290e403883b4e729b0b2c720cbd1a0/.zshrc'
 
 # Require these tools to be installed on the remote machine.
 local required_tools=(uname mkdir rm mv chmod ln tar base64 sed tr)
@@ -128,7 +128,6 @@ print -ru2 -- '[local] connecting: ssh'  "$@"
 
 # Rock 'n roll!
 ssh -t "$@" '
-  set -x
   set -o pipefail 2>/dev/null
   '"${(@)required_tools/(#m)*/${check_tool//TOOL/$MATCH}}"'
   '$fetch_init'
@@ -179,7 +178,7 @@ ssh -t "$@" '
         mv -- "$dir"/git.tmp "$dir"/git                     || exit
       fi
       export PATH="$PATH:$dir/git/usr/bin"
-      sed "s/ --recurse-submodules -j 8//g" -i ~/.zshrc.tmp || exit
+      sed "s/ --recurse-submodules//g" -i ~/.zshrc.tmp      || exit
       sed "s/https:/git:/g" -i ~/.zshrc.tmp                 || exit
     fi
     mv -- ~/.zshrc.tmp ~/.zshrc                             || exit
