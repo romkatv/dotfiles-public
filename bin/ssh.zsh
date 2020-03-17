@@ -124,20 +124,6 @@ checksum_init() {
 END
 )
 
-# The content of ~/.ssh.zsh/zsh/etc/zshenv on the remote machine.
-local zshenv='
-fpath=(${(@)fpath/#.\/run\//$HOME/.ssh.zsh/zsh/})
-cd -- "$_zsh_orig_pwd"
-export LD_LIBRARY_PATH=$_zsh_orig_ldpath
-unset _zsh_orig_ldpath _zsh_orig_pwd'
-
-# The content of ~/.ssh.zsh/zsh/zsh on the remote machine.
-local zsh='#!/bin/sh
-export _zsh_orig_pwd=$PWD
-export _zsh_orig_ldpath=$LD_LIBRARY_PATH
-cd -- "$HOME"/.ssh.zsh/zsh || exit
-LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/.ssh.zsh/zsh" exec ./zsh-portable "$@"'
-
 print -ru2 -- '[local] connecting: ssh'  "$@"
 
 # Rock 'n roll!
