@@ -5,7 +5,7 @@
 emulate zsh -o pipefail -o extended_glob
 
 # If there is no zsh on the remote machine, install this version to ~/.ssh.zsh/zsh.
-local zsh_url='https://github.com/xxh/zsh-portable/raw/50539a52a5f8947c10937fec9649fafa94487624/result/zsh-portable-${kernel}-${arch}.tar.gz'
+local zsh_url='https://github.com/romkatv/zsh-bin/releases/download/v2.0.0/zsh-5.8-${kernel}-${arch}-static.tar.gz'
 # If there is no `git` on the remove machine, install this version to ~/.ssh.zsh/git.
 local git_url='http://s.minos.io/archive/bifrost/${arch}/git-2.7.2-2.tar.gz'
 # md5 of @git_url; not using http://s.minos.io/archive/bifrost/x86_64/md5sum.txt because it's http.
@@ -16,7 +16,7 @@ local git_sha512='1d67b643d79f8426ddf7ee799a6bcb92389b534eb39378d6ba67af1202d77a
 local zshrc_url='https://raw.githubusercontent.com/romkatv/zsh4humans/c7c1a534a79c6537c68a651ab75540459dfa9798/.zshrc'
 
 # Require these tools to be installed on the remote machine.
-local required_tools=(uname mkdir rm mv chmod ln tar base64 sed)
+local required_tools=(uname mkdir rm mv chmod ln tar base64 sed tr)
 
 # Copy all these files and directories (relative to $HOME) from local machine to remote.
 # Silently skip files that don't exist locally. Override existing files on the remote machine.
@@ -118,30 +118,28 @@ print -ru2 -- '[local] connecting: ssh'  "$@"
 
 # Rock 'n roll!
 ssh -t "$@" '
+  set -x
   set -o pipefail 2>/dev/null
   '"${(@)required_tools/(#m)*/${check_tool//TOOL/$MATCH}}"'
   '$fetch_init'
   '$checksum_init'
+  dir="${XDG_CACHE_HOME:-$HOME/.cache}"/.ssh.zsh
+  mkdir -p -- $dir || exit
   if ! command -v zsh >/dev/null 2>&1; then
-    dir="$HOME"/.ssh.zsh/zsh
-    if [ ! -e "$dir" ]; then
+    if [ ! -e "$dir/zsh" ]; then
       >&2 echo "[remote] installing zsh"
-      rm -rf -- "$dir".tmp                                  || exit
-      mkdir -p -- "$dir".tmp                                || exit
       kernel=$(uname -s)                                    || exit
+      kernel=$(printf "%s" "$kernel" | tr "[A-Z]" "[a-z]")  || exit
       arch=$(uname -m)                                      || exit
+      arch=$(printf "%s" "$arch" | tr "[A-Z]" "[a-z]")      || exit
+      tmp="$dir/zsh-5.8-${kernel}-${arch}-static"
+      rm -rf -- "$tmp"                                      || exit
       fetch_init                                            || exit
-      $(echo $fetch) "'$zsh_url'" | tar -C "$dir".tmp -pxz  || exit
-      ln -s -- . "$dir".tmp/run                             || exit
-      mkdir -p -- "$dir".tmp/etc                            || exit
-      >"$dir".tmp/etc/zshenv printf "%s" '${(q)zshenv}'     || exit
-      rm -- "$dir".tmp/zsh.sh                               || exit
-      mv -- "$dir".tmp/zsh "$dir".tmp/zsh-portable          || exit
-      >"$dir".tmp/zsh printf "%s" '${(q)zsh}'               || exit
-      chmod +x "$dir".tmp/zsh                               || exit
-      mv -- "$dir".tmp "$dir"                               || exit
+      $(echo $fetch) "'$zsh_url'" | tar -C "$dir" -pxz      || exit
+      "$tmp/share/zsh/5.8/scripts/relocate" "$dir/zsh"      || exit
+      mv -- "$tmp" "$dir"/zsh                               || exit
     fi
-    export PATH="$PATH:$dir"
+    export PATH="$PATH:$dir/zsh/bin"
   fi
   dump='${(q)dump}'
   if [ -n "$dump" ]; then
@@ -152,25 +150,25 @@ ssh -t "$@" '
     fetch_init                                              || exit
     >~/.zshrc.tmp $(echo $fetch) '${(q)zshrc_url}'          || exit
     if ! command -v git >/dev/null 2>&1; then
-      dir="$HOME"/.ssh.zsh/git
-      if [ ! -e "$dir" ]; then
+      if [ ! -e "$dir"/git ]; then
         >&2 echo "[remote] installing git"
-        rm -rf -- "$dir".tmp                                || exit
-        mkdir -p -- "$dir".tmp                              || exit
+        rm -rf -- "$dir"/git.tmp                            || exit
+        mkdir -p -- "$dir"/git.tmp                          || exit
         arch=$(uname -m)                                    || exit
+        arch=$(printf "%s" "$arch" | tr "[A-Z]" "[a-z]")    || exit
         fetch_init                                          || exit
         checksum_init                                       || exit
-        archive="$dir".tmp/archive
+        archive="$dir"/git.tmp/archive
         >"$archive" $(echo $fetch) "'$git_url'"             || exit
         sum=$($(echo $checksum) - <"$archive")              || exit
         if [ "$sum" != "'$git_md5'  -" ]; then
           [ "$sum" = "'$git_sha512'  -" ]                   || exit
         fi
-        tar -C "$dir".tmp -pxz <"$archive"                  || exit
+        tar -C "$dir"/git.tmp -pxz <"$archive"              || exit
         rm -- "$archive"                                    || exit
-        mv -- "$dir".tmp "$dir"                             || exit
+        mv -- "$dir"/git.tmp "$dir"/git                     || exit
       fi
-      export PATH="$PATH:$dir/usr/bin"
+      export PATH="$PATH:$dir/git/usr/bin"
       sed "s/ --recurse-submodules -j 8//g" -i ~/.zshrc.tmp || exit
       sed "s/https:/git:/g" -i ~/.zshrc.tmp                 || exit
     fi
