@@ -29,7 +29,7 @@
 emulate zsh -o pipefail -o extended_glob
 
 # If there is no zsh on the remote machine, install this version to ~/.ssh.zsh/zsh.
-local zsh_url='https://github.com/romkatv/zsh-bin/releases/download/v2.0.0/zsh-5.8-${kernel}-${arch}-static.tar.gz'
+local zsh_url='https://github.com/romkatv/zsh-bin/releases/download/v2.1.1/zsh-5.8-${kernel}-${arch}-static.tar.gz'
 # If there is no `git` on the remove machine, install this version to ~/.ssh.zsh/git.
 local git_url='http://s.minos.io/archive/bifrost/${arch}/git-2.7.2-2.tar.gz'
 # md5 of @git_url; not using http://s.minos.io/archive/bifrost/x86_64/md5sum.txt because it's http.
