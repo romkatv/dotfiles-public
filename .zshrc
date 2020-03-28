@@ -139,7 +139,7 @@ if (( ${THEME:-1} )); then
     (( vcs )) || return
     unset POWERLEVEL9K_VCS_DISABLED_WORKDIR_PATTERN
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs,vcs-1]=(git_dir)
-    [[ -d ~/gitstatus ]] && : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
+    [[ -e ~/gitstatus/gitstatus.plugin.zsh ]] && : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
     (( $+functions[p10k] )) && p10k reload
   }
   p10k-on-init
@@ -150,10 +150,10 @@ if (( ${THEME:-1} )); then
   fi
 fi
 
-if [[ -d ~/gitstatus ]]; then
+if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
   : ${GITSTATUS_LOG_LEVEL=DEBUG}
   : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
-  [[ -f ~/gitstatus/gitstatusd ]] && : ${GITSTATUS_DAEMON=~/gitstatus/gitstatusd}
+  [[ -e ~/gitstatus/gitstatusd ]] && : ${GITSTATUS_DAEMON=~/gitstatus/gitstatusd}
 fi
 
 jit-source ~/dotfiles/completions.zsh
