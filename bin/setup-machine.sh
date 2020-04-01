@@ -154,7 +154,7 @@ function change_shell() {
   [[ -x "$new" ]]
 
   [[ "$current" != "$new" ]] || return 0
-	chsh -s "$new" || chsh -s "$new" || chsh -s "$new" || return
+  chsh -s "$new" || chsh -s "$new" || chsh -s "$new" || return
 }
 
 # Install Visual Studio Code.
