@@ -21,11 +21,7 @@ function down-line-or-beginning-search-local() {
 
 function my-beginning-of-buffer() { CURSOR=0 }
 function my-end-of-buffer() { CURSOR=$(($#BUFFER  + 1)) }
-
-function my-expand() {
-  zle _expand_alias || true
-  zle .expand-word  || true
-}
+function my-expand() { zle _expand_alias || zle .expand-word || true }
 
 # When using stock run-help with syntax highlighting and autosuggestions, you'll get weird results
 # for `exec` with `exec zsh` as autosuggestion. This fixes one half of the problem.
@@ -203,8 +199,7 @@ bindkey '^\'      redo                                # ctrl+\     redo
 bindkey '^Y'      my-pound-insert                     # ctrl+y     comment and accept, or uncomment
 bindkey '^[[1;5A' up-line-or-beginning-search         # ctrl+up    prev command in global history
 bindkey '^[[1;5B' down-line-or-beginning-search       # ctrl+down  next command in global history
-bindkey '^[[Z'    my-expand                           # shift+tab  expand alias/glob/parameter
-bindkey '^ '      autosuggest-accept               
+bindkey '^ '      my-expand                           # ctrl+space expand alias/glob/parameter
 bindkey '^[[1;3D' cd-back                             # alt+left   cd into the previous directory
 bindkey '^[[1;3C' cd-forward                          # alt+right  cd into the next directory
 bindkey '^[[1;3A' cd-up                               # alt+up     cd ..
