@@ -45,20 +45,22 @@ fi
 
 # Similar to fzf-history-widget. Extras:
 #
-#   - `awk` to remove duplicate
+#   - remove duplicate
+#   - proper multi-line command support
 #   - preview pane with syntax highlighting
 function fzf-history-widget-unique() {
   emulate -L zsh -o pipefail
-  local preview='zsh -dfc "setopt extended_glob; echo - \${\${1#*[0-9] }## #}" -- {}'
+  local preview='printf "%s" {}'
   (( $+commands[bat] )) && preview+=' | bat -l bash --color always -pp'
-  local selected
-  selected="$(
-    fc -rl 1 |
-    awk '!_[substr($0, 8)]++' |
-    fzf +m -n2..,.. --tiebreak=index --cycle --height=80% --preview-window=down:30%:wrap \
-      --bind '?:toggle-preview' --query=$LBUFFER --preview=$preview)"
-  local ret=$?
-  [[ -n "$selected" ]] && zle vi-fetch-history -n $selected
+  local cmd
+  cmd="$(print -rNC1 -- "${(@u)history}" |
+    fzf --read0 --no-multi --tiebreak=index --cycle --height=80% \
+      --preview-window=down:40%:wrap --preview=$preview          \
+      --bind '?:toggle-preview,ctrl-h:backward-kill-word' --query=$LBUFFER)"
+  local -i ret=$?
+  if [[ $ret == 0 && -n "$cmd" ]]; then
+    zle .vi-fetch-history -n $(($#history - ${${history[@]}[(ie)$cmd]} + 1))
+  fi
   zle .reset-prompt
   return ret
 }
@@ -74,7 +76,8 @@ function redraw-prompt() {
   for f in precmd $precmd_functions; do
     (( $+functions[$f] )) && $f &>/dev/null
   done
-  zle .reset-prompt && zle -R
+  zle .reset-prompt
+  zle -R
 }
 
 function cd-rotate() {
@@ -98,7 +101,7 @@ function my-pound-insert() {
   if (( $#uncommented )); then
     local MATCH
     BUFFER="${(pj:\n:)${(@)lines:/(#m)*/#${MATCH#\#}}}"
-    zle accept-line
+    zle .accept-line
   else
     local lbuf=$LBUFFER cur=$CURSOR
     BUFFER="${(pj:\n:)${(@)lines#\#}}"
@@ -154,8 +157,6 @@ jit-source ~/dotfiles/fzf/shell/completion.zsh
 jit-source ~/dotfiles/fzf/shell/key-bindings.zsh
 
 zstyle ':fzf-tab:*' prefix ''
-zstyle ':fzf-tab:*' show-group brief
-zstyle ':fzf-tab:*' single-group
 zstyle ':fzf-tab:*' continuous-trigger alt-enter
 jit-source ~/dotfiles/fzf-tab/fzf-tab.zsh
 
@@ -223,29 +224,18 @@ bindkey '^[[1;5F' my-end-of-buffer
 
 typeset -g ZSH_AUTOSUGGEST_EXECUTE_WIDGETS=()
 typeset -g ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(
-  # end-of-line
-  # vi-end-of-line
-  # vi-add-eol
-  # forward-char
-  # vi-forward-char
+  end-of-line
+  vi-end-of-line
+  vi-add-eol
+  my-end-of-buffer
 )
 typeset -g ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
-  #history-search-forward
-  #history-search-backward
-  #history-beginning-search-forward
-  #history-beginning-search-backward
-  #history-substring-search-up
-  #history-substring-search-down
-  #up-line-or-beginning-search
-  #down-line-or-beginning-search
-  #up-line-or-history
-  #down-line-or-history
   accept-line
-  # fzf-history-widget-unique            # my addition
-  #up-line-or-beginning-search-local    # my addition
-  #down-line-or-beginning-search-local  # my addition
-  # my-expand                          # my addition
-  # fzf-tab-complete                   # my addition
+  up-line-or-beginning-search
+  down-line-or-beginning-search
+  up-line-or-beginning-search-local
+  down-line-or-beginning-search-local
+  fzf-history-widget-unique
 )
 typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   forward-word
@@ -256,14 +246,8 @@ typeset -g ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS=(
   vi-forward-blank-word-end
   vi-find-next-char
   vi-find-next-char-skip
-  # my additions
   forward-char
   vi-forward-char
-  my-beginning-of-buffer
-  my-end-of-buffer
-  end-of-line
-  vi-end-of-line
-  vi-add-eol
 )
 typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   orig-\*
@@ -274,5 +258,6 @@ typeset -g ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   yank
   yank-pop
   zle-\*
-  redisplay           # my addition; not sure if it works
+  redisplay
+  fzf-tab-complete
 )
