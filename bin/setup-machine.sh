@@ -136,13 +136,16 @@ function install_packages() {
   if (( WSL )); then
     packages+=(dbus-x11)
   else
-    packages+=(gnome-tweak-tool imagemagick iotop tilix)
+    sudo add-apt-repository -y ppa:remmina-ppa-team/remmina-next
+    sudo add-apt-repository -y ppa:wireguard/wireguard
+    packages+=(gnome-tweak-tool imagemagick iotop tilix remmina wireguard)
   fi
 
-  sudo apt update
-  sudo bash -c 'DEBIAN_FRONTEND=noninteractive apt -o DPkg::options::=--force-confdef -o DPkg::options::=--force-confold upgrade -y'
-  sudo apt install -y "${packages[@]}"
-  sudo apt autoremove -y
+  sudo apt-get update
+  sudo bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::options::=--force-confdef -o DPkg::options::=--force-confold upgrade -y'
+  sudo apt-get install -y "${packages[@]}"
+  sudo apt-get autoremove -y
+  sudo apt-get autoclean
 }
 
 # If this user's login shell is not already "zsh", attempt to switch.
