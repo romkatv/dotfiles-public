@@ -42,17 +42,16 @@ if [[ ! -e ~/.ssh/id_rsa.pub ]]; then
   chmod 644 ~/.ssh/id_rsa.pub
 fi
 
-sudo apt update
-sudo bash <<END
-  DEBIAN_FRONTEND=noninteractive apt -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade -y
-END
-sudo apt autoremove -y
+sudo apt-get update
+sudo bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade -y'
+sudo apt-get autoremove -y
+sudo apt-get autoclean
 
-sudo apt install -y git curl
+sudo apt-get install -y git curl
 bootstrap="$(curl -fsSL "https://raw.githubusercontent.com/"$GITHUB_USERNAME"/dotfiles-public/master/bin/bootstrap-dotfiles.sh")"
 bash -c "$bootstrap"
 
-sudo apt install -y zsh
+sudo apt-get install -y zsh
 zsh ~/dotfiles/functions/sync-dotfiles
 
 bash ~/bin/setup-machine.sh
@@ -66,5 +65,6 @@ if [[ -t 0 ]] && grep -q Microsoft /proc/version; then
   echo
   if [[ ${REPLY,,} == @(y|yes) ]]; then
     wsl.exe --terminate Ubuntu
+    # TODO: sudo touch /var/run/reboot-required
   fi
 fi
