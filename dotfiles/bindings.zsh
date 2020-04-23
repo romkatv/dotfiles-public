@@ -1,4 +1,5 @@
-zmodload zsh/terminfo
+zmodload zsh/terminfo zsh/system
+zmodload -F zsh/files b:zf_rm
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search run-help
 
 (( $+aliases[run-help] )) && unalias run-help
@@ -48,17 +49,28 @@ function fzf-history-widget-unique() {
   emulate -L zsh -o pipefail
   local preview='printf "%s" {}'
   (( $+commands[bat] )) && preview+=' | bat -l bash --color always -pp'
-  local cmd
-  cmd="$(print -rNC1 -- "${(@u)history}" |
-    fzf --read0 --no-multi --tiebreak=index --cycle --height=80% \
-      --preview-window=down:40%:wrap --preview=$preview          \
-      --bind '?:toggle-preview,ctrl-h:backward-kill-word' --query=$LBUFFER)"
-  local -i ret=$?
-  if [[ $ret == 0 && -n "$cmd" ]]; then
+  local tmp=${TMPDIR:-/tmp}/zsh-hist.$sysparams[pid]
+  {
+    print -rNC1 -- "${(@u)history}" |
+      fzf --read0 --no-multi --tiebreak=index --cycle --height=80%             \
+          --preview-window=down:40%:wrap --preview=$preview                    \
+          --bind '?:toggle-preview,ctrl-h:backward-kill-word' --query=$LBUFFER \
+      >$tmp || return
+    local cmd
+    while true; do
+      sysread 'cmd[$#cmd+1]' && continue
+      (( $? == 5 ))          || return
+      break
+    done <$tmp
+    [[ $cmd == *$'\n' ]] || return
+    cmd[-1]=
+    [[ -n $cmd ]] || return
+    typeset -p cmd >>/tmp/log
     zle .vi-fetch-history -n $(($#history - ${${history[@]}[(ie)$cmd]} + 1))
-  fi
-  zle .reset-prompt
-  return ret
+  } always {
+    zf_rm -f -- $tmp
+    zle .reset-prompt
+  }
 }
 
 function redraw-prompt() {
