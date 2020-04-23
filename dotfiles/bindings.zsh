@@ -65,7 +65,6 @@ function fzf-history-widget-unique() {
     [[ $cmd == *$'\n' ]] || return
     cmd[-1]=
     [[ -n $cmd ]] || return
-    typeset -p cmd >>/tmp/log
     zle .vi-fetch-history -n $(($#history - ${${history[@]}[(ie)$cmd]} + 1))
   } always {
     zf_rm -f -- $tmp
