@@ -136,6 +136,7 @@ function install_packages() {
   if (( WSL )); then
     packages+=(dbus-x11)
   else
+    # For 20.04: apt-get install -y --no-install-recommends wireguard-tools.
     sudo add-apt-repository -y ppa:remmina-ppa-team/remmina-next
     sudo add-apt-repository -y ppa:wireguard/wireguard
     packages+=(gnome-tweak-tool imagemagick iotop tilix remmina wireguard)
