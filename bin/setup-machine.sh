@@ -197,9 +197,9 @@ function install_fzf() {
 }
 
 function install_zsh() {
-  local v="g3b83246"
+  local v="e9afb3f"
   if [[ -x /usr/local/bin/zsh ]]; then
-    [[ "$(/usr/local/bin/zsh -c 'echo $ZSH_PATCHLEVEL')" != *-"$v" ]] || return 0
+    [[ "$(/usr/local/bin/zsh -c 'echo $ZSH_PATCHLEVEL')" != *-g"$v" ]] || return 0
   fi
   local repo
   tmp="$(mktemp -d)"
