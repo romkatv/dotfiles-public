@@ -53,7 +53,7 @@ function fzf-history-widget-unique() {
   {
     print -rNC1 -- "${(@u)history}" |
       fzf --read0 --no-multi --tiebreak=index --cycle --height=80%             \
-          --preview-window=down:40%:wrap --preview=$preview                    \
+          --preview-window=down:40%:wrap --preview=$preview --tabstop 1        \
           --bind '?:toggle-preview,ctrl-h:backward-kill-word' --query=$LBUFFER \
       >$tmp || return
     local cmd
