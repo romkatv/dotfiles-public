@@ -153,7 +153,7 @@ fi
 if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
   : ${GITSTATUS_LOG_LEVEL=DEBUG}
   : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
-  [[ -e ~/gitstatus/gitstatusd ]] && : ${GITSTATUS_DAEMON=~/gitstatus/gitstatusd}
+  [[ -e ~/gitstatus/usrbin/gitstatusd ]] && : ${GITSTATUS_DAEMON=~/gitstatus/usrbin/gitstatusd}
 fi
 
 jit-source ~/dotfiles/completions.zsh
