@@ -32,7 +32,6 @@ fi
 
 if [[ -d ~/gitstatus ]]; then
   GITSTATUS_ENABLE_LOGGING=1
-  [[ -e ~/gitstatus/gitstatusd ]] && GITSTATUS_DAEMON=~/gitstatus/gitstatusd
   source ~/gitstatus/gitstatus.prompt.sh
 else
   source ~/dotfiles/gitstatus/gitstatus.prompt.sh
