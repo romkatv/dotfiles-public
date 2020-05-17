@@ -27,3 +27,5 @@
 [submodule]
 	recurse = true
 	fetchJobs = 0
+[rebase]
+	autoStash = true
