@@ -1,6 +1,7 @@
 [user]
 	name = romkatv
 	email = roman.perepelitsa@gmail.com
+	signingkey = 8B060F8B9EB395614A669F2A90ACE942EB90C3DD
 [diff]
 	tool = meld
 [merge]
