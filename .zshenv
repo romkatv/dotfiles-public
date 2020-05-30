@@ -1,6 +1,9 @@
+[ -z "$-" -o -n "${-##*i*}" ] && setopt no_rcs && return
+
 export XDG_CACHE_HOME="$HOME/.cache"
 Z4H_URL="https://raw.githubusercontent.com/romkatv/zsh4humans/v3"
 : "${Z4H:=${XDG_CACHE_HOME:-$HOME/.cache}/zsh4humans}"
+[ -d ~/zsh4humans/main ] && Z4H_BOOTSTRAP_COMMAND='ln -s ~/zsh4humans/main "$Z4H_PACKAGE_DIR"'
 
 umask o-w
 
@@ -146,8 +149,7 @@ if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
 fi
 
 function toggle-dotfiles() {
-  emulate -L zsh
-  case $GIT_DIR in
+  case "${GIT_DIR-}" in
     '')
       export GIT_DIR=~/.dotfiles-public
       export GIT_WORK_TREE=~
@@ -161,7 +163,12 @@ function toggle-dotfiles() {
       unset GIT_WORK_TREE
     ;;
   esac
-  redraw-prompt 0
+  local f
+  for f in precmd "${precmd_functions[@]}"; do
+    [[ "${+functions[$f]}" == 0 ]] || "$f" &>/dev/null || true
+  done
+  zle .reset-prompt
+  zle -R
 }
 
 zle -N toggle-dotfiles
