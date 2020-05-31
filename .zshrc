@@ -1,5 +1,3 @@
-[ -z "$-" -o -n "${-##*i*}" ] && setopt no_rcs && return
-
 export XDG_CACHE_HOME="$HOME/.cache"
 Z4H_URL="https://raw.githubusercontent.com/romkatv/zsh4humans/v3"
 : "${Z4H:=${XDG_CACHE_HOME:-$HOME/.cache}/zsh4humans}"
@@ -28,7 +26,7 @@ zstyle ':z4h:*'                         channel          testing
 zstyle ':z4h:'                          cd-key           alt
 zstyle ':z4h:autosuggestions'           forward-char     partial-accept
 
-if [[ ${THEME:-1} == 0 ]]; then
+if [[ ${P10K:-1} == 0 ]]; then
   zstyle ':z4h:powerlevel10k'           channel none
 elif [[ -d ~/powerlevel10k ]]; then
   zstyle ':z4h:powerlevel10k'           channel command 'ln -s -- ~/powerlevel10k $Z4H_PACKAGE_DIR'
@@ -42,10 +40,6 @@ if [[ ${ZASUG:-1} == 0 ]]; then
   zstyle ':z4h:zsh-autosuggestions'     channel none
 fi
 
-if (( UID && UID == EUID && ! Z4H_SSH )); then
-  z4h chsh
-fi
-
 z4h install romkatv/archive romkatv/zsh-prompt-benchmark
 
 z4h init || return
@@ -54,17 +48,20 @@ setopt glob_dots
 
 ulimit -c $(((8 << 30) / 512))  # 8GB
 
-path=(~/bin ~/.local/bin ~/.cargo/bin $path)
-fpath+=(~/dotfiles/functions ~/dotfiles/archive)
+[[ -d ~/.cargo/bin ]] && path=(~/.cargo/bin $path)
+[[ -d ~/.local/bin ]] && path=(~/.local/bin $path)
+[[ -d ~/bin        ]] && path=(~/bin $path)
 
-autoload -Uz ${^${(M)fpath:#~/dotfiles/*}}/[^_]*(N:t) zmv is-at-least add-zsh-hook
+fpath=($Z4H/romkatv/archive $fpath)
+[[ -d ~/dotfiles/functions ]] && fpath=(~/dotfiles/functions $fpath)
+
+autoload -Uz -- zmv is-at-least add-zsh-hook archive unarchive ~/dotfiles/functions/[^_]*(N:t)
 
 export GPG_TTY=$TTY
 export EDITOR=~/bin/redit
 export PAGER=less
 export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
-export FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
   export WSL=1
