@@ -153,6 +153,7 @@ if (( $+functions[toggle-dotfiles] )); then
 fi
 
 zstyle ':completion:*'                           sort               false
+zstyle ':completion:*:ls:*'                      list-dirs-first    true
 zstyle ':zle:(up|down)-line-or-beginning-search' leave-cursor       no
 zstyle ':fzf-tab:*'                              continuous-trigger tab
 
