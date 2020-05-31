@@ -270,12 +270,6 @@ function add_to_sudoers() {
   sudo chmod 440 /etc/sudoers.d/"$USER"
 }
 
-function install_clean_tmp() {
-  (( WSL )) || return 0
-  sudo cp ~/bin/clean-tmp /usr/local/bin/clean-tmp-su
-  sudo chmod 755 /usr/local/bin/clean-tmp-su
-}
-
 function fix_dbus() {
   (( WSL )) || return 0
   sudo dbus-uuidgen --ensure
@@ -345,7 +339,6 @@ install_ripgrep
 install_bat
 install_fzf
 install_fonts
-install_clean_tmp
 
 disable_motd_news
 

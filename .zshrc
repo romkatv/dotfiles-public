@@ -74,7 +74,6 @@ if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
   export DISPLAY=:0
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
-  sudo /usr/local/bin/clean-tmp-su
   z4h source ~/dotfiles/ssh-agent.zsh
   HISTFILE=~/.zsh_history.${(%):-%m}-wsl-${HOME:t}
   () {
@@ -84,6 +83,14 @@ if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
     local home=$wenv[USERPROFILE]
     home=/mnt/${(L)home[1]}/${${home:3}//\\//}
     [[ -d $home ]] && hash -d h=$home
+  }
+  () {
+    emulate -L zsh -o dot_glob -o null_glob
+    [[ -n $SSH_CONNECTON || $P9K_SSH == 1 ]] && return
+    local -i uptime_sec=${$(</proc/uptime)[1]}
+    local files=(${TMPDIR:-/tmp}/*(as+$((uptime_sec+86400))))
+    (( $#files )) || return
+    sudo rm -rf -- $files
   }
   if [[ -x '/mnt/c/Program Files/Notepad++/notepad++.exe' ]]; then
     alias np="'/mnt/c/Program Files/Notepad++/notepad++.exe'"
