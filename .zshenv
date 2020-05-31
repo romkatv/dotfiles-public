@@ -46,7 +46,7 @@ if (( UID && UID == EUID && ! Z4H_SSH )); then
   z4h chsh
 fi
 
-z4h install romkatv/zsh-prompt-benchmark
+z4h install romkatv/archive romkatv/zsh-prompt-benchmark
 
 z4h init || return
 
@@ -97,6 +97,7 @@ fi
   for hist in ~/.zsh_history*~$HISTFILE(N); do
     fc -RI $hist
   done
+  [[ -e $HISTFILE ]] && fc -RI $HISTFILE
 }
 
 is-at-least 5.8 && ZLE_RPROMPT_INDENT=0
@@ -104,22 +105,6 @@ TIMEFMT='user=%U system=%S cpu=%P total=%*E'
 
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
-
-function bench() {
-  emulate -L zsh
-  if (( ! $+functions[zsh-prompt-benchmark] )); then
-    z4h source $Z4H/romkatv/zsh-prompt-benchmark || return
-  fi
-  local on_done
-  if (( $+commands[gsettings] )); then
-    gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 1 || return
-    on_done=_bench_restore_key_repeat_interval
-    function _bench_restore_key_repeat_interval() {
-      gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
-    }
-  fi
-  zsh-prompt-benchmark ${1:-2} ${2:-2} $on_done
-}
 
 function prompt_git_dir() {
   emulate -L zsh
@@ -148,33 +133,27 @@ if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
   : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
 fi
 
-function toggle-dotfiles() {
-  case "${GIT_DIR-}" in
-    '')
-      export GIT_DIR=~/.dotfiles-public
-      export GIT_WORK_TREE=~
-    ;;
-    ~/.dotfiles-public)
-      export GIT_DIR=~/.dotfiles-private
-      export GIT_WORK_TREE=~
-    ;;
-    *)
-      unset GIT_DIR
-      unset GIT_WORK_TREE
-    ;;
-  esac
-  local f
-  for f in precmd "${precmd_functions[@]}"; do
-    [[ "${+functions[$f]}" == 0 ]] || "$f" &>/dev/null || true
+() {
+  local key keys=(
+    "^A"   "^B"   "^D"   "^E"   "^F"   "^N"   "^O"   "^P"   "^Q"   "^S"   "^T"   "^W"   "^Y"
+    "^X*"  "^X="  "^X?"  "^XC"  "^XG"  "^Xa"  "^Xc"  "^Xd"  "^Xe"  "^Xg"  "^Xh"  "^Xm"  "^Xn"
+    "^Xr"  "^Xs"  "^Xt"  "^Xu"  "^X~"  "^[ "  "^[!"  "^['"  "^[,"  "^[-"  "^[."  "^[0"  "^[1"
+    "^[2"  "^[3"  "^[4"  "^[5"  "^[6"  "^[7"  "^[8"  "^[9"  "^[<"  "^[>"  "^[?"  "^[A"  "^[B"
+    "^[C"  "^[D"  "^[F"  "^[G"  "^[L"  "^[M"  "^[N"  "^[P"  "^[Q"  "^[S"  "^[T"  "^[U"  "^[W"
+    "^[_"  "^[a"  "^[b"  "^[c"  "^[d"  "^[f"  "^[g"  "^[l"  "^[n"  "^[p"  "^[q"  "^[s"  "^[t"
+    "^[u"  "^[w"  "^[y"  "^[z"  "^[|"  "^[~"  "^[^I" "^[^J" "^[^L" "^[^M" "^[^_" "^[\"" "^[\$"
+    "^X^B" "^X^F" "^X^J" "^X^K" "^X^N" "^X^O" "^X^R" "^X^U" "^X^X" "^[^D" "^[^G" "^[^H")
+  for key in $keys; do
+    bindkey $key z4h-do-nothing
   done
-  zle .reset-prompt
-  zle -R
 }
 
-zle -N toggle-dotfiles
-
 bindkey '^H' backward-kill-word
-bindkey '^P' toggle-dotfiles
+
+if (( $+functions[toggle-dotfiles] )); then
+  zle -N toggle-dotfiles
+  bindkey '^P' toggle-dotfiles
+fi
 
 zstyle ':completion:*'                           sort               false
 zstyle ':zle:(up|down)-line-or-beginning-search' leave-cursor       no
@@ -233,4 +212,4 @@ if (( $+commands[xclip] )); then
   alias c='xclip -selection clipboard -in -filter'
 fi
 
-z4h source ~/.zshrc-private
+[[ ! -e ~/.zshrc-private ]] || source ~/.zshrc-private
