@@ -42,6 +42,11 @@ if [[ ! -e ~/.ssh/id_rsa.pub ]]; then
   chmod 644 ~/.ssh/id_rsa.pub
 fi
 
+if [[ ! -e ~/.ssh/control-master ]]; then
+  mkdir ~/.ssh/control-master
+  chmod 755 ~/.ssh/control-master
+fi
+
 sudo apt-get update
 sudo bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade -y'
 sudo apt-get autoremove -y
