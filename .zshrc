@@ -59,7 +59,7 @@ autoload -Uz -- zmv is-at-least add-zsh-hook archive unarchive ~/dotfiles/functi
 
 if [[ -x ~/bin/redit ]]; then
   export VISUAL=~/bin/redit
-else (( ${commands[nano]:-vi} ))
+else
   export VISUAL=${commands[nano]:-vi}
 fi
 
