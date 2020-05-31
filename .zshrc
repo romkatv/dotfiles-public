@@ -57,8 +57,14 @@ fpath=($Z4H/romkatv/archive $fpath)
 
 autoload -Uz -- zmv is-at-least add-zsh-hook archive unarchive ~/dotfiles/functions/[^_]*(N:t)
 
+if [[ -x ~/bin/redit ]]; then
+  export VISUAL=~/bin/redit
+else (( ${commands[nano]:-vi} ))
+  export VISUAL=${commands[nano]:-vi}
+fi
+
+export EDITOR=$VISUAL
 export GPG_TTY=$TTY
-export EDITOR=~/bin/redit
 export PAGER=less
 export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1

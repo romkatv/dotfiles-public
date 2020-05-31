@@ -1,14 +1,10 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
-emulate -L zsh -o no_aliases
-
-readonly np='/mnt/c/Program Files/Notepad++/notepad++.exe'
-
-if [[ $WSL == 1 && $# == 1 && ${1:A} == /mnt/?/* && -x $np ]] && win_path="$(wslpath -w $1)"; then
-  $np -multiInst -notabbar -nosession $win_path &>/dev/null
-elif command -v gedit &>/dev/null && command -v xprop &>/dev/null && xprop -root &>/dev/null; then
+if command -v gedit >/dev/null 2>&1 &&
+   command -v xprop >/dev/null 2>&1 &&
+   command xprop -root >/dev/null 2>&1; then
   # Have X server at $DISPLAY.
-  gedit --wait "$@" &>/dev/null
+  command gedit --wait -- "$@" >/dev/null 2>&1
 else
-  nano "$@"
+  command nano -- "$@"
 fi
