@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# The same as double-clicking on file or dir $1 in X File Manager.
+
+command xdg-open "$@" </dev/null >/dev/null 2>&1
