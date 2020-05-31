@@ -1,0 +1,23 @@
+# No emulate zsh here because it calls reset-prompt.
+
+case "${GIT_DIR-}" in
+  '')
+    export GIT_DIR=~/.dotfiles-public
+    export GIT_WORK_TREE=~
+  ;;
+  ~/.dotfiles-public)
+    export GIT_DIR=~/.dotfiles-private
+    export GIT_WORK_TREE=~
+  ;;
+  *)
+    unset GIT_DIR
+    unset GIT_WORK_TREE
+  ;;
+esac
+
+local f
+for f in precmd "${precmd_functions[@]}"; do
+  [[ "${+functions[$f]}" == 0 ]] || "$f" &>/dev/null || true
+done
+zle .reset-prompt
+zle -R

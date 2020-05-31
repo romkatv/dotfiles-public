@@ -1,0 +1,13 @@
+emulate -L zsh
+if (( ! $+functions[zsh-prompt-benchmark] )); then
+  z4h source $Z4H/romkatv/zsh-prompt-benchmark || return
+fi
+local on_done
+if (( $+commands[gsettings] )); then
+  gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 1 || return
+  on_done=_bench_restore_key_repeat_interval
+  function _bench_restore_key_repeat_interval() {
+    gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 30
+  }
+fi
+zsh-prompt-benchmark ${1:-2} ${2:-2} $on_done
