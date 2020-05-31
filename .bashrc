@@ -31,8 +31,11 @@ elif [[ -f /etc/bash_completion ]]; then
 fi
 
 if [[ -d ~/gitstatus ]]; then
-  GITSTATUS_ENABLE_LOGGING=1
+  GITSTATUS_LOG_LEVEL=DEBUG
   source ~/gitstatus/gitstatus.prompt.sh
 else
-  source ~/dotfiles/gitstatus/gitstatus.prompt.sh
+  PS1='\[\033[01;32m\]\u@\h\[\033[00m\] '           # green user@host
+  PS1+='\[\033[01;34m\]\w\[\033[00m\]'              # blue current working directory
+  PS1+='\n\[\033[01;$((31+!$?))m\]\$\[\033[00m\] '  # green/red (success/error) $/# (normal/root)
+  PS1+='\[\e]0;\u@\h: \w\a\]'                       # terminal title: user@host: dir
 fi
