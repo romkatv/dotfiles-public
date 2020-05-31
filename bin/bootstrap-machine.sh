@@ -69,7 +69,7 @@ if [[ -t 0 ]] && grep -q Microsoft /proc/version; then
   read -p "Need to restart WSL to complete installation. Terminate WSL now? [y/N] " -n 1 -r
   echo
   if [[ ${REPLY,,} == @(y|yes) ]]; then
-    wsl.exe --terminate Ubuntu
+    wsl.exe --shutdown
     # TODO: sudo touch /var/run/reboot-required
   fi
 fi
