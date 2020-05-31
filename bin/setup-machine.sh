@@ -176,7 +176,7 @@ function install_vscode() {
 }
 
 function install_ripgrep() {
-  local v="11.0.2"
+  local v="12.1.1"
   ! command -v rg &>/dev/null || [[ "$(rg --version)" != *" $v "* ]] || return 0
   local deb
   deb="$(mktemp)"
@@ -186,7 +186,7 @@ function install_ripgrep() {
 }
 
 function install_bat() {
-  local v="0.12.1"
+  local v="0.15.4"
   ! command -v bat &>/dev/null || [[ "$(bat --version)" != *" $v" ]] || return 0
   local deb
   deb="$(mktemp)"
@@ -258,12 +258,22 @@ function install_fonts() {
   (( !WSL )) || win_install_fonts ~/.local/share/fonts/NerdFonts/*.ttf
 }
 
+function add_to_sudoers() {
+  # This is to be able to create /etc/sudoers.d/"$username".
+  if [[ "$USER" == *'~' || "$USER" == *.* ]]; then
+    >&2 echo "$BASH_SOURCE: invalid username: $USER"
+    exit 1
+  fi
+
+  sudo usermod -aG sudo "$USER"
+  sudo tee /etc/sudoers.d/"$USER" <<<"$USER ALL=(ALL) NOPASSWD:ALL" >/dev/null
+  sudo chmod 440 /etc/sudoers.d/"$USER"
+}
+
 function install_clean_tmp() {
   (( WSL )) || return 0
   sudo cp ~/bin/clean-tmp /usr/local/bin/clean-tmp-su
   sudo chmod 755 /usr/local/bin/clean-tmp-su
-  sudo tee /etc/sudoers.d/"$USER" >/dev/null <<<"$USER ALL=(ALL) NOPASSWD: /usr/local/bin/clean-tmp-su"
-  sudo chmod 440 /etc/sudoers.d/"$USER"
 }
 
 function fix_dbus() {
@@ -326,6 +336,8 @@ if [[ "$(id -u)" == 0 ]]; then
 fi
 
 umask g-w,o-w
+
+add_to_sudoers
 
 install_packages
 install_vscode
