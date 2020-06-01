@@ -15,7 +15,8 @@
     "defaults": {
       "fontFace": "MesloLGS NF",
       "fontSize": 11,
-      "colorScheme": "Tango Dark"
+      "colorScheme": "Tango Dark",
+      "closeOnExit": "always"
     },
     "list": [
       {
