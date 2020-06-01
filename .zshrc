@@ -77,7 +77,7 @@ if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
   z4h source ~/dotfiles/ssh-agent.zsh
   HISTFILE=~/.zsh_history.${(%):-%m}-wsl-${HOME:t}
   () {
-    local lines=("${(@f)${$(/mnt/c/Windows/System32/cmd.exe /c set)//$'\r'}}")
+    local lines=("${(@f)${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c set)//$'\r'}}")
     local keys=(${lines%%=*}) vals=(${lines#*=})
     typeset -gA wenv=(${keys:^vals})
     local home=$wenv[USERPROFILE]
