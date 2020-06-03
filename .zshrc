@@ -46,7 +46,7 @@ z4h init || return
 
 setopt glob_dots
 
-ulimit -c $(((8 << 30) / 512))  # 8GB
+ulimit -c $(((4 << 30) / 512))  # 4GB
 
 [[ -d ~/.cargo/bin ]] && path=(~/.cargo/bin $path)
 [[ -d ~/.local/bin ]] && path=(~/.local/bin $path)
@@ -158,7 +158,7 @@ fi
 (( $+commands[tree]  )) && alias tree='tree -aC -I .git --dirsfirst'
 (( $+commands[gedit] )) && alias gedit='gedit &>/dev/null'
 
-if (( $+commands[xclip] )); then
+if (( $+commands[xclip] && $#DISPLAY )); then
   alias x='xclip -selection clipboard -in'
   alias v='xclip -selection clipboard -out'
   alias c='xclip -selection clipboard -in -filter'
