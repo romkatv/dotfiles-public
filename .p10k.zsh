@@ -1,9 +1,7 @@
 unset -m '(POWERLEVEL9K_*|DEFAULT_USER)~POWERLEVEL9K_GITSTATUS_DIR'
 
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(
-  dir my_git_dir vcs newline prompt_char)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
-  status command_execution_time background_jobs context nordvpn mkport)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir my_git_dir vcs newline prompt_char)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time background_jobs context nordvpn)
 (( P9K_SSH )) && POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(time)
 
 POWERLEVEL9K_MODE=nerdfont-complete
