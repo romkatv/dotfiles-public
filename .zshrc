@@ -116,6 +116,8 @@ TIMEFMT='user=%U system=%S cpu=%P total=%*E'
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
+function ssh() { z4h ssh "$@" }
+
 if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
   : ${GITSTATUS_LOG_LEVEL=DEBUG}
   : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
@@ -147,45 +149,6 @@ zstyle ':completion:*'                           sort               false
 zstyle ':completion:*:ls:*'                      list-dirs-first    true
 zstyle ':zle:(up|down)-line-or-beginning-search' leave-cursor       no
 zstyle ':fzf-tab:*'                              continuous-trigger tab
-
-# export PYENV_ROOT=~/.pyenv
-# path=("$PYENV_ROOT/bin" $path)
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
-
-# export RBENV_ROOT=~/.rbenv
-# path=($HOME/.rbenv/bin $path)
-# eval "$(rbenv init -)"
-
-# export LUAENV_ROOT=~/.luaenv
-# path=($HOME/.luaenv/bin $path)
-# eval "$(luaenv init -)"
-
-# export JENV_ROOT=~/.jenv
-# path=($HOME/.jenv/bin $path)
-# eval "$(jenv init -)"
-
-# export PLENV_ROOT=~/.plenv
-# path=($HOME/.plenv/bin $path)
-# eval "$(plenv init -)"
-
-# export GOENV_ROOT=~/.goenv
-# path=($HOME/.goenv/bin $path)
-# eval "$(goenv init -)"
-# [[ -n $GOROOT ]] && path=($GOROOT/bin $path)
-# [[ -n $GOPATH ]] && path=($path $GOPATH/bin)
-
-# path=($HOME/.nodenv/bin $path)
-# eval "$(nodenv init -)"
-
-# source ~/.asdf/asdf.sh
-# source ~/.asdf/completions/asdf.bash
-
-# path+=(/usr/lib/dart/bin ~/.pub-cache/bin)
-
-# path=($HOME/.ebcli-virtual-env/executables $HOME/.pyenv/versions/3.7.2/bin $path)
-
-# eval "$(direnv hook zsh)"
 
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
