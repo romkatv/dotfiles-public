@@ -116,28 +116,6 @@ TIMEFMT='user=%U system=%S cpu=%P total=%*E'
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
-function prompt_git_dir() {
-  emulate -L zsh
-  [[ -n $GIT_DIR ]] || return
-  local repo=${GIT_DIR:t}
-  [[ $repo == .git ]] && repo=${GIT_DIR:h:t}
-  [[ $repo == .dotfiles-(public|private) ]] && repo=${repo#.dotfiles-}
-  p10k segment -b 0 -f 208 -t ${repo//\%/%%}
-}
-
-function p10k-on-init() {
-  emulate -L zsh
-  (( POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)git_dir] )) && return
-  local -i vcs=POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[(I)vcs]
-  (( vcs )) || return
-  unset POWERLEVEL9K_VCS_DISABLED_WORKDIR_PATTERN
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS[vcs,vcs-1]=(git_dir)
-  [[ -e ~/gitstatus/gitstatus.plugin.zsh ]] && : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
-  (( $+functions[p10k] )) && p10k reload
-}
-
-(( $+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS )) && p10k-on-init
-
 if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
   : ${GITSTATUS_LOG_LEVEL=DEBUG}
   : ${POWERLEVEL9K_GITSTATUS_DIR=~/gitstatus}
