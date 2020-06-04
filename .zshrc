@@ -166,3 +166,4 @@ if (( $+commands[xclip] && $#DISPLAY )); then
 fi
 
 [[ ! -e ~/.zshrc-private ]] || source ~/.zshrc-private
+return 0
