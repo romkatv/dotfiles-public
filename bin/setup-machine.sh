@@ -267,6 +267,10 @@ function add_to_sudoers() {
   sudo usermod -aG sudo "$USER"
   sudo tee /etc/sudoers.d/"$USER" <<<"$USER ALL=(ALL) NOPASSWD:ALL" >/dev/null
   sudo chmod 440 /etc/sudoers.d/"$USER"
+
+  if (( WSL )) && ! sudo grep -qxF 'Defaults env_keep += WSL_DISTRO_NAME' /etc/sudoers; then
+    sudo tee -a /etc/sudoers >/dev/null <<<'Defaults env_keep += WSL_DISTRO_NAME'
+  fi
 }
 
 function fix_dbus() {
