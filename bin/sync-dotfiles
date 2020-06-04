@@ -2,6 +2,8 @@
 
 emulate -L zsh -o err_return -o no_unset -o pushd_silent -o no_prompt_subst -o prompt_percent
 
+unset GIT_DIR GIT_WORK_TREE
+
 local merge=1 OPTIND OPTARG
 while getopts ":hm" opt; do
   case $opt in
