@@ -198,10 +198,6 @@ function install_bat() {
   rm "$deb"
 }
 
-function install_fzf() {
-  ~/dotfiles/fzf/install --bin
-}
-
 function install_zsh() {
   local v="e9afb3f"
   if [[ -x /usr/local/bin/zsh ]]; then
@@ -340,7 +336,6 @@ install_packages
 install_vscode
 install_ripgrep
 install_bat
-install_fzf
 install_fonts
 
 disable_motd_news
