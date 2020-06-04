@@ -91,8 +91,11 @@ session-resize-terminal-right='disabled'
 win-reorder-previous-session='disabled'
 session-switch-to-terminal-left='disabled'"
 
-# '1' if running under Windows Subsystem for Linux, '0' otherwise.
-readonly WSL="$(grep -iq Microsoft /proc/version && echo 1 || echo 0)"
+if [[ -n "${WSL_DISTRO_NAME-}" ]]; then
+  readonly WSL=1
+else
+  readonly WSL=0
+fi
 
 # Install a bunch of debian packages.
 function install_packages() {

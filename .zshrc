@@ -69,8 +69,7 @@ export PAGER=less
 export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
-  export WSL=1
+if [[ -n $WSL_DISTRO_NAME ]]; then
   export DISPLAY=:0
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
@@ -96,7 +95,6 @@ if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
     alias np="'/mnt/c/Program Files/Notepad++/notepad++.exe'"
   fi
 else
-  export WSL=0
   HISTFILE=~/.zsh_history.${(%):-%m}-linux-${HOME:t}
 fi
 

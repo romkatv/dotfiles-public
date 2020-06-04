@@ -2,15 +2,15 @@
 
 set -xueEo pipefail
 
-if [[ -z "${GITHUB_USERNAME:-}" ]]; then
+if [[ -z "${GITHUB_USERNAME-}" ]]; then
   echo "ERROR: GITHUB_USERNAME not set" >&2
   exit 1
 fi
 
-umask 0022
+umask o-w
 
 if [[ ! -f ~/.ssh/id_rsa || ! -f ~/.ssh/id_rsa.pub ]]; then
-  if ! grep -q Microsoft /proc/version 2>/dev/null; then
+  if [[ -z "${WSL_DISTRO_NAME-}" ]]; then
     echo "ERROR: Put your ssh keys at ~/.ssh and retry" >&2
     exit 1
   fi
@@ -48,16 +48,18 @@ if [[ ! -e ~/.ssh/control-master ]]; then
 fi
 
 sudo apt-get update
-sudo bash -c 'DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade -y'
+sudo sh -c 'DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" upgrade -y'
 sudo apt-get autoremove -y
 sudo apt-get autoclean
 
-sudo apt-get install -y git curl
-bootstrap="$(curl -fsSL "https://raw.githubusercontent.com/"$GITHUB_USERNAME"/dotfiles-public/master/bin/bootstrap-dotfiles.sh")"
+sudo apt-get install -y git curl zsh
+tmpdir="$(mktemp -d)"
+git clone --depth=1 -- git@github.com:"$GITHUB_USERNAME"/dotfiles-public.git "$tmpdir"
+bootstrap="$(<"$tmpdir"/bin/bootstrap-dotfiles.sh)"
+rm -rf -- "$tmpdir"
 bash -c "$bootstrap"
 
-sudo apt-get install -y zsh
-zsh ~/dotfiles/functions/sync-dotfiles
+zsh -fec 'fpath=(~/dotfiles/functions $fpath); autoload -Uz sync-dotfiles; sync-dotfiles'
 
 bash ~/bin/setup-machine.sh
 
@@ -65,11 +67,10 @@ if [[ -f ~/bin/bootstrap-machine-private.sh ]]; then
   bash ~/bin/bootstrap-machine-private.sh
 fi
 
-if [[ -t 0 ]] && grep -q Microsoft /proc/version; then
+if [[ -t 0 && -n "${WSL_DISTRO_NAME-}" ]]; then
   read -p "Need to restart WSL to complete installation. Terminate WSL now? [y/N] " -n 1 -r
   echo
   if [[ ${REPLY,,} == @(y|yes) ]]; then
-    wsl.exe --shutdown
-    # TODO: sudo touch /var/run/reboot-required
+    wsl.exe --terminate "$WSL_DISTRO_NAME"
   fi
 fi
