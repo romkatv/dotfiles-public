@@ -1,8 +1,12 @@
 unset -m '(POWERLEVEL9K_*|DEFAULT_USER)~POWERLEVEL9K_GITSTATUS_DIR'
 
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir my_git_dir vcs newline prompt_char)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time background_jobs context nordvpn)
-(( P9K_SSH )) && POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(time)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir)
+[[ -e ~/.ssh/id_rsa ]] && POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=(my_git_dir vcs)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS+=(newline prompt_char)
+
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time background_jobs context)
+(( $+commands[nordvpn] )) && POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(nordvpn)
+(( P9K_SSH             )) && POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS+=(time)
 
 POWERLEVEL9K_MODE=nerdfont-complete
 POWERLEVEL9K_ICON_PADDING=none
@@ -37,6 +41,15 @@ POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
 POWERLEVEL9K_DIR_MAX_LENGTH=80
 POWERLEVEL9K_DIR_SHOW_WRITABLE=v2
 POWERLEVEL9K_DIR_CLASSES=()
+
+function prompt_my_git_dir() {
+  emulate -L zsh
+  [[ -n $GIT_DIR ]] || return
+  local repo=${GIT_DIR:t}
+  [[ $repo == .git ]] && repo=${GIT_DIR:h:t}
+  [[ $repo == .dotfiles-(public|private) ]] && repo=${repo#.dotfiles-}
+  p10k segment -b 0 -f 208 -t ${repo//\%/%%}
+}
 
 function my_git_formatter() {
   emulate -L zsh
@@ -151,14 +164,5 @@ POWERLEVEL9K_TRANSIENT_PROMPT=always
 POWERLEVEL9K_INSTANT_PROMPT=quiet
 POWERLEVEL9K_DISABLE_HOT_RELOAD=true
 POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
-
-function prompt_my_git_dir() {
-  emulate -L zsh
-  [[ -n $GIT_DIR ]] || return
-  local repo=${GIT_DIR:t}
-  [[ $repo == .git ]] && repo=${GIT_DIR:h:t}
-  [[ $repo == .dotfiles-(public|private) ]] && repo=${repo#.dotfiles-}
-  p10k segment -b 0 -f 208 -t ${repo//\%/%%}
-}
 
 (( ! $+functions[p10k] )) || p10k reload
