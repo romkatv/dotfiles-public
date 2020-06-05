@@ -52,7 +52,7 @@ ulimit -c $(((4 << 30) / 512))  # 4GB
 fpath=($Z4H/romkatv/archive $fpath)
 [[ -d ~/dotfiles/functions ]] && fpath=(~/dotfiles/functions $fpath)
 
-autoload -Uz -- zmv is-at-least add-zsh-hook archive unarchive ~/dotfiles/functions/[^_]*(N:t)
+autoload -Uz -- zmv archive unarchive ~/dotfiles/functions/[^_]*(N:t)
 
 if [[ -x ~/bin/redit ]]; then
   export VISUAL=~/bin/redit
@@ -105,7 +105,6 @@ fi
   [[ -e $HISTFILE ]] && fc -RI $HISTFILE
 }
 
-is-at-least 5.8 && ZLE_RPROMPT_INDENT=0
 TIMEFMT='user=%U system=%S cpu=%P total=%*E'
 
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
@@ -158,6 +157,11 @@ if (( $+commands[xclip] && $#DISPLAY )); then
   alias x='xclip -selection clipboard -in'
   alias v='xclip -selection clipboard -out'
   alias c='xclip -selection clipboard -in -filter'
+  function copy-buffer-to-clipboard() {
+    print -rn -- "$PREBUFFER$BUFFER" | xclip -selection clipboard -in
+  }
+  zle -N copy-buffer-to-clipboard
+  bindkey '^S' copy-buffer-to-clipboard
 fi
 
 if [[ -n $commands[make] && -x ~/bin/num-cpus ]]; then
