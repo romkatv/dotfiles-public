@@ -20,25 +20,22 @@ fi
 
 . "$Z4H"/z4h.zsh || return
 
-zstyle ':z4h:'                          auto-update      ask
-zstyle ':z4h:'                          auto-update-days 28
-zstyle ':z4h:*'                         channel          testing
-zstyle ':z4h:'                          cd-key           alt
-zstyle ':z4h:autosuggestions'           forward-char     partial-accept
+zstyle ':z4h:'                auto-update      ask
+zstyle ':z4h:'                auto-update-days 28
+zstyle ':z4h:*'               channel          testing
+zstyle ':z4h:'                cd-key           alt
+zstyle ':z4h:autosuggestions' forward-char     partial-accept
 
-if [[ ${P10K:-1} == 0 ]]; then
-  zstyle ':z4h:powerlevel10k'           channel none
-elif [[ -d ~/powerlevel10k ]]; then
-  zstyle ':z4h:powerlevel10k'           channel command 'ln -s -- ~/powerlevel10k $Z4H_PACKAGE_DIR'
-fi
-
-if [[ ${ZSYH:-1} == 0 ]]; then
-  zstyle ':z4h:zsh-syntax-highlighting' channel none
-fi
-
-if [[ ${ZASUG:-1} == 0 ]]; then
-  zstyle ':z4h:zsh-autosuggestions'     channel none
-fi
+() {
+  local var proj
+  for var proj in P10K powerlevel10k ZSYH zsh-syntax-highlighting ZASUG zsh-autosuggestions; do
+    if [[ ${(P)var} == 0 ]]; then
+      zstyle ":z4h:$proj" channel none
+    elif [[ -d ~/$proj ]]; then
+      zstyle ":z4h:$proj" channel command "ln -s -- ~/$proj \$Z4H_PACKAGE_DIR"
+    fi
+  done
+}
 
 z4h install romkatv/archive romkatv/zsh-prompt-benchmark
 
@@ -69,7 +66,7 @@ export PAGER=less
 export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-if [[ -n $WSL_DISTRO_NAME ]]; then
+if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
   [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
