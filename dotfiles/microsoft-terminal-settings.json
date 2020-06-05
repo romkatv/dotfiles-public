@@ -2,10 +2,10 @@
   "$schema": "https://aka.ms/terminal-profiles-schema",
 
   "copyFormatting": false,
-  "initialCols": 144,
-  "initialRows": 45,
+  "initialCols": 160,
+  "initialRows": 46,
   "alwaysShowTabs": false,
-  "initialPosition": "5,1155",
+  "initialPosition": "1,1150",
   "showTabsInTitlebar": false,
   "snapToGridOnResize": false,
   "wordDelimiters": " ",
