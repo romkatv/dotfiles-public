@@ -70,15 +70,15 @@ export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
 if [[ -n $WSL_DISTRO_NAME ]]; then
-  export DISPLAY=:0
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
+  [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
   z4h source ~/dotfiles/ssh-agent.zsh
   HISTFILE=~/.zsh_history.${(%):-%m}-wsl-${HOME:t}
   () {
     local lines=("${(@f)${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c set)//$'\r'}}")
     local keys=(${lines%%=*}) vals=(${lines#*=})
-    typeset -gA wenv=(${keys:^vals})
+    typeset -grA wenv=(${keys:^vals})
     local home=$wenv[USERPROFILE]
     home=/mnt/${(L)home[1]}/${${home:3}//\\//}
     [[ -d $home ]] && hash -d h=$home
