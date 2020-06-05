@@ -10,7 +10,7 @@ fi
 umask o-w
 
 if [[ ! -f ~/.ssh/id_rsa || ! -f ~/.ssh/id_rsa.pub ]]; then
-  if [[ -z "${WSL_DISTRO_NAME-}" ]]; then
+  if [[ "$(</proc/version)" != *[Mm]icrosoft* ]] 2>/dev/null; then
     echo "ERROR: Put your ssh keys at ~/.ssh and retry" >&2
     exit 1
   fi

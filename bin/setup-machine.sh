@@ -91,7 +91,7 @@ session-resize-terminal-right='disabled'
 win-reorder-previous-session='disabled'
 session-switch-to-terminal-left='disabled'"
 
-if [[ -n "${WSL_DISTRO_NAME-}" ]]; then
+if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
   readonly WSL=1
 else
   readonly WSL=0
@@ -267,10 +267,6 @@ function add_to_sudoers() {
   sudo usermod -aG sudo "$USER"
   sudo tee /etc/sudoers.d/"$USER" <<<"$USER ALL=(ALL) NOPASSWD:ALL" >/dev/null
   sudo chmod 440 /etc/sudoers.d/"$USER"
-
-  if (( WSL )) && ! sudo grep -qxF 'Defaults env_keep += WSL_DISTRO_NAME' /etc/sudoers; then
-    sudo tee -a /etc/sudoers >/dev/null <<<'Defaults env_keep += WSL_DISTRO_NAME'
-  fi
 }
 
 function fix_dbus() {
