@@ -78,7 +78,7 @@ if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
     typeset -grA wenv=(${keys:^vals})
     local home=$wenv[USERPROFILE]
     home=/mnt/${(L)home[1]}/${${home:3}//\\//}
-    [[ -d $home ]] && hash -d h=$home
+    [[ -d $home ]] && hash -d w=$home
   }
   () {
     emulate -L zsh -o dot_glob -o null_glob
@@ -141,6 +141,7 @@ fi
 
 zstyle ':completion:*'                           sort               false
 zstyle ':completion:*:ls:*'                      list-dirs-first    true
+zstyle ':completion:*:-tilde-:*'                 tag-order          named-directories users
 zstyle ':zle:(up|down)-line-or-beginning-search' leave-cursor       no
 zstyle ':fzf-tab:*'                              continuous-trigger tab
 
