@@ -30,3 +30,5 @@
 	fetchJobs = 0
 [rebase]
 	autoStash = true
+[alias]
+  patch = apply --ignore-space-change --ignore-whitespace
