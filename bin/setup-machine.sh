@@ -155,18 +155,6 @@ function install_packages() {
   sudo apt-get autoclean
 }
 
-# If this user's login shell is not already "zsh", attempt to switch.
-function change_shell() {
-  local current
-  current="$(getent passwd $USER | cut -d: -f7)"
-  local new=/usr/local/bin/zsh
-  [[ -x "$new" ]] || new=/bin/zsh
-  [[ -x "$new" ]]
-
-  [[ "$current" != "$new" ]] || return 0
-  chsh -s "$new" || chsh -s "$new" || chsh -s "$new" || return
-}
-
 # Install Visual Studio Code.
 function install_vscode() {
   (( !WSL )) || return 0
@@ -196,26 +184,6 @@ function install_bat() {
   curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${v}/bat_${v}_amd64.deb" > "$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
-}
-
-function install_zsh() {
-  local v="e9afb3f"
-  if [[ -x /usr/local/bin/zsh ]]; then
-    [[ "$(/usr/local/bin/zsh -c 'echo $ZSH_PATCHLEVEL')" != *-g"$v" ]] || return 0
-  fi
-  local repo
-  tmp="$(mktemp -d)"
-  git clone 'https://github.com/romkatv/zsh.git' "$tmp"
-  pushd "$tmp"
-  git checkout "$v"
-  ./Util/preconfig
-  ./configure
-  sudo make -j 20 install
-  popd
-  sudo rm -rf "$tmp"
-  if ! grep -qE '^/usr/local/bin/zsh$' /etc/shells; then
-    sudo tee -a /etc/shells <<</usr/local/bin/zsh >/dev/null
-  fi
 }
 
 # Avoid clock snafu when dual-booting Windows and Linux.
@@ -347,8 +315,5 @@ fix_gcc
 fix_imagemagic
 
 set_preferences
-
-install_zsh
-change_shell
 
 echo SUCCESS
