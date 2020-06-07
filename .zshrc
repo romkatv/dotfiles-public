@@ -132,7 +132,6 @@ if (( $+functions[toggle-dotfiles] )); then
   bindkey '^P' toggle-dotfiles
 fi
 
-zstyle ':completion:*'                            verbose            yes
 zstyle ':completion:*'                            sort               false
 zstyle ':completion:*:ls:*'                       list-dirs-first    true
 zstyle ':completion:*:-tilde-:*'                  tag-order          named-directories users
