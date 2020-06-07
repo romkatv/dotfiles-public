@@ -18,6 +18,8 @@ if [ ! -e "$Z4H"/z4h.zsh ]; then
   mv -- "$Z4H"/z4h.zsh.$$ "$Z4H"/z4h.zsh || return
 fi
 
+[ -n "${ZSH_VERSION-}" ] && HISTFILE=~/.zsh_history.${Z4H_SSH:-${(%):-%m}}
+
 . "$Z4H"/z4h.zsh || return
 
 zstyle ':z4h:'                auto-update      ask
@@ -71,7 +73,6 @@ if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
   export LIBGL_ALWAYS_INDIRECT=1
   [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
   z4h source ~/dotfiles/ssh-agent.zsh
-  HISTFILE=~/.zsh_history.${(%):-%m}-wsl-${HOME:t}
   () {
     local lines=("${(@f)${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c set)//$'\r'}}")
     local keys=(${lines%%=*}) vals=(${lines#*=})
@@ -91,8 +92,6 @@ if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
   if [[ -x '/mnt/c/Program Files/Notepad++/notepad++.exe' ]]; then
     alias np="'/mnt/c/Program Files/Notepad++/notepad++.exe'"
   fi
-else
-  HISTFILE=~/.zsh_history.${(%):-%m}-linux-${HOME:t}
 fi
 
 () {
@@ -102,7 +101,6 @@ fi
   for hist in ~/.zsh_history*~$HISTFILE(N); do
     fc -RI $hist
   done
-  [[ -e $HISTFILE ]] && fc -RI $HISTFILE
 }
 
 TIMEFMT='user=%U system=%S cpu=%P total=%*E'
