@@ -59,7 +59,7 @@ autoload -Uz -- zmv archive unarchive ~/dotfiles/functions/[^_]*(N:t)
 if [[ -x ~/bin/redit ]]; then
   export VISUAL=~/bin/redit
 else
-  export VISUAL=${commands[nano]:-vi}
+  export VISUAL=${${commands[nano]:t}:-vi}
 fi
 
 export EDITOR=$VISUAL
@@ -89,14 +89,9 @@ if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
     (( $#files )) || return
     sudo rm -rf -- $files
   }
-  if [[ -x '/mnt/c/Program Files/Notepad++/notepad++.exe' ]]; then
-    alias np="'/mnt/c/Program Files/Notepad++/notepad++.exe'"
-  fi
 fi
 
 () {
-  emulate -L zsh
-  setopt extended_glob
   local hist
   for hist in ~/.zsh_history*~$HISTFILE(N); do
     fc -RI $hist
@@ -137,11 +132,17 @@ if (( $+functions[toggle-dotfiles] )); then
   bindkey '^P' toggle-dotfiles
 fi
 
-zstyle ':completion:*'                           sort               false
-zstyle ':completion:*:ls:*'                      list-dirs-first    true
-zstyle ':completion:*:-tilde-:*'                 tag-order          named-directories users
-zstyle ':zle:(up|down)-line-or-beginning-search' leave-cursor       no
-zstyle ':fzf-tab:*'                              continuous-trigger tab
+zstyle ':completion:*'                            verbose            yes
+zstyle ':completion:*'                            sort               false
+zstyle ':completion:*:ls:*'                       list-dirs-first    true
+zstyle ':completion:*:-tilde-:*'                  tag-order          named-directories users
+zstyle ':completion::complete:ssh:argument-1:'    tag-order          hosts users
+zstyle ':completion::complete:scp:argument-rest:' tag-order          hosts files users
+zstyle ':completion:complete:ssh:argument-1'      sort               true
+zstyle ':completion:complete:scp:argument-rest'   sort               true
+zstyle ':completion::complete:(ssh|scp):*:hosts'  hosts
+zstyle ':fzf-tab:*'                               continuous-trigger tab
+zstyle ':zle:(up|down)-line-or-beginning-search'  leave-cursor       no
 
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
