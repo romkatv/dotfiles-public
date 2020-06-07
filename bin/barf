@@ -1,0 +1,50 @@
+#!/usr/bin/env zsh
+
+emulate -L zsh -o no_unset -o pipe_fail
+
+zmodload zsh/system || return
+zmodload -F zsh/files b:zf_mkdir b:zf_rm || return
+
+function usage() {
+  print -r -- 'usage: barf path/to/dir
+
+Read a tar.gz archive from stdin and extract it to the
+specified directory.'
+}
+
+() {
+  local -i OPTIND
+  local opt OPTARG
+  while getopts ":h" opt; do
+    case $opt in
+      *h) usage; return 0;;
+      \?) print -ru2 "barf: invalid option: -$OPTARG";;
+      :)  print -ru2 "barf: missing required argument: -OPTARG";;
+      +?) print -ru2 "barf: unhandled option: +$opt";;
+      *)  print -ru2 "barf: unhandled option: -$opt";;
+    esac
+  done
+
+  if (( OPTIND != $# || ! $#1 )); then
+    usage >&2
+    return 1
+  fi
+
+  if [[ -t 0 ]]; then
+    print -ru2 "barf: refusing to read archive contents from terminal"
+    return 1
+  fi
+
+  local help warn
+  if help=$(command tar --help 2>&1) && [[ $help == *--warning=* ]]; then
+    warn=--warning=no-unknown-keyword
+  fi
+
+  if [[ ! -e $1 ]]; then
+    zf_mkdir -p -- $1 || return
+  elif [[ ! -d $1 ]]; then
+    print -ru2 "barf: destination exist and is not a directory: $1"
+  fi
+
+  command tar -C $1 $warn -xz || return
+} "$@"

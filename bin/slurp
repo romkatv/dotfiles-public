@@ -1,0 +1,73 @@
+#!/usr/bin/env zsh
+
+emulate -L zsh -o no_unset -o pipe_fail
+
+zmodload zsh/system || return
+zmodload -F zsh/files b:zf_mkdir b:zf_rm || return
+
+function usage() {
+  print -r -- 'usage: slurp path...
+
+Create a tar.gz archive from the specified files and directories
+and write it to stdout. Directories are archived recursively.'
+}
+
+() {
+  local -i OPTIND
+  local opt OPTARG
+  while getopts ":h" opt; do
+    case $opt in
+      *h) usage; return 0;;
+      \?) print -ru2 "slurp: invalid option: -$OPTARG";;
+      :)  print -ru2 "slurp: missing required argument: -OPTARG";;
+      +?) print -ru2 "slurp: unhandled option: +$opt";;
+      *)  print -ru2 "slurp: unhandled option: -$opt";;
+    esac
+  done
+
+  if (( OPTIND == $# + 1 )); then
+    usage >&2
+    return 1
+  fi
+
+  if [[ -t 1 ]]; then
+    print -ru2 "slurp: refusing to write archive contents to terminal"
+    return 1
+  fi
+
+  local tmpdir
+  if (( $+commands[mktemp] )); then
+    tmpdir=$(command mktemp -d -- ${TMPDIR:-/tmp}/slurp.XXXXXXXXXX) || return
+  else
+    tmpdir=${TMPDIR:-/tmp}/slurp.tmp.$sysparams[pid]
+    zf_rm -rf -- $tmpdir || return
+    zf_mkdir -- $tmpdir || return
+  fi
+
+  {
+    local arg
+    for arg in "$@"; do
+      if [[ ! -e $arg ]]; then
+        print -ru2 "slurp: file not found: $arg"
+        return 1
+      fi
+      local target=${arg:A}
+      if [[ -z $target(#qN.) && -z $target(#qN/) ]]; then
+        print -ru2 "slurp: unsupported file type: $arg"
+        return 1
+      fi
+      if [[ ${tmpdir:A} == $target(|/*) ]]; then
+        print -ru2 "slurp: cannot slurp: $arg"
+        return 1
+      fi
+      if [[ -e $tmpdir/${arg:t} ]]; then
+        print -ru2 "slurp: duplicate file name: ${arg:t}"
+        return 1
+      fi
+      command ln -s -- $target $tmpdir/${arg:t} || return
+    done
+    command tar -C $tmpdir -czh -- "${@:t}" || return
+  } always {
+    zf_rm -rf -- $tmpdir
+  }
+} "$@"
