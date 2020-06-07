@@ -60,13 +60,13 @@ and write it to stdout. Directories are archived recursively.'
         print -ru2 "slurp: cannot slurp: $arg"
         return 1
       fi
-      if [[ -e $tmpdir/${arg:t} ]]; then
-        print -ru2 "slurp: duplicate file name: ${arg:t}"
+      if [[ -e $tmpdir/${arg:a:t} ]]; then
+        print -ru2 "slurp: duplicate file name: ${arg:a:t}"
         return 1
       fi
-      command ln -s -- $target $tmpdir/${arg:t} || return
+      command ln -s -- $target $tmpdir/${arg:a:t} || return
     done
-    command tar -C $tmpdir -czh -- "${@:t}" || return
+    command tar -C $tmpdir -czh -- "${@:a:t}" || return
   } always {
     zf_rm -rf -- $tmpdir
   }
