@@ -41,6 +41,8 @@ zstyle ':z4h:autosuggestions' forward-char     partial-accept
 
 z4h install romkatv/archive romkatv/zsh-prompt-benchmark
 
+[[ -e ~/.ssh/id_rsa ]] || : ${GITSTATUS_AUTO_INSTALL:=0}
+
 z4h init || return
 
 setopt glob_dots
