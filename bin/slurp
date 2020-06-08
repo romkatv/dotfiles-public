@@ -66,7 +66,7 @@ and write it to stdout. Directories are archived recursively.'
       fi
       command ln -s -- $target $tmpdir/${arg:a:t} || return
     done
-    command tar -C $tmpdir -czh -- "${@:a:t}" || return
+    command tar -C $tmpdir -czhf - -- "${@:a:t}" || return
   } always {
     zf_rm -rf -- $tmpdir
   }

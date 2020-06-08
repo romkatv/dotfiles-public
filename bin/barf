@@ -46,5 +46,5 @@ specified directory.'
     print -ru2 "barf: destination exist and is not a directory: $1"
   fi
 
-  command tar -C $1 $warn -xz || return
+  command tar -C $1 $warn -xzf - || return
 } "$@"
