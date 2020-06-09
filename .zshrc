@@ -169,5 +169,5 @@ if [[ -n $commands[make] && -x ~/bin/num-cpus ]]; then
   alias make='make -j "${_my_num_cpus:-${_my_num_cpus::=$(~/bin/num-cpus)}}"'
 fi
 
-[[ ! -e ~/.zshrc-private ]] || source ~/.zshrc-private
+z4h source ~/.zshrc-private
 return 0
