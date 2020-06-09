@@ -1,6 +1,6 @@
 emulate -L zsh
 if (( ! $+functions[zsh-prompt-benchmark] )); then
-  z4h source $Z4H/romkatv/zsh-prompt-benchmark || return
+  z4h source $Z4H/romkatv/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh || return
 fi
 local on_done
 if (( $+commands[gsettings] )); then
