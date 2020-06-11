@@ -50,5 +50,12 @@ specified directory. If stdin is a tty, read from clipboard.'
     print -ru2 "barf: destination exist and is not a directory: $1"
   fi
 
-  $in | command tar -C $1 $warn -xzf - || return
+  local precmd fs
+  fs="${${$(command df -P -- $1 2>/dev/null)[(f)2]}[(w)1]}" || return
+  if [[ $fs == [A-Z]:(|\\) && -z $1(#qNU) ]]; then
+    # Without sudo tar cannot extract to NFS if $USER isn't the default wsl user.
+    precmd=sudo
+  fi
+
+  $in | command $precmd tar -C $1 $warn -xzf - || return
 } "$@"
