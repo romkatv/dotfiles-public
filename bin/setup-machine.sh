@@ -102,6 +102,7 @@ function install_packages() {
   local packages=(
     ascii
     autoconf
+    bat
     bzip2
     build-essential
     clang-format
@@ -109,12 +110,13 @@ function install_packages() {
     curl
     dconf-cli
     dos2unix
-    g++-8
+    g++
     gawk
     gedit
     git
     gzip
     htop
+    jsonnet
     jq
     lftp
     libncurses-dev
@@ -126,6 +128,7 @@ function install_packages() {
     p7zip-rar
     perl
     pigz
+    ripgrep
     tree
     unrar
     unzip
@@ -142,9 +145,6 @@ function install_packages() {
   if (( WSL )); then
     packages+=(dbus-x11)
   else
-    # For 20.04: apt-get install -y --no-install-recommends wireguard-tools.
-    sudo add-apt-repository -y ppa:remmina-ppa-team/remmina-next
-    sudo add-apt-repository -y ppa:wireguard/wireguard
     packages+=(gnome-tweak-tool imagemagick iotop tilix remmina wireguard)
   fi
 
@@ -166,26 +166,6 @@ function install_vscode() {
   rm "$deb"
 }
 
-function install_ripgrep() {
-  local v="12.1.1"
-  ! command -v rg &>/dev/null || [[ "$(rg --version)" != *" $v "* ]] || return 0
-  local deb
-  deb="$(mktemp)"
-  curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${v}/ripgrep_${v}_amd64.deb" >"$deb"
-  sudo dpkg -i "$deb"
-  rm "$deb"
-}
-
-function install_bat() {
-  local v="0.15.4"
-  ! command -v bat &>/dev/null || [[ "$(bat --version)" != *" $v" ]] || return 0
-  local deb
-  deb="$(mktemp)"
-  curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${v}/bat_${v}_amd64.deb" > "$deb"
-  sudo dpkg -i "$deb"
-  rm "$deb"
-}
-
 # Avoid clock snafu when dual-booting Windows and Linux.
 # See https://www.howtogeek.com/323390/how-to-fix-windows-and-linux-showing-different-times-when-dual-booting/.
 function fix_clock() {
@@ -202,7 +182,8 @@ tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0'
 }
 
 function win_install_fonts() {
-  local dst_dir="$(cmd.exe /c 'echo %LOCALAPPDATA%\Microsoft\Windows\Fonts' 2>/dev/null | sed 's/\r$//')"
+  local dst_dir
+  dst_dir="$(cmd.exe /c 'echo %LOCALAPPDATA%\Microsoft\Windows\Fonts' 2>/dev/null | sed 's/\r$//')"
   dst_dir="$(wslpath "$dst_dir")"
   mkdir -p "$dst_dir"
   local src
@@ -222,7 +203,8 @@ function win_install_fonts() {
 
 # Install a decent monospace font.
 function install_fonts() {
-  (( !WSL )) || win_install_fonts ~/.local/share/fonts/NerdFonts/*.ttf
+  (( WSL )) || return 0
+  win_install_fonts ~/.local/share/fonts/NerdFonts/*.ttf
 }
 
 function add_to_sudoers() {
@@ -242,13 +224,10 @@ function fix_dbus() {
   sudo dbus-uuidgen --ensure
 }
 
-function fix_gcc() {
-  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8
-  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
-}
-
 # Increase imagemagic memory and disk limits.
 function fix_imagemagic() {
+  # TODO: enable this.
+  return
   (( !WSL )) || return 0
   local cfg=/etc/ImageMagick-6/policy.xml k v kv
   [[ -f "$cfg" ]]
@@ -302,8 +281,6 @@ add_to_sudoers
 
 install_packages
 install_vscode
-install_ripgrep
-install_bat
 install_fonts
 
 disable_motd_news
@@ -311,7 +288,6 @@ disable_motd_news
 fix_clock
 fix_shm
 fix_dbus
-fix_gcc
 fix_imagemagic
 
 set_preferences

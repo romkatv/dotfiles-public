@@ -59,7 +59,7 @@ wsl.exe --unregister DISTRO
 These steps allow you to recreate the whole WSL environment. Before proceeding, delete the current distro if you have it. See [WSL Removal](#wsl-removal).
 
 - Download `id_rsa` into the Windows `Downloads` folder. It's OK if it's downloaded as `id_rsa.txt`.
-- Go to https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q and install *Ubuntu 18.04 LTS*.
+- Go to https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx71 and install *Ubuntu 20.04 LTS*.
 - Click *Start > Ubuntu*. If you get an error, remove *Ubuntu* via *Add or remove programs* and install it again. Once *Start > Ubuntu* is working, create a new user.
 - Type this (change the value of `GITHUB_USERNAME` if it's not the same as your WSL username):
 ```bash
