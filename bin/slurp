@@ -19,10 +19,10 @@ Directories are archived recursively.'
   while getopts ":h" opt; do
     case $opt in
       *h) usage; return 0;;
-      \?) print -ru2 "slurp: invalid option: -$OPTARG";;
-      :)  print -ru2 "slurp: missing required argument: -OPTARG";;
-      +?) print -ru2 "slurp: unhandled option: +$opt";;
-      *)  print -ru2 "slurp: unhandled option: -$opt";;
+      \?) print -ru2 "slurp: invalid option: -$OPTARG"; return 1;;
+      :)  print -ru2 "slurp: missing required argument: -OPTARG"; return 1;;
+      +?) print -ru2 "slurp: unhandled option: +$opt"; return 1;;
+      *)  print -ru2 "slurp: unhandled option: -$opt"; return 1;;
     esac
   done
 

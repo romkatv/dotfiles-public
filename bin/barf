@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-emulate -L zsh -o no_unset -o pipe_fail
+emulate -L zsh -o no_unset -o pipe_fail -o extended_glob
 
 zmodload zsh/system || return
 zmodload -F zsh/files b:zf_mkdir b:zf_rm || return
@@ -18,10 +18,10 @@ specified directory. If stdin is a tty, read from clipboard.'
   while getopts ":h" opt; do
     case $opt in
       *h) usage; return 0;;
-      \?) print -ru2 "barf: invalid option: -$OPTARG";;
-      :)  print -ru2 "barf: missing required argument: -OPTARG";;
-      +?) print -ru2 "barf: unhandled option: +$opt";;
-      *)  print -ru2 "barf: unhandled option: -$opt";;
+      \?) print -ru2 "barf: invalid option: -$OPTARG"; return 1;;
+      :)  print -ru2 "barf: missing required argument: -OPTARG"; return 1;;
+      +?) print -ru2 "barf: unhandled option: +$opt"; return 1;;
+      *)  print -ru2 "barf: unhandled option: -$opt"; return 1;;
     esac
   done
 
