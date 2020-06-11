@@ -45,7 +45,7 @@ choco.exe install -y microsoft-windows-terminal vcxsrv
 
 Follow these steps to remove your Linux distro with all files (applications, settings, home directory, etc.). You can recreate it by following [WSL Installation](#wsl-installation) guide below.
 
--- Find out the name of your default distro by running the following command from *PowerShell*:
+- Find out the name of your default distro by running the following command from *PowerShell*:
 ```powershell
 wsl.exe --list
 ```
