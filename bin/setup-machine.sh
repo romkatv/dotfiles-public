@@ -102,7 +102,6 @@ function install_packages() {
   local packages=(
     ascii
     autoconf
-    bat
     bzip2
     build-essential
     clang-format
@@ -128,7 +127,6 @@ function install_packages() {
     p7zip-rar
     perl
     pigz
-    ripgrep
     tree
     unrar
     unzip
@@ -162,6 +160,26 @@ function install_vscode() {
   local deb
   deb="$(mktemp)"
   curl -fsSL 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$deb"
+  sudo dpkg -i "$deb"
+  rm "$deb"
+}
+
+function install_ripgrep() {
+  local v="12.1.1"
+  ! command -v rg &>/dev/null || [[ "$(rg --version)" != *" $v "* ]] || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${v}/ripgrep_${v}_amd64.deb" >"$deb"
+  sudo dpkg -i "$deb"
+  rm "$deb"
+}
+
+function install_bat() {
+  local v="0.15.4"
+  ! command -v bat &>/dev/null || [[ "$(bat --version)" != *" $v" ]] || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${v}/bat_${v}_amd64.deb" > "$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
 }
@@ -281,6 +299,8 @@ add_to_sudoers
 
 install_packages
 install_vscode
+install_ripgrep
+install_bat
 install_fonts
 
 disable_motd_news
