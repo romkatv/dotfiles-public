@@ -54,6 +54,17 @@ sudo sh -c 'DEBIAN_FRONTEND=noninteractive apt-get -o DPkg::options::="--force-c
 sudo apt-get autoremove -y
 sudo apt-get autoclean
 
+sudo apt-get install -y curl
+
+if [[ "${WSL_DISTRO_NAME-}" == Ubuntu-20.04 ]]; then
+  # https://github.com/microsoft/WSL/issues/4898#issuecomment-626186721
+  tmpdir="$(mktemp -d)"
+  curl -fsSLo "$tmpdir"/libc6_2.31-0ubuntu9_amd64.deb \
+    https://github.com/microsoft/WSL/files/4603734/libc6_2.31-0ubuntu9_amd64.deb.zip
+  sudo dpkg -i "$tmpdir"/libc6_2.31-0ubuntu9_amd64.deb
+  rm -rf -- "$tmpdir"
+fi
+
 sudo apt-get install -y git curl
 sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh-bin/master/install)" sh -d /usr/local
 if ! grep -qxF '/usr/local/bin/zsh' /etc/shells; then
