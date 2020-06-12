@@ -143,7 +143,7 @@ function install_packages() {
   if (( WSL )); then
     packages+=(dbus-x11)
   else
-    packages+=(gnome-tweak-tool imagemagick iotop tilix remmina wireguard)
+    packages+=(gnome-tweak-tool imagemagick iotop tilix remmina wireguard docker.io)
   fi
 
   sudo apt-get update
@@ -182,6 +182,11 @@ function install_bat() {
   curl -fsSL "https://github.com/sharkdp/bat/releases/download/v${v}/bat_${v}_amd64.deb" > "$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
+}
+
+function fix_docker() {
+  (( !WSL )) || return 0
+  sudo usermod -aG docker "$USER"
 }
 
 # Avoid clock snafu when dual-booting Windows and Linux.
@@ -322,6 +327,7 @@ install_fonts
 patch_ssh
 disable_motd_news
 
+fix_docker
 fix_clock
 fix_shm
 fix_dbus
