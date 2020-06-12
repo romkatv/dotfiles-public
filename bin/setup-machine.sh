@@ -195,8 +195,11 @@ function fix_clock() {
 function fix_shm() {
   (( !WSL )) || return 0
   ! grep -qF '# My custom crap' /etc/fstab || return 0
+  sudo mkdir -p /mnt/c /mnt/d
   sudo tee -a /etc/fstab >/dev/null <<<'# My custom crap
-tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0'
+tmpfs /dev/shm tmpfs defaults,rw,nosuid,nodev,size=64g 0 0
+UUID=F212115212111D63 /mnt/c ntfs-3g nosuid,nodev,uid=0,gid=0,noatime,streams_interface=none,remove_hiberfile,async,lazytime,big_writes 0 0
+UUID=2A680BF9680BC315 /mnt/d ntfs-3g nosuid,nodev,uid=0,gid=0,noatime,streams_interface=none,remove_hiberfile,async,lazytime,big_writes 0 0'
 }
 
 function win_install_fonts() {
