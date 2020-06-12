@@ -242,6 +242,19 @@ function fix_dbus() {
   sudo dbus-uuidgen --ensure
 }
 
+function patch_ssh() {
+  local ssh
+  ssh="$(which ssh)"
+  grep -qF -- 'Warning: Permanently added' "$ssh" || return 0
+  dpkg -s openssh-client | grep -qxF 'Version: 1:8.2p1-4' || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSLo "$deb" \
+    'https://github.com/romkatv/ssh/releases/download/v1.0/openssh-client_8.2p1-4_amd64.deb'
+  sudo dpkg -i "$deb"
+  rm -- "$deb"
+}
+
 # Increase imagemagic memory and disk limits.
 function fix_imagemagic() {
   # TODO: enable this.
@@ -303,6 +316,7 @@ install_ripgrep
 install_bat
 install_fonts
 
+patch_ssh
 disable_motd_news
 
 fix_clock
