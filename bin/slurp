@@ -71,6 +71,12 @@ Directories are archived recursively.'
       fi
       command ln -s -- $target $tmpdir/${arg:a:t} || return
     done
+
+    local tar_version tar_opt
+    if tar_version=$(command tar --version 2>/dev/null) && [[ $tar_version == *'GNU tar'* ]]; then
+      tar_opt=(--owner=0 --group=0)
+    fi
+
     command tar -C $tmpdir -czhf - -- "${@:a:t}" | $out || return
   } always {
     zf_rm -rf -- $tmpdir
