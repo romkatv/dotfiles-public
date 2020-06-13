@@ -77,7 +77,7 @@ Directories are archived recursively.'
       tar_opt=(--owner=0 --group=0)
     fi
 
-    command tar -C $tmpdir -czhf - -- "${@:a:t}" | $out || return
+    command tar -C $tmpdir $tar_opt -czhf - -- "${@:a:t}" | $out || return
   } always {
     zf_rm -rf -- $tmpdir
   }
