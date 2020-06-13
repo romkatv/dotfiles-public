@@ -105,6 +105,7 @@ function install_packages() {
     bzip2
     build-essential
     clang-format
+    cmake
     command-not-found
     curl
     dconf-cli
