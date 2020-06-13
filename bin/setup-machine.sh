@@ -127,6 +127,8 @@ function install_packages() {
     p7zip-full
     p7zip-rar
     perl
+    python3
+    python3-pip
     pigz
     tree
     unrar
@@ -152,6 +154,10 @@ function install_packages() {
   sudo apt-get install -y "${packages[@]}"
   sudo apt-get autoremove -y
   sudo apt-get autoclean
+}
+
+function install_b2() {
+  sudo pip3 install --upgrade b2
 }
 
 # Install Visual Studio Code.
@@ -320,6 +326,7 @@ umask g-w,o-w
 add_to_sudoers
 
 install_packages
+install_b2
 install_vscode
 install_ripgrep
 install_bat
