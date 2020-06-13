@@ -191,6 +191,16 @@ function install_bat() {
   rm "$deb"
 }
 
+function install_gh() {
+  local v="0.10.0"
+  ! command -v gh &>/dev/null || [[ "$(gh --version)" != */v"$v" ]] || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSL "https://github.com/cli/cli/releases/download/v${v}/gh_${v}_linux_amd64.deb" > "$deb"
+  sudo dpkg -i "$deb"
+  rm "$deb"
+}
+
 function fix_docker() {
   (( !WSL )) || return 0
   sudo usermod -aG docker "$USER"
@@ -330,6 +340,7 @@ install_b2
 install_vscode
 install_ripgrep
 install_bat
+install_gh
 install_fonts
 
 patch_ssh
