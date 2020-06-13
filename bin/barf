@@ -39,9 +39,9 @@ specified directory. If stdin is a tty, read from clipboard.'
     return 1
   fi
 
-  local help warn
+  local help tar_opt
   if help=$(command tar --help 2>&1) && [[ $help == *--warning=* ]]; then
-    warn=--warning=no-unknown-keyword
+    tar_opt=(--warning=no-unknown-keyword --no-same-owner)
   fi
 
   if [[ ! -e $1 ]]; then
@@ -57,5 +57,5 @@ specified directory. If stdin is a tty, read from clipboard.'
     precmd=sudo
   fi
 
-  $in | command $precmd tar -C $1 $warn -xzf - || return
+  $in | command $precmd tar -C $1 $tar_opt -xzf - || return
 } "$@"
