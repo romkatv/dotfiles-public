@@ -8,7 +8,7 @@
   "initialPosition": "1,1150",
   "showTabsInTitlebar": false,
   "snapToGridOnResize": false,
-  "wordDelimiters": " ",
+  "wordDelimiters": " ()\"';<>!@$^*|+=[]{}",
 
   "defaultProfile": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
 
