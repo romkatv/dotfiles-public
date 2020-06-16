@@ -201,6 +201,10 @@ function install_gh() {
   rm "$deb"
 }
 
+function fix_locale() {
+  sudo tee /etc/default/locale >/dev/null <<<'LC_ALL="C.UTF-8"'
+}
+
 function fix_docker() {
   (( !WSL )) || return 0
   sudo usermod -aG docker "$USER"
@@ -346,6 +350,7 @@ install_fonts
 patch_ssh
 disable_motd_news
 
+fix_locale
 fix_docker
 fix_clock
 fix_shm
