@@ -18,7 +18,7 @@ if [ ! -e "$Z4H"/z4h.zsh ]; then
   mv -- "$Z4H"/z4h.zsh.$$ "$Z4H"/z4h.zsh || return
 fi
 
-[ -n "${ZSH_VERSION-}" ] && HISTFILE=~/.zsh_history.${Z4H_SSH:-${(%):-%m}}
+[ -n "${ZSH_VERSION-}" -a -z "${Z4H_SSH-}" ] && HISTFILE=${ZDOTDIR:-~}/.zsh_history.${(%):-%m}
 
 . "$Z4H"/z4h.zsh || return
 
@@ -106,6 +106,17 @@ function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
 function ssh() { z4h ssh "$@" }
+
+zstyle ':z4h:ssh:*' ssh-command      command ssh
+zstyle ':z4h:ssh:*' send-extra-files '~/.zshrc-private' '~/bin/slurp' '~/bin/barf'
+
+function z4h-ssh-configure() {
+  local x y
+  for x y in $ZDOTDIR/.zsh_history.${(%):-%m}:$z4h_ssh_host '"$ZDOTDIR"/.zsh_history'; do
+    z4h_ssh_send_files[$x]=$y
+    z4h_ssh_retrieve_files[$y]=$x
+  done
+}
 
 if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
   : ${GITSTATUS_LOG_LEVEL=DEBUG}
