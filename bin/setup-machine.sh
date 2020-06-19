@@ -124,6 +124,7 @@ function install_packages() {
     man
     meld
     nano
+    openssh-server
     p7zip-full
     p7zip-rar
     perl
@@ -284,6 +285,23 @@ function patch_ssh() {
   rm -- "$deb"
 }
 
+function enable_sshd() {
+  sudo tee /etc/ssh/sshd_config >/dev/null <<\END
+ClientAliveInterval 60
+AcceptEnv TERM
+X11Forwarding no
+X11UseLocalhost no
+PermitRootLogin no
+AllowTcpForwarding no
+AllowAgentForwarding no
+AllowStreamLocalForwarding no
+AuthenticationMethods publickey
+PrintLastLog no
+PrintMotd no
+END
+  sudo systemctl enable --now ssh
+}
+
 # Increase imagemagic memory and disk limits.
 function fix_imagemagic() {
   # TODO: enable this.
@@ -348,6 +366,7 @@ install_gh
 install_fonts
 
 patch_ssh
+enable_sshd
 disable_motd_news
 
 fix_locale
