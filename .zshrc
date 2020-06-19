@@ -49,10 +49,6 @@ setopt glob_dots
 
 ulimit -c $(((4 << 30) / 512))  # 4GB
 
-[[ -d ~/.cargo/bin ]] && path=(~/.cargo/bin $path)
-[[ -d ~/.local/bin ]] && path=(~/.local/bin $path)
-[[ -d ~/bin        ]] && path=(~/bin $path)
-
 fpath=($Z4H/romkatv/archive $fpath)
 [[ -d ~/dotfiles/functions ]] && fpath=(~/dotfiles/functions $fpath)
 
