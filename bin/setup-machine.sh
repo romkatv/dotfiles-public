@@ -299,6 +299,7 @@ AuthenticationMethods publickey
 PrintLastLog no
 PrintMotd no
 END
+  (( !WSL )) || return 0
   sudo systemctl enable --now ssh
 }
 
