@@ -67,12 +67,14 @@ function -sync-dotfiles-repo() {
   -sync-dotfiles-repo || return
 
   GIT_DIR=~/.dotfiles-private
-  if [[ -f ${HISTFILE:-} ]]; then
-    git add $HISTFILE || return
+  local hist=${ZDOTDIR:-~}/.zsh_history.${(%):-%m}
+  local -U hist=($hist{,:*}(N))
+  if (( $#hist )); then
+    git add -- $hist || return
     local s
     s="$(git status --porcelain $HISTFILE)" || return
     if [[ -n $s ]]; then
-      git commit -m 'fresh history' -- $HISTFILE || return
+      git commit -m 'fresh history' -- $hist || return
     fi
   fi
   -sync-dotfiles-repo dotfiles-private || return
