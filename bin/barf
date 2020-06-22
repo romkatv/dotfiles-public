@@ -25,7 +25,7 @@ specified directory. If stdin is a tty, read from clipboard.'
     esac
   done
 
-  if (( OPTIND != $# || ! $#1 )); then
+  if [[ $OPTIND != $# || -z $1 ]]; then
     usage >&2
     return 1
   fi
