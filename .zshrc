@@ -103,14 +103,15 @@ compdef _directories md
 
 function ssh() { z4h ssh "$@" }
 
-zstyle ':z4h:ssh:*' ssh-command      command ssh
-zstyle ':z4h:ssh:*' send-extra-files '~/.zshrc-private' '~/bin/slurp' '~/bin/barf'
+zstyle    ':z4h:ssh:*' ssh-command      command ssh
+zstyle    ':z4h:ssh:*' send-extra-files '~/.zshrc-private' '~/bin/slurp' '~/bin/barf'
+zstyle -e ':z4h:ssh:*' retrieve-history 'reply=($ZDOTDIR/.zsh_history.${(%):-%m}:$z4h_ssh_host)'
 
 function z4h-ssh-configure() {
-  local x y
-  for x y in $ZDOTDIR/.zsh_history.${(%):-%m}:$z4h_ssh_host '"$ZDOTDIR"/.zsh_history'; do
-    z4h_ssh_send_files[$x]=$y
-    z4h_ssh_retrieve_files[$y]=$x
+  local file
+  for file in $ZDOTDIR/.zsh_history.*:$z4h_ssh_host(N); do
+    (( $+z4h_ssh_send_files[$file] )) && continue
+    z4h_ssh_send_files[$file]='"$ZDOTDIR"/'${file:t}
   done
 }
 
