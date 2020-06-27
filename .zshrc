@@ -1,27 +1,3 @@
-export XDG_CACHE_HOME="$HOME/.cache"
-Z4H_URL="https://raw.githubusercontent.com/romkatv/zsh4humans/v3"
-: "${Z4H:=${XDG_CACHE_HOME:-$HOME/.cache}/zsh4humans}"
-[ -d ~/zsh4humans/main ] && Z4H_BOOTSTRAP_COMMAND='ln -s ~/zsh4humans/main "$Z4H_PACKAGE_DIR"'
-
-umask o-w
-
-if [ ! -e "$Z4H"/z4h.zsh ]; then
-  mkdir -p -- "$Z4H" || return
-  >&2 printf '\033[33mz4h\033[0m: fetching \033[4mz4h.zsh\033[0m\n'
-  if [ -e ~/zsh4humans/main/z4h.zsh ]; then
-    ln -s -- ~/zsh4humans/main/z4h.zsh "$Z4H"/z4h.zsh.$$ || return
-  elif command -v curl >/dev/null 2>&1; then
-    curl -fsSL -- "$Z4H_URL"/z4h.zsh >"$Z4H"/z4h.zsh.$$  || return
-  else
-    wget -O-   -- "$Z4H_URL"/z4h.zsh >"$Z4H"/z4h.zsh.$$  || return
-  fi
-  mv -- "$Z4H"/z4h.zsh.$$ "$Z4H"/z4h.zsh || return
-fi
-
-[ -n "${ZSH_VERSION-}" -a -z "${Z4H_SSH-}" ] && HISTFILE=${ZDOTDIR:-~}/.zsh_history.${(%):-%m}
-
-. "$Z4H"/z4h.zsh || return
-
 zstyle ':z4h:'                auto-update      ask
 zstyle ':z4h:'                auto-update-days 28
 zstyle ':z4h:*'               channel          testing
@@ -69,7 +45,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
-  [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
+  [[ -z $SSH_CONNECTON && -z $P9K_SSH && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
   z4h source ~/dotfiles/ssh-agent.zsh
   () {
     local lines=("${(@f)${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c set)//$'\r'}}")
@@ -81,7 +57,7 @@ if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
   }
   () {
     emulate -L zsh -o dot_glob -o null_glob
-    [[ -n $SSH_CONNECTON || $P9K_SSH == 1 ]] && return
+    [[ -n $SSH_CONNECTON || -n $P9K_SSH ]] && return
     local -i uptime_sec=${$(</proc/uptime)[1]}
     local files=(${TMPDIR:-/tmp}/*(as+$((uptime_sec+86400))))
     (( $#files )) || return
