@@ -28,7 +28,7 @@ ulimit -c $(((4 << 30) / 512))  # 4GB
 fpath=($Z4H/romkatv/archive $fpath)
 [[ -d ~/dotfiles/functions ]] && fpath=(~/dotfiles/functions $fpath)
 
-autoload -Uz -- zmv archive unarchive ~/dotfiles/functions/[^_]*(N:t)
+autoload -Uz -- zmv archive lsarchive unarchive ~/dotfiles/functions/[^_]*(N:t)
 
 if [[ -x ~/bin/redit ]]; then
   export VISUAL=~/bin/redit
