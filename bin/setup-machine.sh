@@ -301,6 +301,9 @@ PrintMotd no
 END
   (( !WSL )) || return 0
   sudo systemctl enable --now ssh
+  if [[ ! -e ~/.ssh/authorized_keys ]]; then
+    cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys
+  fi
 }
 
 # Increase imagemagic memory and disk limits.
