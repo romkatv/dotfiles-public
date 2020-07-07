@@ -10,7 +10,7 @@ zstyle ':z4h:autosuggestions' forward-char     partial-accept
     if [[ ${(P)var} == 0 ]]; then
       zstyle ":z4h:$proj" channel none
     elif [[ -d ~/$proj ]]; then
-      zstyle ":z4h:$proj" channel command "ln -s -- ~/$proj \$Z4H_PACKAGE_DIR"
+      zstyle ":z4h:$proj" channel command "zf_ln -s -- ~/$proj \$Z4H_PACKAGE_DIR"
     fi
   done
 }
