@@ -46,7 +46,7 @@ if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
   [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
-  z4h source ~/dotfiles/ssh-agent.zsh
+  z4h source -c ~/dotfiles/ssh-agent.zsh
   () {
     local lines=("${(@f)${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c set)//$'\r'}}")
     local keys=(${lines%%=*}) vals=(${lines#*=})
@@ -153,5 +153,5 @@ if [[ -n $commands[make] && -x ~/bin/num-cpus ]]; then
   alias make='make -j "${_my_num_cpus:-${_my_num_cpus::=$(~/bin/num-cpus)}}"'
 fi
 
-z4h source ~/.zshrc-private
+z4h source -c ~/.zshrc-private
 return 0
