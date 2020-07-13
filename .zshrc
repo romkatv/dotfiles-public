@@ -72,8 +72,6 @@ fi
   done
 }
 
-TIMEFMT='user=%U system=%S cpu=%P total=%*E'
-
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
