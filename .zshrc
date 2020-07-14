@@ -109,7 +109,8 @@ fi
   done
 }
 
-bindkey '^H' z4h-backward-kill-word
+bindkey '^H'   z4h-backward-kill-word
+bindkey '^[^H' z4h-backward-kill-zword
 
 if (( $+functions[toggle-dotfiles] )); then
   zle -N toggle-dotfiles
