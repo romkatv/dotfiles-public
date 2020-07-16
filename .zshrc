@@ -136,6 +136,7 @@ fi
 (( $+commands[tree]  )) && alias tree='tree -aC -I .git --dirsfirst'
 (( $+commands[gedit] )) && alias gedit='gedit &>/dev/null'
 (( $+commands[rsync] )) && alias rsync='rsync -z'
+(( $+commands[exa]   )) && alias exa='exa -ga --group-directories-first --time-style=long-iso --color-scale'
 
 if (( $+commands[xclip] && $#DISPLAY )); then
   alias x='xclip -selection clipboard -in'
