@@ -172,6 +172,19 @@ function install_vscode() {
   rm "$deb"
 }
 
+function install_exa() {
+  local v="0.9.0"
+  ! command -v exa &>/dev/null || [[ "$(exa --version)" != *" v$v" ]] || return 0
+  local tmp
+  tmp="$(mktemp -d)"
+  pushd -- "$tmp"
+  curl -fsSLO "https://github.com/ogham/exa/releases/download/v${v}/exa-linux-x86_64-${v}.zip"
+  unzip exa-linux-x86_64-${v}.zip
+  sudo install -DT ./exa-linux-x86_64 /usr/local/bin/exa
+  popd
+  rm -rf -- "$tmp"
+}
+
 function install_ripgrep() {
   local v="12.1.1"
   ! command -v rg &>/dev/null || [[ "$(rg --version)" != *" $v "* ]] || return 0
@@ -367,6 +380,7 @@ install_vscode
 install_ripgrep
 install_bat
 install_gh
+install_exa
 install_fonts
 
 patch_ssh
