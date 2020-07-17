@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+local cpus
+if (( ! $+commands[sysctl] )) || [[ $OSTYPE == linux* ]] ||
+    ! cpus=$(command sysctl -n hw.ncpu 2>/dev/null); then
+  if (( ! $+commands[getconf] )) || ! cpus=$(command getconf _NPROCESSORS_ONLN 2>/dev/null); then
+    cpus=
+  fi
+fi
+
+[[ $cpus == <1-> ]] || cpus=8
+print -r -- $cpus
