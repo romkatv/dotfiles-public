@@ -149,8 +149,13 @@ if (( $+commands[xclip] && $#DISPLAY )); then
   bindkey '^S' copy-buffer-to-clipboard
 fi
 
-if [[ -n $commands[make] && -x ~/bin/num-cpus ]]; then
-  alias make='make -j "${_my_num_cpus:-${_my_num_cpus::=$(~/bin/num-cpus)}}"'
+if [[ -x ~/bin/num-cpus ]]; then
+  if (( $+commands[make] )); then
+    alias make='make -j "${_my_num_cpus:-${_my_num_cpus::=$(~/bin/num-cpus)}}"'
+  fi
+  if (( $+commands[cmake] )); then
+    alias cmake='cmake -j "${_my_num_cpus:-${_my_num_cpus::=$(~/bin/num-cpus)}}"'
+  fi
 fi
 
 z4h source -c ~/.zshrc-private
