@@ -128,6 +128,8 @@ zstyle ':completion::complete:(ssh|scp):*:hosts'  hosts
 zstyle ':fzf-tab:*'                               continuous-trigger tab
 zstyle ':zle:(up|down)-line-or-beginning-search'  leave-cursor       no
 
+zstyle ':z4h'                                     experimental-git-completion true
+
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
   alias ls="${aliases[ls]:-ls} --group-directories-first"
