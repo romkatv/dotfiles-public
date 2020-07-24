@@ -119,6 +119,7 @@ function install_packages() {
     jsonnet
     jq
     lftp
+    libglpk-dev
     libncurses-dev
     libxml2-utils
     man
