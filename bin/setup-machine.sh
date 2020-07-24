@@ -287,14 +287,15 @@ function fix_dbus() {
 }
 
 function patch_ssh() {
+  local v='8.2p1-4ubuntu0.1'
   local ssh
   ssh="$(which ssh)"
   grep -qF -- 'Warning: Permanently added' "$ssh" || return 0
-  dpkg -s openssh-client | grep -qxF 'Version: 1:8.2p1-4' || return 0
+  dpkg -s openssh-client | grep -qxF "Version: 1:$v" || return 0
   local deb
   deb="$(mktemp)"
   curl -fsSLo "$deb" \
-    'https://github.com/romkatv/ssh/releases/download/v1.0/openssh-client_8.2p1-4_amd64.deb'
+    "https://github.com/romkatv/ssh/releases/download/v1.0/openssh-client_${v}_amd64.deb"
   sudo dpkg -i "$deb"
   rm -- "$deb"
 }
