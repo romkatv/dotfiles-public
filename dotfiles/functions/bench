@@ -3,7 +3,7 @@ if (( ! $+functions[zsh-prompt-benchmark] )); then
   z4h source $Z4H/romkatv/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh || return
 fi
 local on_done
-if (( $+commands[gsettings] )); then
+if (( $+commands[gsettings] )) && [[ "$(</proc/version)" != *[Mm]icrosoft* ]] 2>/dev/null; then
   gsettings set org.gnome.desktop.peripherals.keyboard repeat-interval 1 || return
   on_done=_bench_restore_key_repeat_interval
   function _bench_restore_key_repeat_interval() {
