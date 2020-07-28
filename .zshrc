@@ -128,6 +128,14 @@ zstyle ':completion::complete:(ssh|scp):*:hosts'  hosts
 zstyle ':fzf-tab:*'                               continuous-trigger tab
 zstyle ':zle:(up|down)-line-or-beginning-search'  leave-cursor       no
 
+if [[ -n $Z4H_SSH ]]; then
+  zstyle ':z4h' term-title-preexec ${${Z4H_SSH#*:}//\%/%%}': ${1//\%/%%}'
+  zstyle ':z4h' term-title-precmd  ${${Z4H_SSH#*:}//\%/%%}': %~'
+elif [[ -n $SSH_CONNECTON || $P9K_SSH == 1 ]]; then
+  zstyle ':z4h' term-title-preexec '%m: ${1//\%/%%}'
+  zstyle ':z4h' term-title-precmd  '%m: %~'
+fi
+
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
   alias ls="${aliases[ls]:-ls} --group-directories-first"
