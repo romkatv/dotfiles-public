@@ -32,8 +32,6 @@
       done
     fi
 
-    return
-
     if [[ -e $env_file ]]; then
       builtin source $env_file >/dev/null
       _ssh-agent-running && return
