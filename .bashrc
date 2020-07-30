@@ -42,3 +42,5 @@ else
   PS1+='\n\[\033[01;$((31+!$?))m\]\$\[\033[00m\] '  # green/red (success/error) $/# (normal/root)
   PS1+='\[\e]0;\u@\h: \w\a\]'                       # terminal title: user@host: dir
 fi
+
+PROMPT_DIRTRIM=3
