@@ -10,7 +10,7 @@ if [ -n "${ZSH_VERSION-}" ]; then
 fi
 
 Z4H_URL="https://raw.githubusercontent.com/romkatv/zsh4humans/v3"
-: "${Z4H:=${XDG_CACHE_HOME:-$HOME/.cache}/zsh4humans}"
+: "${Z4H:=${XDG_CACHE_HOME:-$HOME/.cache}/zsh4humans/v3}"
 [ -d ~/zsh4humans/main ] && Z4H_BOOTSTRAP_COMMAND='ln -s ~/zsh4humans/main "$Z4H_PACKAGE_DIR"'
 
 umask o-w
