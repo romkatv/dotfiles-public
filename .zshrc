@@ -3,6 +3,8 @@ zstyle ':z4h:'                auto-update-days 28
 zstyle ':z4h:*'               channel          testing
 zstyle ':z4h:'                cd-key           alt
 zstyle ':z4h:autosuggestions' forward-char     partial-accept
+zstyle ':z4h:term-title:ssh'  precmd           ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
+zstyle ':z4h:term-title:ssh'  preexec          ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
 
 () {
   local var proj
@@ -117,24 +119,17 @@ if (( $+functions[toggle-dotfiles] )); then
   bindkey '^P' toggle-dotfiles
 fi
 
-zstyle ':completion:*'                            sort               false
-zstyle ':completion:*:ls:*'                       list-dirs-first    true
-zstyle ':completion:*:-tilde-:*'                  tag-order          named-directories users
-zstyle ':completion::complete:ssh:argument-1:'    tag-order          hosts users
-zstyle ':completion::complete:scp:argument-rest:' tag-order          hosts files users
-zstyle ':completion:complete:ssh:argument-1'      sort               true
-zstyle ':completion:complete:scp:argument-rest'   sort               true
-zstyle ':completion::complete:(ssh|scp):*:hosts'  hosts
-zstyle ':fzf-tab:*'                               continuous-trigger tab
-zstyle ':zle:(up|down)-line-or-beginning-search'  leave-cursor       no
-
-if [[ -n $Z4H_SSH ]]; then
-  zstyle ':z4h' term-title-preexec ${${Z4H_SSH#*:}//\%/%%}': ${1//\%/%%}'
-  zstyle ':z4h' term-title-precmd  ${${Z4H_SSH#*:}//\%/%%}': %~'
-elif [[ -n $SSH_CONNECTON || $P9K_SSH == 1 ]]; then
-  zstyle ':z4h' term-title-preexec '%m: ${1//\%/%%}'
-  zstyle ':z4h' term-title-precmd  '%m: %~'
-fi
+zstyle ':completion:*'                      sort               false
+zstyle ':completion:*:ls:*'                 list-dirs-first    true
+zstyle ':completion:*:-tilde-:*'            tag-order          named-directories users
+zstyle ':completion:*:ssh:argument-1:'      tag-order          hosts users
+zstyle ':completion:*:scp:argument-rest:'   tag-order          hosts files users
+zstyle ':completion:*:ssh:argument-1'       sort               true
+zstyle ':completion:*:scp:argument-rest'    sort               true
+zstyle ':completion:*:(ssh|scp):*:hosts'    hosts
+zstyle ':fzf-tab:*'                         continuous-trigger tab
+zstyle ':zle:up-line-or-beginning-search'   leave-cursor       no
+zstyle ':zle:down-line-or-beginning-search' leave-cursor       no
 
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
