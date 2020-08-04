@@ -44,19 +44,12 @@ export PAGER=less
 export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 
-if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
+if (( $+z4h_win_env )); then
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
   [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
   z4h source -c ~/dotfiles/ssh-agent.zsh
-  () {
-    local lines=("${(@f)${$(cd /mnt/c && /mnt/c/Windows/System32/cmd.exe /c set)//$'\r'}}")
-    local keys=(${lines%%=*}) vals=(${lines#*=})
-    typeset -grA wenv=(${keys:^vals})
-    local home=$wenv[USERPROFILE]
-    home=/mnt/${(L)home[1]}/${${home:3}//\\//}
-    [[ -d $home ]] && hash -d w=$home
-  }
+  (( $+z4h_win_home )) && hash -d w=$z4h_win_home
   () {
     emulate -L zsh -o dot_glob -o null_glob
     [[ -n $SSH_CONNECTON || $P9K_SSH == 1 ]] && return
