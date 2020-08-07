@@ -196,6 +196,16 @@ function install_ripgrep() {
   rm "$deb"
 }
 
+function install_jc() {
+  local v="1.13.2"
+  ! command -v jc &>/dev/null || [[ "$(jc -a | jq -r .version)" != "$v" ]] || return 0
+  local deb
+  deb="$(mktemp)"
+  curl -fsSL "https://jc-packages.s3-us-west-1.amazonaws.com/jc-${v}-1.x86_64.deb" >"$deb"
+  sudo dpkg -i "$deb"
+  rm "$deb"
+}
+
 function install_bat() {
   local v="0.15.4"
   ! command -v bat &>/dev/null || [[ "$(bat --version)" != *" $v" ]] || return 0
@@ -380,6 +390,7 @@ install_packages
 install_b2
 install_vscode
 install_ripgrep
+install_jc
 install_bat
 install_gh
 install_exa
