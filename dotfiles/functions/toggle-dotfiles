@@ -15,14 +15,13 @@ case "${GIT_DIR-}" in
   ;;
 esac
 
-local -i c=$((${+terminfo[civis]} && ${+terminfo[cnorm]}))
-{
-  (( c )) && echoti civis
-  local f
-  for f in precmd "${precmd_functions[@]}"; do
-    [[ "${+functions[$f]}" == 0 ]] || "$f" &>/dev/null || true
-  done
+local f
+for f in precmd "${precmd_functions[@]}"; do
+  [[ "${+functions[$f]}" == 0 ]] || "$f" &>/dev/null || true
+done
+
+if (( $+functions[p10k] )); then
+  p10k display -r
+else
   zle .reset-prompt
-} always {
-  (( c )) && echoti cnorm
-}
+fi
