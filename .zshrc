@@ -125,7 +125,7 @@ zstyle ':completion:*:ssh:argument-1'       sort               true
 zstyle ':completion:*:scp:argument-rest'    sort               true
 zstyle ':completion:*:(ssh|scp):*:hosts'    hosts
 
-zstyle ':completion:*:git-*:argument-rest:heads'           ignored-patterns '(FETCH_|ORIG_|)HEAD'
+zstyle ':completion:*:git-*:argument-rest:heads'           ignored-patterns '(FETCH_|ORIG_|)HEAD' '*/HEAD'
 zstyle ':completion:*:git-*:argument-rest:heads-local'     ignored-patterns '(FETCH_|ORIG_|)HEAD'
 zstyle ':completion:*:git-*:argument-rest:heads-remote'    ignored-patterns '*/HEAD'
 zstyle ':completion:*:git-*:argument-rest:commits'         ignored-patterns '*'
