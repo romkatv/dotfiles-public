@@ -118,19 +118,11 @@ zstyle ':zle:down-line-or-beginning-search' leave-cursor       no
 
 zstyle ':completion:*'                      sort               false
 zstyle ':completion:*:ls:*'                 list-dirs-first    true
-zstyle ':completion:*:-tilde-:*'            tag-order          named-directories users
 zstyle ':completion:*:ssh:argument-1:'      tag-order          hosts users
 zstyle ':completion:*:scp:argument-rest:'   tag-order          hosts files users
 zstyle ':completion:*:ssh:argument-1'       sort               true
 zstyle ':completion:*:scp:argument-rest'    sort               true
 zstyle ':completion:*:(ssh|scp):*:hosts'    hosts
-
-zstyle ':completion:*:git-*:argument-rest:heads'           ignored-patterns '(FETCH_|ORIG_|)HEAD' '*/HEAD'
-zstyle ':completion:*:git-*:argument-rest:heads-local'     ignored-patterns '(FETCH_|ORIG_|)HEAD'
-zstyle ':completion:*:git-*:argument-rest:heads-remote'    ignored-patterns '*/HEAD'
-zstyle ':completion:*:git-*:argument-rest:commits'         ignored-patterns '*'
-zstyle ':completion:*:git-*:argument-rest:commit-objects'  ignored-patterns '*'
-zstyle ':completion:*:git-*:argument-rest:recent-branches' ignored-patterns '*'
 
 # zstyle ':completion:*' group-name '' && zstyle ':completion:*' format 'Completing "%d":'
 
