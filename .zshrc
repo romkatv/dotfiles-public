@@ -3,6 +3,7 @@ zstyle ':z4h:'                auto-update-days 28
 zstyle ':z4h:*'               channel          testing
 zstyle ':z4h:'                cd-key           alt
 zstyle ':z4h:autosuggestions' forward-char     partial-accept
+zstyle ':z4h:autosuggestions' end-of-line      partial-accept
 zstyle ':z4h:term-title:ssh'  precmd           ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
 zstyle ':z4h:term-title:ssh'  preexec          ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
 
