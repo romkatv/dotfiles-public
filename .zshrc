@@ -157,4 +157,5 @@ if [[ -x ~/bin/num-cpus ]]; then
 fi
 
 z4h source -c ~/.zshrc-private
-return 0
+
+z4h compile $ZDOTDIR/{.zshenv,.zprofile,.zshrc,.zlogin,.zlogout}
