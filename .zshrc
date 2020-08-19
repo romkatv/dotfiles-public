@@ -1,7 +1,6 @@
 zstyle ':z4h:'                auto-update      ask
 zstyle ':z4h:'                auto-update-days 28
 zstyle ':z4h:*'               channel          testing
-zstyle ':z4h:'                cd-key           alt
 zstyle ':z4h:autosuggestions' forward-char     partial-accept
 zstyle ':z4h:autosuggestions' end-of-line      partial-accept
 zstyle ':z4h:term-title:ssh'  precmd           ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
@@ -107,6 +106,10 @@ fi
 
 z4h bindkey z4h-backward-kill-word  Ctrl+Backspace
 z4h bindkey z4h-backward-kill-zword Ctrl+Alt+Backspace
+z4h bindkey z4h-cd-back             Alt+Left
+z4h bindkey z4h-cd-forward          Alt+Right
+z4h bindkey z4h-cd-up               Alt+Up
+z4h bindkey z4h-cd-down             Alt+Down
 
 if (( $+functions[toggle-dotfiles] )); then
   zle -N toggle-dotfiles
