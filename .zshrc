@@ -105,12 +105,12 @@ fi
   done
 }
 
-bindkey '^H'   z4h-backward-kill-word
-bindkey '^[^H' z4h-backward-kill-zword
+z4h bindkey z4h-backward-kill-word  Ctrl+Backspace
+z4h bindkey z4h-backward-kill-zword Ctrl+Alt+Backspace
 
 if (( $+functions[toggle-dotfiles] )); then
   zle -N toggle-dotfiles
-  bindkey '^P' toggle-dotfiles
+  z4h bindkey toggle-dotfiles Ctrl+P
 fi
 
 zstyle ':fzf-tab:*'                         continuous-trigger tab
@@ -157,6 +157,5 @@ if [[ -x ~/bin/num-cpus ]]; then
   fi
 fi
 
-z4h source -c ~/.zshrc-private
-
-z4h compile $ZDOTDIR/{.zshenv,.zprofile,.zshrc,.zlogin,.zlogout}
+z4h source -c -- $ZDOTDIR/.zshrc-private
+z4h compile -- $ZDOTDIR/{.zshenv,.zprofile,.zshrc,.zlogin,.zlogout}
