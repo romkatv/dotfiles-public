@@ -17,10 +17,10 @@ esac
 
 local f
 for f in precmd "${precmd_functions[@]}"; do
-  [[ "${+functions[$f]}" == 0 ]] || "$f" &>/dev/null || true
+  (( ${+functions[$f]} )) && "$f" &>/dev/null
 done
 
-if (( $+functions[p10k] )); then
+if (( ${+functions[p10k]} )); then
   p10k display -r
 else
   zle .reset-prompt
