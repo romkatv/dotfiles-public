@@ -9,11 +9,30 @@ if (( $# != 1 || $#1 == 0 )); then
   exit 1
 fi
 
-if [[ "$(</proc/version)" == *[Mm]icrosoft* ]] 2>/dev/null; then
-  local file
-  file=$(wslpath -wa -- "${1:A}")
-  builtin cd -q /mnt/c
-  /mnt/c/Windows/System32/cmd.exe /c start "$file"
-else
-  command xdg-open "$@" </dev/null &>/dev/null
-fi
+case $OSTYPE in
+  darwin*)
+    # TODO
+    exit 1
+  ;;
+  linux*)
+    if [[ -r /proc/version && "$(</proc/version)" == *[Mm]icrosoft* ]]; then
+      local ufile=${1:A}
+      local wfile
+      wfile=$(wslpath -wa -- $ufile)
+      if [[ $wfile == '\\wsl$\'* || ! -d ${ufile:h} ]]; then
+        builtin cd -q /mnt/c
+        /mnt/c/Windows/System32/cmd.exe /c start $wfile
+      else
+        builtin cd -q -- ${ufile:h}
+        /mnt/c/Windows/System32/cmd.exe /c start '.\'${ufile:t}
+      fi
+      exit
+    elif (( $+commands[xdg-open] )); then
+      command xdg-open -- $1 </dev/null &>/dev/null
+      exit
+    fi
+  ;;
+esac
+
+print -ru2 -- "open: unsupported platform"
+exit 1
