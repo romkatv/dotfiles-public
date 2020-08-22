@@ -71,6 +71,15 @@ GITHUB_USERNAME=$USER bash -c \
   - Press <kbd>Ctrl+,</kbd>.
   - Replace the content of `settings.json` with [this](https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/microsoft-terminal-settings.json). Change "romkatv" to your WSL username.
 
+#### Optional: Windows Defender Exclusion
+
+- Run *Start > Windows Security*.
+  - Click *Virus & threat protection*.
+  - Click *Manage settings* under *Virus & threat protection settings*.
+  - Click *Add or remove exclusions* under *Exclusions*.
+  - Click *Add an exclusion > Folder*.
+  - Select `%USERPROFILE%\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc`.
+
 ### Maintenance
 
 Run this command occasionally.
