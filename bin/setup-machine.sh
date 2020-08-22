@@ -124,6 +124,7 @@ function install_packages() {
     libxml2-utils
     man
     meld
+    moreutils
     nano
     openssh-server
     p7zip-full
