@@ -28,7 +28,7 @@ case $OSTYPE in
       fi
       exit
     elif (( $+commands[xdg-open] )); then
-      command xdg-open -- $1 </dev/null &>/dev/null
+      command xdg-open $1 </dev/null &>/dev/null
       exit
     fi
   ;;
