@@ -48,6 +48,31 @@
     ]
   },
 
+  "schemes": [
+    {
+      "name": "Tango Dark",
+      "foreground": "#EEEEEC",
+      "background": "#171A1B",
+      "cursorColor": "#FFFFFF",
+      "black": "#2E3436",
+      "red": "#CC0000",
+      "green": "#4D9A05",
+      "yellow": "#C3A000",
+      "blue": "#3464A3",
+      "purple": "#754F7B",
+      "cyan": "#05979A",
+      "white": "#D3D6CF",
+      "brightBlack": "#545652",
+      "brightRed": "#EF2828",
+      "brightGreen": "#89E234",
+      "brightYellow": "#FBE84F",
+      "brightBlue": "#729ECF",
+      "brightPurple": "#AC7EA8",
+      "brightCyan": "#34E2E2",
+      "brightWhite": "#EDEDEB"
+    }
+  ],
+
   "keybindings": [
     {
       "command": {
