@@ -9,6 +9,8 @@
   "showTabsInTitlebar": false,
   "snapToGridOnResize": false,
   "wordDelimiters": " ()\"';<>!@$^*|+=[]{}",
+  "largePasteWarning": true,
+  "multiLinePasteWarning": false,
 
   "defaultProfile": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
 
