@@ -395,7 +395,7 @@ install_jc
 install_bat
 install_gh
 install_exa
-install_fonts
+# install_fonts
 
 patch_ssh
 enable_sshd
