@@ -66,10 +66,8 @@ if [[ "${WSL_DISTRO_NAME-}" == Ubuntu-20.04 ]]; then
 fi
 
 sudo apt-get install -y git
-sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh-bin/master/install)" sh -d /usr/local
-if ! grep -qxF '/usr/local/bin/zsh' /etc/shells; then
-  sudo tee -a /etc/shells <<</usr/local/bin/zsh >/dev/null
-fi
+sudo sh -c "$(curl -fsSL https://raw.githubusercontent.com/romkatv/zsh-bin/master/install)" \
+  sh -d /usr/local -e yes
 sudo chsh -s /usr/local/bin/zsh "$USER"
 
 tmpdir="$(mktemp -d)"
