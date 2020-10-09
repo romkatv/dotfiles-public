@@ -73,7 +73,7 @@ compdef _directories md
 function ssh() { z4h ssh "$@" }
 
 zstyle    ':z4h:ssh:*' ssh-command      command ssh
-zstyle    ':z4h:ssh:*' send-extra-files '~/.zshrc-private' '~/bin/slurp' '~/bin/barf'
+zstyle    ':z4h:ssh:*' send-extra-files '~/.zshenv-private' '~/.zshrc-private' '~/bin/slurp' '~/bin/barf'
 zstyle -e ':z4h:ssh:*' retrieve-history 'reply=($ZDOTDIR/.zsh_history.${(%):-%m}:$z4h_ssh_host)'
 
 function z4h-ssh-configure() {
@@ -83,6 +83,8 @@ function z4h-ssh-configure() {
     z4h_ssh_send_files[$file]='"$ZDOTDIR"/'${file:t}
   done
 }
+
+[[ -e ~/.ssh/control-master ]] || zf_mkdir -p -m 700 ~/.ssh/control-master
 
 if [[ -e ~/gitstatus/gitstatus.plugin.zsh ]]; then
   : ${GITSTATUS_LOG_LEVEL=DEBUG}
