@@ -127,11 +127,13 @@ zstyle ':completion:*'                      sort               false
 zstyle ':completion:*:ls:*'                 list-dirs-first    true
 zstyle ':completion:*:ssh:argument-1:'      tag-order          hosts users
 zstyle ':completion:*:scp:argument-rest:'   tag-order          hosts files users
-zstyle ':completion:*:ssh:argument-1'       sort               true
-zstyle ':completion:*:scp:argument-rest'    sort               true
+zstyle ':completion:*:ssh:argument-1:'      sort               true
+zstyle ':completion:*:scp:argument-rest:'   sort               true
 zstyle ':completion:*:(ssh|scp):*:hosts'    hosts
 
-# zstyle ':completion:*' group-name '' && zstyle ':completion:*' format 'Completing "%d":'
+# TODO: remove these once "comp" branch is merged into "v3" in zsh4humans.
+zstyle ':completion:*:ssh:argument-1'       sort               true
+zstyle ':completion:*:scp:argument-rest'    sort               true
 
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
