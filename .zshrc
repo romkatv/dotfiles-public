@@ -128,8 +128,6 @@ zstyle ':completion:*'                      sort               false
 zstyle ':completion:*:ls:*'                 list-dirs-first    true
 zstyle ':completion:*:ssh:argument-1:'      tag-order          hosts users
 zstyle ':completion:*:scp:argument-rest:'   tag-order          hosts files users
-zstyle ':completion:*:ssh:argument-1:*'     sort               true
-zstyle ':completion:*:scp:argument-rest:*'  sort               true
 zstyle ':completion:*:(ssh|scp):*:hosts'    hosts
 
 alias ls="${aliases[ls]:-ls} -A"
