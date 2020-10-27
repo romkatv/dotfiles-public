@@ -135,7 +135,7 @@ if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
   alias ls="${aliases[ls]:-ls} --group-directories-first"
 fi
 
-(( $+commands[tree]  )) && alias tree='tree -aC -I .git --dirsfirst'
+(( $+commands[tree]  )) && alias tree='LS_COLORS= tree -aC -I .git --dirsfirst'
 (( $+commands[gedit] )) && alias gedit='gedit &>/dev/null'
 (( $+commands[rsync] )) && alias rsync='rsync -z --info=FLIST,COPY,DEL,REMOVE,SKIP,SYMSAFE,MISC,NAME,PROGRESS,STATS'
 (( $+commands[exa]   )) && alias exa='exa -ga --group-directories-first --time-style=long-iso --color-scale'
