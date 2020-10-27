@@ -5,6 +5,7 @@ zstyle ':z4h:autosuggestions' forward-char     partial-accept
 zstyle ':z4h:autosuggestions' end-of-line      partial-accept
 zstyle ':z4h:term-title:ssh'  precmd           ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
 zstyle ':z4h:term-title:ssh'  preexec          ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
+zstyle ':z4h:tmux'            start-at-bottom  yes
 
 () {
   local var proj
@@ -107,12 +108,13 @@ fi
   done
 }
 
-z4h bindkey z4h-backward-kill-word  Ctrl+Backspace
-z4h bindkey z4h-backward-kill-zword Ctrl+Alt+Backspace
-z4h bindkey z4h-cd-back             Alt+Left
-z4h bindkey z4h-cd-forward          Alt+Right
-z4h bindkey z4h-cd-up               Alt+Up
-z4h bindkey z4h-cd-down             Alt+Down
+z4h bindkey z4h-backward-kill-word              Ctrl+Backspace
+z4h bindkey z4h-backward-kill-zword             Ctrl+Alt+Backspace
+z4h bindkey z4h-cd-back                         Alt+Left
+z4h bindkey z4h-cd-forward                      Alt+Right
+z4h bindkey z4h-cd-up                           Alt+Up
+z4h bindkey z4h-cd-down                         Alt+Down
+z4h bindkey z4h-clear-screen-and-move-to-bottom Ctrl+L
 
 if (( $+functions[toggle-dotfiles] )); then
   zle -N toggle-dotfiles
@@ -135,7 +137,7 @@ if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
   alias ls="${aliases[ls]:-ls} --group-directories-first"
 fi
 
-(( $+commands[tree]  )) && alias tree='LS_COLORS= tree -aC -I .git --dirsfirst'
+(( $+commands[tree]  )) && alias tree='tree -a -I .git --dirsfirst'
 (( $+commands[gedit] )) && alias gedit='gedit &>/dev/null'
 (( $+commands[rsync] )) && alias rsync='rsync -z --info=FLIST,COPY,DEL,REMOVE,SKIP,SYMSAFE,MISC,NAME,PROGRESS,STATS'
 (( $+commands[exa]   )) && alias exa='exa -ga --group-directories-first --time-style=long-iso --color-scale'
