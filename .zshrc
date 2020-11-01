@@ -70,14 +70,13 @@ fi
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
-function ssh() { z4h ssh "$@" }
-
+zstyle    ':z4h:ssh:*' enable           yes
 zstyle    ':z4h:ssh:*' ssh-command      command ssh
 zstyle    ':z4h:ssh:*' send-extra-files '~/.zshenv-private' '~/.zshrc-private' '~/bin/slurp' '~/bin/barf'
 zstyle -e ':z4h:ssh:*' retrieve-history 'reply=($ZDOTDIR/.zsh_history.${(%):-%m}:$z4h_ssh_host)'
 
 function z4h-ssh-configure() {
-  (( z4h_ssh_passthrough )) && return
+  (( z4h_ssh_enable )) || return 0
   local file
   for file in $ZDOTDIR/.zsh_history.*:$z4h_ssh_host(N); do
     (( $+z4h_ssh_send_files[$file] )) && continue
