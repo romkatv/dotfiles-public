@@ -70,6 +70,8 @@ fi
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 compdef _directories md
 
+compdef _default open
+
 zstyle    ':z4h:ssh:*' enable           yes
 zstyle    ':z4h:ssh:*' ssh-command      command ssh
 zstyle    ':z4h:ssh:*' send-extra-files '~/.zshenv-private' '~/.zshrc-private' '~/bin/slurp' '~/bin/barf'
