@@ -121,6 +121,7 @@ if (( $+functions[toggle-dotfiles] )); then
 fi
 
 zstyle ':z4h:fzf-complete'                  fzf-bindings       tab:repeat
+zstyle ':z4h:cd-down'                       fzf-bindings       tab:repeat
 
 zstyle ':zle:up-line-or-beginning-search'   leave-cursor       no
 zstyle ':zle:down-line-or-beginning-search' leave-cursor       no
