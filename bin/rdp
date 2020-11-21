@@ -1,0 +1,72 @@
+#!/usr/bin/env zsh
+
+emulate -L zsh -o err_return -o no_unset -o pipe_fail -o extended_glob
+
+() {
+  zmodload zsh/zutil
+
+  function usage() {
+    print -r -- 'Usage: '${(q-)ZSH_SCRIPT:t}' [option]... <host>'
+    print -r -- ''
+    print -r -- 'Options:'
+    print -r -- ''
+    print -r -- '  -h, --help                     print help and exit'
+    print -r -- '  -w, --wait                     wait for RDP to terminate'
+    print -r -- '  -p, --port=NUMBER              port on the remote host'
+    print -r -- '  -a, --admin                    connect in admin mode'
+    print -r -- '  -f, --fullscreen               start in fullscreen mode'
+    print -r -- '  -r, --resolution=WIDTHxHEIGHT  screen resolution (default: 1600x1200)'
+  }
+
+  local -a help wait port admin fullscreen resolution
+  zparseopts -D -F --         \
+    {h,-help}=help            \
+    {w,-wait}=wait            \
+    {p,-port}:=port           \
+    {a,-admin}=admin          \
+    {f,fullscreen}=fullscreen \
+    {r,-resolution}:=resolution
+
+  if (( $#help )); then
+    usage
+    return 0
+  fi
+
+  if (( ARGC != 1 )) || [[ -z $1 ]]; then
+    usage >&2
+    return 1
+  fi
+
+  if [[ -n ${resolution[-1]-} && $resolution[-1] != <1->x<1-> ]]; then
+    print -ru2 -- 'rdp: invalid resolution: '${(q-)resolution[-1]}
+    return 1
+  fi
+
+  local -a hostname
+  hostname=(${${(M)${(f)"$(command ssh -G -- $1)"}:#hostname [^[:space:]]*}#hostname })
+  if (( $#hostname != 1 )); then
+    print -ru2 -- 'rdp: failed to resolve hostname: '${(q-)1}
+    return 1
+  fi
+
+  local -a args=(/v:$hostname:${port[-1]:-3389} ${admin:+/admin})
+  if (( $#fullscreen )); then
+    args+=(/f)
+  else
+    local width height
+    IFS=x read -r width height <<<${resolution[-1]:-1600x1200}
+    args+=(/w:$width)
+    args+=(/h:$height)
+  fi
+
+  if (( ! $+commands[mstsc.exe] )); then
+    print -ru2 -- 'rdp: command not found: mstsc.exe'
+    return 1
+  fi
+
+  if (( $#wait )); then
+    command mstsc.exe $args
+  else
+    command mstsc.exe $args </dev/null &>/dev/null &!
+  fi
+} "$@"

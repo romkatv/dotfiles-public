@@ -1,0 +1,12 @@
+#compdef rdp
+
+local -a flags=(
+  '(- :)'{-h,--help}'[print help and exit]'
+  '(-w --wait)'{-w,--wait}'[wait for RDP to terminate]'
+  '(-p --port)'{-p+,--port=}'[port on the remote host]:NUMBER'
+  '(-a --admin)'{-a,--admin}'[connect in admin mode]'
+  '(-f --fullscreen -r --resolution)'{-f,--fullscreen}'[start in fullscreen mode]'
+  '(-f --fullscreen -r --resolution)'{-r+,--resolution=}'[screen resolution (default: 1600x1200)]:WIDTHxHEIGHT'
+)
+
+_arguments -s -S $flags '*:host:_ssh_hosts'

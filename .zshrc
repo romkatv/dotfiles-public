@@ -70,7 +70,9 @@ fi
 }
 
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
+
 compdef _directories md
+compdef _default     open
 
 zstyle    ':z4h:ssh:*' enable           yes
 zstyle    ':z4h:ssh:*' ssh-command      command ssh
@@ -120,17 +122,17 @@ if (( $+functions[toggle-dotfiles] )); then
   z4h bindkey toggle-dotfiles Ctrl+P
 fi
 
-zstyle ':z4h:fzf-complete'                  fzf-bindings       tab:repeat
-zstyle ':z4h:cd-down'                       fzf-bindings       tab:repeat
+zstyle ':z4h:fzf-complete'                   fzf-bindings       tab:repeat
+zstyle ':z4h:cd-down'                        fzf-bindings       tab:repeat
 
-zstyle ':zle:up-line-or-beginning-search'   leave-cursor       no
-zstyle ':zle:down-line-or-beginning-search' leave-cursor       no
+zstyle ':zle:up-line-or-beginning-search'    leave-cursor       no
+zstyle ':zle:down-line-or-beginning-search'  leave-cursor       no
 
-zstyle ':completion:*'                      sort               false
-zstyle ':completion:*:ls:*'                 list-dirs-first    true
-zstyle ':completion:*:ssh:argument-1:'      tag-order          hosts users
-zstyle ':completion:*:scp:argument-rest:'   tag-order          hosts files users
-zstyle ':completion:*:(ssh|scp):*:hosts'    hosts
+zstyle ':completion:*'                       sort               false
+zstyle ':completion:*:ls:*'                  list-dirs-first    true
+zstyle ':completion:*:ssh:argument-1:'       tag-order          hosts users
+zstyle ':completion:*:scp:argument-rest:'    tag-order          hosts files users
+zstyle ':completion:*:(ssh|scp|rdp):*:hosts' hosts
 
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
