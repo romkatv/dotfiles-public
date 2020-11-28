@@ -1,4 +1,4 @@
-zstyle ':z4h:'                  auto-update        ask
+zstyle ':z4h:'                  auto-update        no
 zstyle ':z4h:'                  auto-update-days   28
 zstyle ':z4h:*'                 channel            testing
 zstyle ':z4h:autosuggestions'   forward-char       partial-accept
