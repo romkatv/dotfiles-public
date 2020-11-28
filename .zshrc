@@ -1,11 +1,14 @@
-zstyle ':z4h:'                  auto-update      ask
-zstyle ':z4h:'                  auto-update-days 28
-zstyle ':z4h:*'                 channel          testing
-zstyle ':z4h:autosuggestions'   forward-char     partial-accept
-zstyle ':z4h:autosuggestions'   end-of-line      partial-accept
-zstyle ':z4h:term-title:ssh'    precmd           ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
-zstyle ':z4h:term-title:ssh'    preexec          ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
-zstyle ':z4h:command-not-found' to-file          "$TTY"
+zstyle ':z4h:'                  auto-update        ask
+zstyle ':z4h:'                  auto-update-days   28
+zstyle ':z4h:*'                 channel            testing
+zstyle ':z4h:autosuggestions'   forward-char       partial-accept
+zstyle ':z4h:autosuggestions'   end-of-line        partial-accept
+zstyle ':z4h:term-title:ssh'    precmd             ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
+zstyle ':z4h:term-title:ssh'    preexec            ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
+zstyle ':z4h:command-not-found' to-file            "$TTY"
+zstyle ':z4h:'                  iterm2-integration yes
+
+# zstyle :z4h start-tmux no
 
 () {
   local var proj
