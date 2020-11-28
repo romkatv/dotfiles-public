@@ -8,7 +8,7 @@ zstyle ':z4h:term-title:ssh'    preexec            ${${${Z4H_SSH##*:}//\%/%%}:-%
 zstyle ':z4h:command-not-found' to-file            "$TTY"
 zstyle ':z4h:'                  iterm2-integration yes
 
-# zstyle :z4h start-tmux no
+# zstyle :z4h: start-tmux no
 
 () {
   local var proj
