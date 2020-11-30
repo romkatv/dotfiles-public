@@ -102,6 +102,7 @@ function install_packages() {
   local packages=(
     ascii
     autoconf
+    bfs
     bzip2
     build-essential
     clang-format
