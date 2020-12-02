@@ -103,6 +103,7 @@ function install_packages() {
     ascii
     autoconf
     bfs
+    bsdutils
     bzip2
     build-essential
     clang-format
