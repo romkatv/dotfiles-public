@@ -4,7 +4,6 @@
     "editor.wordWrapColumn": 100,
     "editor.dragAndDrop": false,
     "editor.folding": false,
-    "editor.glyphMargin": false,
     "editor.parameterHints.cycle": true,
     "workbench.commandPalette.history": 1000000,
     "workbench.startupEditor": "none",
