@@ -28,7 +28,7 @@ z4h install romkatv/archive romkatv/zsh-prompt-benchmark
 z4h init || return
 
 setopt glob_dots magic_equal_subst no_multi_os no_local_loops rm_star_silent rc_quotes rematch_pcre
-setopt glob_star_short no_auto_menu
+setopt glob_star_short
 
 ulimit -c $(((4 << 30) / 512))  # 4GB
 
