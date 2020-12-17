@@ -200,7 +200,7 @@ function install_ripgrep() {
 }
 
 function install_jc() {
-  local v="1.13.2"
+  local v="1.13.4"
   ! command -v jc &>/dev/null || [[ "$(jc -a | jq -r .version)" != "$v" ]] || return 0
   local deb
   deb="$(mktemp)"
@@ -210,7 +210,7 @@ function install_jc() {
 }
 
 function install_bat() {
-  local v="0.15.4"
+  local v="0.17.1"
   ! command -v bat &>/dev/null || [[ "$(bat --version)" != *" $v" ]] || return 0
   local deb
   deb="$(mktemp)"
@@ -220,7 +220,7 @@ function install_bat() {
 }
 
 function install_gh() {
-  local v="0.10.0"
+  local v="1.4.0"
   ! command -v gh &>/dev/null || [[ "$(gh --version)" != */v"$v" ]] || return 0
   local deb
   deb="$(mktemp)"
