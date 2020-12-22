@@ -27,10 +27,15 @@ z4h install romkatv/archive romkatv/zsh-prompt-benchmark
 
 z4h init || return
 
-setopt glob_dots magic_equal_subst no_multi_os no_local_loops rm_star_silent rc_quotes rematch_pcre
-setopt glob_star_short
+setopt glob_dots magic_equal_subst no_multi_os no_local_loops
+setopt rm_star_silent rc_quotes glob_star_short rematch_pcre
 
 ulimit -c $(((4 << 30) / 512))  # 4GB
+
+# TODO: move these to z4h.
+[[ -d /opt/local/sbin      ]] && path=(/opt/local/sbin $path)
+[[ -d /opt/local/bin       ]] && path=(/opt/local/bin  $path)
+[[ -d /opt/local/share/man ]] && manpath=(/opt/local/share/man $manpath '')
 
 fpath=($Z4H/romkatv/archive $fpath)
 [[ -d ~/dotfiles/functions ]] && fpath=(~/dotfiles/functions $fpath)
