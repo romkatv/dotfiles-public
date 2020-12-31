@@ -116,6 +116,7 @@ function install_packages() {
     gawk
     gedit
     git
+    gnome-icon-theme
     gzip
     htop
     jsonnet
