@@ -101,11 +101,13 @@ fi
 function install_packages() {
   local packages=(
     ascii
+    apt-transport-https
     autoconf
     bfs
     bsdutils
     bzip2
     build-essential
+    ca-certificates
     clang-format
     cmake
     command-not-found
@@ -136,6 +138,7 @@ function install_packages() {
     python3
     python3-pip
     pigz
+    software-properties-common
     tree
     unrar
     unzip
@@ -164,6 +167,24 @@ function install_packages() {
 
 function install_b2() {
   sudo pip3 install --upgrade b2
+}
+
+function install_docker() {
+  if (( WSL )); then
+    local release
+    release="$(lsb_release -cs)"
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo apt-key fingerprint 0EBFCD88
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu
+      $release
+      stable"
+    sudo apt-get update -y
+    sudo apt-get install -y docker-ce
+  else
+    sudo apt-get install -y docker.io
+  fi
+  sudo usermod -aG docker "$USER"
+  pip3 install --user docker-compose
 }
 
 # Install Visual Studio Code.
@@ -232,11 +253,6 @@ function install_gh() {
 
 function fix_locale() {
   sudo tee /etc/default/locale >/dev/null <<<'LC_ALL="C.UTF-8"'
-}
-
-function fix_docker() {
-  (( !WSL )) || return 0
-  sudo usermod -aG docker "$USER"
 }
 
 # Avoid clock snafu when dual-booting Windows and Linux.
@@ -391,6 +407,7 @@ umask g-w,o-w
 add_to_sudoers
 
 install_packages
+install_docker
 install_b2
 install_vscode
 install_ripgrep
@@ -405,7 +422,6 @@ enable_sshd
 disable_motd_news
 
 fix_locale
-fix_docker
 fix_clock
 fix_shm
 fix_dbus
