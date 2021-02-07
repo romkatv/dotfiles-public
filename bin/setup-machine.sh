@@ -187,6 +187,14 @@ function install_docker() {
   pip3 install --user docker-compose
 }
 
+function install_brew() {
+  local install
+  install="$(mktemp)"
+  curl -fsSLo "$install" https://raw.githubusercontent.com/Homebrew/install/master/install.sh
+  bash -- "$install" </dev/null
+  rm -- "$install"
+}
+
 # Install Visual Studio Code.
 function install_vscode() {
   (( !WSL )) || return 0
@@ -195,7 +203,7 @@ function install_vscode() {
   deb="$(mktemp)"
   curl -fsSL 'https://go.microsoft.com/fwlink/?LinkID=760868' >"$deb"
   sudo dpkg -i "$deb"
-  rm "$deb"
+  rm -- "$deb"
 }
 
 function install_exa() {
@@ -408,6 +416,7 @@ add_to_sudoers
 
 install_packages
 install_docker
+install_brew
 install_b2
 install_vscode
 install_ripgrep
