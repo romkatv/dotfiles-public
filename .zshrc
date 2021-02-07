@@ -32,11 +32,6 @@ setopt rm_star_silent rc_quotes glob_star_short
 
 ulimit -c $(((4 << 30) / 512))  # 4GB
 
-# TODO: move these to z4h.
-[[ -d /opt/local/sbin      ]] && path=(/opt/local/sbin $path)
-[[ -d /opt/local/bin       ]] && path=(/opt/local/bin  $path)
-[[ -d /opt/local/share/man ]] && manpath=(/opt/local/share/man $manpath '')
-
 fpath=($Z4H/romkatv/archive $fpath)
 [[ -d ~/dotfiles/functions ]] && fpath=(~/dotfiles/functions $fpath)
 
