@@ -147,6 +147,14 @@ if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
   alias ls="${aliases[ls]:-ls} --group-directories-first"
 fi
 
+[[ ${${:-grep}:c:A:t} == busybox* ]] || alias grep='() {
+  if [[ -t 1 ]]; then
+    \grep --color=always --exclude-dir={.bzr,CVS,.git,.hg,.svn} "$@" | tr -d "\r"
+  else
+    \grep --exclude-dir={.bzr,CVS,.git,.hg,.svn} "$@"
+  fi
+}'
+
 (( $+commands[tree]  )) && alias tree='tree -a -I .git --dirsfirst'
 (( $+commands[gedit] )) && alias gedit='gedit &>/dev/null'
 (( $+commands[rsync] )) && alias rsync='rsync -z --info=FLIST,COPY,DEL,REMOVE,SKIP,SYMSAFE,MISC,NAME,PROGRESS,STATS'
