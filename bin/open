@@ -4,7 +4,7 @@
 
 emulate zsh -o err_exit -o no_unset
 
-if (( $# != 1 || $#1 == 0 )); then
+if [[ $# != 1 || -z $1 ]]; then
   print -ru2 -- "usage: xopen FILE"
   exit 1
 fi
