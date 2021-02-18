@@ -250,7 +250,7 @@ function install_bat() {
 }
 
 function install_gh() {
-  local v="1.4.0"
+  local v="1.6.0"
   ! command -v gh &>/dev/null || [[ "$(gh --version)" != */v"$v" ]] || return 0
   local deb
   deb="$(mktemp)"
