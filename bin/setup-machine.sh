@@ -240,7 +240,7 @@ function install_jc() {
 }
 
 function install_bat() {
-  local v="0.17.1"
+  local v="0.18.0"
   ! command -v bat &>/dev/null || [[ "$(bat --version)" != *" $v" ]] || return 0
   local deb
   deb="$(mktemp)"
