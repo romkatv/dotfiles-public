@@ -230,7 +230,7 @@ function install_ripgrep() {
 }
 
 function install_jc() {
-  local v="1.13.4"
+  local v="1.14.4"
   ! command -v jc &>/dev/null || [[ "$(jc -a | jq -r .version)" != "$v" ]] || return 0
   local deb
   deb="$(mktemp)"
