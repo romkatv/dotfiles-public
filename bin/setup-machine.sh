@@ -259,6 +259,17 @@ function install_gh() {
   rm "$deb"
 }
 
+function install_nuget() {
+  (( WSL )) || return 0
+  local v="5.8.1"
+  ! command -v nuget.exe &>/dev/null || [[ "$(nuget.exe help)" != "NuGet Version: $v."* ]] || return 0
+  local tmp
+  tmp="$(mktemp -- ~/bin/nuget.exe.XXXXXX)"
+  curl -fsSLo "$tmp" "https://dist.nuget.org/win-x86-commandline/v${v}/nuget.exe"
+  chmod +x -- "$tmp"
+  mv -- "$tmp" ~/bin/nuget.exe
+}
+
 function fix_locale() {
   sudo tee /etc/default/locale >/dev/null <<<'LC_ALL="C.UTF-8"'
 }
@@ -424,6 +435,7 @@ install_jc
 install_bat
 install_gh
 install_exa
+install_nuget
 # install_fonts
 
 patch_ssh
