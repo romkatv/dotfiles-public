@@ -73,6 +73,9 @@ fi
   done
 }
 
+function -arith-eval() { print -r -- $(( $@ )) }
+aliases[=]='noglob -arith-eval'
+
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 
 compdef _directories md
