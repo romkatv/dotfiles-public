@@ -1,8 +1,16 @@
 #!/usr/bin/env zsh
 #
 # The same as double-clicking on file or dir $1 in X File Manager or Windows Explorer.
+#
+# For best results on WSL, run this (once):
+#
+#   net.exe use U: '\\wsl$\Ubuntu-20.04' /persistent:yes
+#
+# TODO: move the net.exe command to setup-machine.sh.
+# TODO: factor out path conversion logic into a standalone script (winpath).
+# TODO: make this work: open /mnt/d
 
-emulate zsh -o err_exit -o no_unset
+emulate zsh -o err_exit -o no_unset -o extended_glob
 
 if [[ $# != 1 || -z $1 ]]; then
   print -ru2 -- "usage: xopen FILE"
@@ -12,19 +20,30 @@ fi
 case $OSTYPE in
   darwin*)
     # TODO
-    exit 1
   ;;
   linux*)
     if [[ -r /proc/version && "$(</proc/version)" == *[Mm]icrosoft* ]]; then
       local ufile=${1:A}
       local wfile
       wfile=$(wslpath -wa -- $ufile)
-      if [[ $wfile == '\\wsl$\'* || ! -d ${ufile:h} ]]; then
+      local -a mappings
+      local drive=U
+      local prefix='\\wsl$\'$WSL_DISTRO_NAME
+      if [[ $wfile == $prefix\\* ]] &&
+         mappings=(${(f)"$(net.exe use 2>/dev/null)"}) &&
+         (( $mappings[(I)[[:space:]]#${(b)drive}:[[:space:]]##${(b)prefix}[[:space:]]*] )); then
+        wfile=${wfile/$prefix/${drive}:}
+        if [[ $wfile == *\\?* ]]; then
+          powershell.exe -c '$ErrorActionPreference = "Stop"; cd '${wfile%\\*}'\; cmd.exe /c start .\'${ufile:t}
+        else
+          powershell.exe -c '$ErrorActionPreference = "Stop"; cd '${wfile}'\; cmd.exe /c start .'
+        fi
+      elif [[ ! -d ${ufile:h} ]]; then
         builtin cd -q /mnt/c
-        /mnt/c/Windows/System32/cmd.exe /c start $wfile
+        cmd.exe /c start $wfile
       else
         builtin cd -q -- ${ufile:h}
-        /mnt/c/Windows/System32/cmd.exe /c start '.\'${ufile:t}
+        cmd.exe /c start '.\'${ufile:t}
       fi
       exit
     elif (( $+commands[xdg-open] )); then
