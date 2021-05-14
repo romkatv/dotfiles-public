@@ -49,6 +49,7 @@ export PAGER=less
 export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export HOMEBREW_NO_ANALYTICS=1
+export SYSTEMD_LESS=${LESS}S
 
 if (( $+z4h_win_env )); then
   export NO_AT_BRIDGE=1
