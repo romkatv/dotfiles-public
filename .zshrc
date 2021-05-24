@@ -148,6 +148,7 @@ if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
 fi
 
 [[ ${${:-grep}:c:A:t} == busybox* ]] || alias grep='() {
+  setopt local_options pipe_fail
   if [[ -t 1 ]]; then
     \grep --color=always --exclude-dir={.bzr,CVS,.git,.hg,.svn} "$@" | tr -d "\r"
   else
