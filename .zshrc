@@ -128,12 +128,14 @@ z4h bindkey z4h-cd-back             Alt+Left
 z4h bindkey z4h-cd-forward          Alt+Right
 z4h bindkey z4h-cd-up               Alt+Up
 z4h bindkey z4h-cd-down             Alt+Down
+z4h bindkey z4h-fzf-dir-history     Alt+N
 
 if (( $+functions[toggle-dotfiles] )); then
   zle -N toggle-dotfiles
   z4h bindkey toggle-dotfiles Ctrl+P
 fi
 
+zstyle ':z4h:fzf-dir-history'                fzf-bindings       tab:repeat
 zstyle ':z4h:fzf-complete'                   fzf-bindings       tab:repeat
 zstyle ':z4h:cd-down'                        fzf-bindings       tab:repeat
 
