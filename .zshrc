@@ -10,6 +10,13 @@ zstyle ':z4h:'                  iterm2-integration yes
 
 # zstyle :z4h: start-tmux no
 
+if [[ -e ~/.ssh/id_rsa ]]; then
+  zstyle ':z4h:ssh-agent:' start      yes
+  zstyle ':z4h:ssh-agent:' extra-args -t 20h
+else
+  : ${GITSTATUS_AUTO_INSTALL:=0}
+fi
+
 () {
   local var proj
   for var proj in P10K powerlevel10k ZSYH zsh-syntax-highlighting ZASUG zsh-autosuggestions; do
@@ -22,8 +29,6 @@ zstyle ':z4h:'                  iterm2-integration yes
 }
 
 z4h install romkatv/archive romkatv/zsh-prompt-benchmark
-
-[[ -e ~/.ssh/id_rsa ]] || : ${GITSTATUS_AUTO_INSTALL:=0}
 
 z4h init || return
 
@@ -55,7 +60,6 @@ if (( $+z4h_win_env )); then
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
   [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
-  z4h source -c ~/dotfiles/ssh-agent.zsh
   (( $+z4h_win_home )) && hash -d w=$z4h_win_home
   () {
     emulate -L zsh -o dot_glob -o null_glob
