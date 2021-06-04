@@ -1,7 +1,7 @@
 [user]
 	name = Roman Perepelitsa
 	email = roman.perepelitsa@gmail.com
-	signingkey = 8B060F8B9EB395614A669F2A90ACE942EB90C3DD
+	signingKey = 8B060F8B9EB395614A669F2A90ACE942EB90C3DD
 [diff]
 	tool = meld
 [merge]
@@ -32,3 +32,5 @@
 	autoStash = true
 [alias]
   patch = apply --ignore-space-change --ignore-whitespace
+[init]
+	defaultBranch = master
