@@ -7,6 +7,7 @@ zstyle ':z4h:term-title:ssh'    precmd             ${${${Z4H_SSH##*:}//\%/%%}:-%
 zstyle ':z4h:term-title:ssh'    preexec            ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
 zstyle ':z4h:command-not-found' to-file            "$TTY"
 zstyle ':z4h:'                  iterm2-integration yes
+zstyle ':z4h:'                  propagate-cwd      yes
 
 # zstyle :z4h: start-tmux no
 
@@ -55,6 +56,8 @@ export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export HOMEBREW_NO_ANALYTICS=1
 export SYSTEMD_LESS=${LESS}S
+
+unset KITTY_SHELL_INTEGRATION
 
 if (( $+z4h_win_env )); then
   export NO_AT_BRIDGE=1
