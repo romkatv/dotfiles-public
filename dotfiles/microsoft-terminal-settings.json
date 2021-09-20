@@ -1,12 +1,6 @@
 {
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "alwaysShowTabs": false,
-    "copyFormatting": "none",
-    "defaultProfile": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
-    "initialCols": 160,
-    "initialPosition": "1,1150",
-    "initialRows": 46,
-    "keybindings": 
+    "actions": 
     [
         {
             "command": 
@@ -23,15 +17,6 @@
                 "singleLine": true
             },
             "keys": "ctrl+insert"
-        },
-        {
-            "command": 
-            {
-                "action": "splitPane",
-                "split": "vertical",
-                "splitMode": "duplicate"
-            },
-            "keys": "alt+r"
         },
         {
             "command": 
@@ -63,6 +48,15 @@
             "keys": "alt+right"
         },
         {
+            "command": 
+            {
+                "action": "splitPane",
+                "split": "vertical",
+                "splitMode": "duplicate"
+            },
+            "keys": "alt+r"
+        },
+        {
             "command": "scrollDownPage",
             "keys": "shift+pgdn"
         },
@@ -71,6 +65,13 @@
             "keys": "shift+pgup"
         }
     ],
+    "alwaysShowTabs": false,
+    "copyFormatting": "none",
+    "defaultProfile": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
+    "disableAnimations": true,
+    "initialCols": 160,
+    "initialPosition": "1,1150",
+    "initialRows": 46,
     "largePasteWarning": true,
     "multiLinePasteWarning": false,
     "profiles": 
@@ -79,8 +80,11 @@
         {
             "closeOnExit": "always",
             "colorScheme": "Tango Dark",
-            "fontFace": "MesloLGS NF",
-            "fontSize": 11
+            "font": 
+            {
+                "face": "MesloLGS NF",
+                "size": 11
+            }
         },
         "list": 
         [
