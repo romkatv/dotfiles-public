@@ -41,6 +41,16 @@ choco.exe install -y microsoft-windows-terminal vcxsrv
   - Click *Save Configuration* and save `config.xlaunch` in your `Startup` folder at `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`.
   - Click *Finish*.
 
+Optional: if disk `D:` does not exist, make it an alias for `C:`. If you don't know why you might want this, then you don't need it.
+
+- Open *PowerShell* as *Administrator* and run:
+```powershell
+if (!(Test-Path -Path "D:\")) {
+  New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\DOS Devices" -Name "D:" -PropertyType String -Value \DosDevices\C:\ -Force
+}
+```
+- Reboot.
+
 #### WSL Removal
 
 Follow these steps to remove your Linux distro with all files (applications, settings, home directory, etc.). You can recreate it by following [WSL Installation](#wsl-installation) guide below.
