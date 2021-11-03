@@ -9,7 +9,9 @@ zstyle ':z4h:command-not-found' to-file            "$TTY"
 zstyle ':z4h:'                  iterm2-integration yes
 zstyle ':z4h:'                  propagate-cwd      yes
 
-# zstyle :z4h: start-tmux no
+# zstyle ':z4h:direnv'          enable             yes
+# zstyle ':z4h:'                start-tmux         no
+# zstyle ':z4h:'                start-tmux         command tmux -u new -A -D -t z4h
 
 if [[ -e ~/.ssh/id_rsa ]]; then
   zstyle ':z4h:ssh-agent:' start      yes
