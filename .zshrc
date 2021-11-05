@@ -135,6 +135,7 @@ z4h bindkey z4h-cd-up               Alt+Up
 z4h bindkey z4h-fzf-dir-history     Alt+Down
 z4h bindkey z4h-eof                 Ctrl+D
 
+# TODO: When moving this to z4h, condition it on _z4h_zle.
 setopt ignore_eof
 
 if (( $+functions[toggle-dotfiles] )); then
