@@ -12,6 +12,7 @@ zstyle ':z4h:'                  propagate-cwd      yes
 # zstyle ':z4h:direnv'          enable             yes
 # zstyle ':z4h:'                start-tmux         no
 # zstyle ':z4h:'                start-tmux         command tmux -u new -A -D -t z4h
+# zstyle ':z4h:'                term-vresize       top
 
 if [[ -e ~/.ssh/id_rsa ]]; then
   zstyle ':z4h:ssh-agent:' start      yes
