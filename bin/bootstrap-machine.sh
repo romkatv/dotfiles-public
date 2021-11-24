@@ -9,28 +9,32 @@ fi
 
 umask o-w
 
-if [[ ! -f ~/.ssh/id_rsa || ! -f ~/.ssh/id_rsa.pub ]]; then
+mkdir -m 700 -p ~/.ssh/s
+
+if [[ ! -e ~/.ssh/id_rsa ]]; then
   if [[ "$(</proc/version)" != *[Mm]icrosoft* ]] 2>/dev/null; then
     echo "ERROR: Put your ssh keys at ~/.ssh and retry" >&2
     exit 1
   fi
 
-  mkdir -p ~/.ssh
-  chmod 755 ~/.ssh
-
   win_home="$(cd /mnt/c && cmd.exe /c "echo %HOMEDRIVE%%HOMEPATH%" | sed 's/\r$//')"
   downloads="$(wslpath "$win_home")/Downloads"
 
+  (
+    umask 0077
+    : >~/.ssh/id_rsa.tmp
+  )
+
   if [[ -f "$downloads"/id_rsa ]]; then
-    cp "$downloads"/id_rsa ~/.ssh
+    cat -- "$downloads"/id_rsa >~/.ssh/id_rsa.tmp
   elif [[ -f "$downloads"/id_rsa.txt ]]; then
-    cp "$downloads"/id_rsa.txt ~/.ssh/id_rsa
+    cat -- "$downloads"/id_rsa.txt >~/.ssh/id_rsa.tmp
   else
     echo "ERROR: Put your ssh keys at ~/.ssh or ${downloads@Q} and retry" >&2
     exit 1
   fi
 
-  chmod 600 ~/.ssh/id_rsa
+  mv -- ~/.ssh/id_rsa.tmp ~/.ssh/id_rsa
 fi
 
 ssh_agent="$(ssh-agent -st 20h)"
@@ -38,13 +42,12 @@ eval "$ssh_agent"
 trap 'ssh-agent -k >/dev/null' INT TERM EXIT
 ssh-add ~/.ssh/id_rsa
 if [[ ! -e ~/.ssh/id_rsa.pub ]]; then
-  ssh-add -L >~/.ssh/id_rsa.pub
-  chmod 644 ~/.ssh/id_rsa.pub
-fi
-
-if [[ ! -e ~/.ssh/control-master ]]; then
-  mkdir ~/.ssh/control-master
-  chmod 755 ~/.ssh/control-master
+  (
+    umask 0077
+    : >~/.ssh/id_rsa.pub.tmp
+  )
+  ssh-add -L >~/.ssh/id_rsa.pub.tmp
+  mv -- ~/.ssh/id_rsa.pub.tmp ~/.ssh/id_rsa.pub
 fi
 
 rm -rf ~/.cache
