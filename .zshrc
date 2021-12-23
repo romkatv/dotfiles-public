@@ -1,18 +1,19 @@
-zstyle ':z4h:'                  auto-update        no
-zstyle ':z4h:'                  auto-update-days   28
-zstyle ':z4h:*'                 channel            testing
-zstyle ':z4h:autosuggestions'   forward-char       partial-accept
-zstyle ':z4h:autosuggestions'   end-of-line        partial-accept
-zstyle ':z4h:term-title:ssh'    precmd             ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
-zstyle ':z4h:term-title:ssh'    preexec            ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
-zstyle ':z4h:command-not-found' to-file            "$TTY"
-zstyle ':z4h:'                  iterm2-integration yes
-zstyle ':z4h:'                  propagate-cwd      yes
+zstyle ':z4h:'                  auto-update            no
+zstyle ':z4h:'                  auto-update-days       28
+zstyle ':z4h:*'                 channel                testing
+zstyle ':z4h:autosuggestions'   forward-char           partial-accept
+zstyle ':z4h:autosuggestions'   end-of-line            partial-accept
+zstyle ':z4h:term-title:ssh'    precmd                 ${${${Z4H_SSH##*:}//\%/%%}:-%m}': %~'
+zstyle ':z4h:term-title:ssh'    preexec                ${${${Z4H_SSH##*:}//\%/%%}:-%m}': ${1//\%/%%}'
+zstyle ':z4h:command-not-found' to-file                "$TTY"
+zstyle ':z4h:'                  term-shell-integration yes
+zstyle ':z4h:'                  propagate-cwd          yes
+zstyle ':z4h:'                  prompt-height          4
 
-# zstyle ':z4h:direnv'          enable             yes
-# zstyle ':z4h:'                start-tmux         no
-# zstyle ':z4h:'                start-tmux         command tmux -u new -A -D -t z4h
-# zstyle ':z4h:'                term-vresize       top
+# zstyle ':z4h:direnv'          enable                 yes
+# zstyle ':z4h:'                start-tmux             no
+# zstyle ':z4h:'                start-tmux             command tmux -u new -A -D -t z4h
+# zstyle ':z4h:'                term-vresize           top
 
 if [[ -e ~/.ssh/id_rsa ]]; then
   zstyle ':z4h:ssh-agent:' start      yes
@@ -59,6 +60,7 @@ export GOPATH=$HOME/go
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export HOMEBREW_NO_ANALYTICS=1
 export SYSTEMD_LESS=${LESS}S
+export HOMEBREW_NO_ENV_HINTS=1
 
 unset KITTY_SHELL_INTEGRATION
 
