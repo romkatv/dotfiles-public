@@ -198,5 +198,7 @@ if [[ -x ~/bin/num-cpus ]]; then
   fi
 fi
 
+POSTEDIT=$'\n\n\e[2A'
+
 z4h source -c -- $ZDOTDIR/.zshrc-private
 z4h compile -- $ZDOTDIR/{.zshenv,.zprofile,.zshrc,.zlogin,.zlogout}
