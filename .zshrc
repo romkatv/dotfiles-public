@@ -33,6 +33,15 @@ fi
   done
 }
 
+if [[ $TERM == xterm-256color && ! -v ZSH_SCRIPT && ! -v ZSH_EXECUTION_STRING &&
+      -z $SSH_CONNECTON && P9K_SSH -ne 1 && -e /proc/uptime &&
+      ! (/tmp/wiped-after-boot -nt /proc/uptime) && -r /proc/version &&
+      "$(</proc/version)" == *Microsoft* ]]; then
+  print -Pr -- "%F{3}zsh%f: wiping %U/tmp%u ..."
+  sudo rm -rf -- /tmp/*(ND)
+  : >/tmp/wiped-after-boot
+fi
+
 z4h install romkatv/archive romkatv/zsh-prompt-benchmark
 
 z4h init || return
@@ -69,14 +78,6 @@ if (( $+z4h_win_env )); then
   export LIBGL_ALWAYS_INDIRECT=1
   [[ -z $SSH_CONNECTON && $P9K_SSH != 1 && -z $DISPLAY ]] && export DISPLAY=localhost:0.0
   (( $+z4h_win_home )) && hash -d w=$z4h_win_home
-  () {
-    emulate -L zsh -o dot_glob -o null_glob
-    [[ -n $SSH_CONNECTON || $P9K_SSH == 1 ]] && return
-    local -i uptime_sec=${$(</proc/uptime)[1]}
-    local files=(${TMPDIR:-/tmp}/*(as+$((uptime_sec+86400))))
-    (( $#files )) || return
-    sudo rm -rf -- $files
-  }
 fi
 
 () {
