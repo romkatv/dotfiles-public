@@ -34,7 +34,7 @@ fi
 }
 
 if [[ $TERM == xterm-256color && ! -v ZSH_SCRIPT && ! -v ZSH_EXECUTION_STRING &&
-      -z $SSH_CONNECTON && P9K_SSH -ne 1 && -e /proc/uptime &&
+      -z $SSH_CONNECTON && P9K_SSH -ne 1 && -e ~/.ssh/id_rsa && -e /proc/uptime &&
       ! (/tmp/wiped-after-boot -nt /proc/uptime) && -r /proc/version &&
       "$(</proc/version)" == *Microsoft* ]]; then
   print -Pr -- "%F{3}zsh%f: wiping %U/tmp%u ..."
