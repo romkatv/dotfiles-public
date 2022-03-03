@@ -72,8 +72,6 @@ export SYSTEMD_LESS=${LESS}S
 export HOMEBREW_NO_ENV_HINTS=1
 export MANOPT=--no-hyphenation
 
-unset KITTY_SHELL_INTEGRATION
-
 if (( $+z4h_win_env )); then
   export NO_AT_BRIDGE=1
   export LIBGL_ALWAYS_INDIRECT=1
