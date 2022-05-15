@@ -270,6 +270,20 @@ function install_nuget() {
   mv -- "$tmp" ~/bin/nuget.exe
 }
 
+function install_bw() {
+  local v="1.22.1"
+  ! command -v bw &>/dev/null || [[ "$(bw --version)" != "$v" ]] || return 0
+  local tmp
+  tmp="$(mktemp -d)"
+  pushd -- "$tmp"
+  curl -fsSLO "https://github.com/bitwarden/cli/releases/download/v${v}/bw-linux-${v}.zip"
+  unzip -- "bw-linux-${v}.zip"
+  chmod +x bw
+  mv bw ~/bin/
+  popd
+  rm -rf -- "$tmp"
+}
+
 function fix_locale() {
   sudo tee /etc/default/locale >/dev/null <<<'LC_ALL="C.UTF-8"'
 }
@@ -436,6 +450,7 @@ install_bat
 install_gh
 install_exa
 install_nuget
+install_bw
 # install_fonts
 
 patch_ssh
