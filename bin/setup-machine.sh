@@ -350,7 +350,7 @@ function fix_dbus() {
 }
 
 function patch_ssh() {
-  local v='8.2p1-4ubuntu0.3'
+  local v='8.2p1-4ubuntu0.5'
   local ssh
   ssh="$(which ssh)"
   grep -qF -- 'Warning: Permanently added' "$ssh" || return 0
