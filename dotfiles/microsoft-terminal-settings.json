@@ -3,26 +3,16 @@
   "$schema": "https://aka.ms/terminal-profiles-schema",
   "actions": [
     {
-      "command": {
-        "action": "copy",
-        "singleLine": true
-      },
-      "keys": "ctrl+shift+c"
-    },
-    {
-      "command": {
-        "action": "copy",
-        "singleLine": true
-      },
-      "keys": "ctrl+insert"
+      "command": "scrollDownPage",
+      "keys": "shift+pgdn"
     },
     {
       "command": {
         "action": "splitPane",
-        "split": "horizontal",
+        "split": "right",
         "splitMode": "duplicate"
       },
-      "keys": "alt+d"
+      "keys": "alt+r"
     },
     {
       "command": "unbound",
@@ -46,15 +36,25 @@
     },
     {
       "command": {
-        "action": "splitPane",
-        "split": "vertical",
-        "splitMode": "duplicate"
+        "action": "copy",
+        "singleLine": true
       },
-      "keys": "alt+r"
+      "keys": "ctrl+shift+c"
     },
     {
-      "command": "scrollDownPage",
-      "keys": "shift+pgdn"
+      "command": {
+        "action": "copy",
+        "singleLine": true
+      },
+      "keys": "ctrl+insert"
+    },
+    {
+      "command": {
+        "action": "splitPane",
+        "split": "down",
+        "splitMode": "duplicate"
+      },
+      "keys": "alt+d"
     },
     {
       "command": "scrollUpPage",
