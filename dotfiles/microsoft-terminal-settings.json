@@ -1,4 +1,5 @@
 {
+  "$help": "https://aka.ms/terminal-documentation",
   "$schema": "https://aka.ms/terminal-profiles-schema",
   "actions": [
     {
@@ -73,20 +74,21 @@
     "defaults": {
       "closeOnExit": "always",
       "colorScheme": "Tango Dark",
+      "cursorShape": "bar",
       "font": {
         "face": "MesloLGS NF",
         "size": 11
-      }
+      },
+      "intenseTextStyle": "bold",
+      "padding": "8"
     },
     "list": [
       {
-        "commandline": "powershell.exe",
         "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
         "hidden": false,
         "name": "Windows PowerShell"
       },
       {
-        "commandline": "cmd.exe",
         "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
         "hidden": false,
         "name": "Command Prompt"
@@ -103,6 +105,18 @@
         "name": "Ubuntu-20.04",
         "source": "Windows.Terminal.Wsl",
         "startingDirectory": "\\\\wsl$\\Ubuntu-20.04\\home\\romka"
+      },
+      {
+        "guid": "{ef2bc713-191b-502a-a7c2-6acddb4745c1}",
+        "hidden": false,
+        "name": "Developer Command Prompt for VS 2022",
+        "source": "Windows.Terminal.VisualStudio"
+      },
+      {
+        "guid": "{7de61a42-783d-5f1b-979a-9929e7ada640}",
+        "hidden": false,
+        "name": "Developer PowerShell for VS 2022",
+        "source": "Windows.Terminal.VisualStudio"
       }
     ]
   },
@@ -316,6 +330,8 @@
     }
   ],
   "showTabsInTitlebar": true,
-  "snapToGridOnResize": false,
+  "snapToGridOnResize": true,
+  "trimBlockSelection": true,
+  "trimPaste": false,
   "wordDelimiters": " ()\"';<>!@$^*|+=[]{}"
 }
