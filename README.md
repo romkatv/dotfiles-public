@@ -24,6 +24,17 @@ This needs to be done once per user.
 
 This needs to be done once per Windows installation. You don't need to repeat these steps when reinstalling Ubuntu.
 
+- Download these four ttf files:
+  - [MesloLGS NF Regular.ttf](
+      https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf)
+  - [MesloLGS NF Bold.ttf](
+      https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf)
+  - [MesloLGS NF Italic.ttf](
+      https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf)
+  - [MesloLGS NF Bold Italic.ttf](
+      https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf)
+- Double-click on each file and click "Install". This will make `MesloLGS NF` font available to all
+   applications on your system.
 - Open *PowerShell* as *Administrator* and run:
 ```powershell
 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
