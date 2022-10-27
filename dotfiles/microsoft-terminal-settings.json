@@ -65,9 +65,9 @@
   "copyFormatting": "none",
   "defaultProfile": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
   "disableAnimations": true,
-  "initialCols": 160,
-  "initialPosition": "1,1150",
-  "initialRows": 46,
+  "initialCols": 180,
+  "initialPosition": "1,1160",
+  "initialRows": 53,
   "largePasteWarning": true,
   "multiLinePasteWarning": false,
   "profiles": {
@@ -77,7 +77,7 @@
       "cursorShape": "bar",
       "font": {
         "face": "MesloLGS NF",
-        "size": 11
+        "size": 10
       },
       "intenseTextStyle": "bold",
       "padding": "8"
