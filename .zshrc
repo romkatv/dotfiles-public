@@ -178,13 +178,32 @@ fi
 (( $+commands[rsync] )) && alias rsync='rsync -rz --info=FLIST,COPY,DEL,REMOVE,SKIP,SYMSAFE,MISC,NAME,PROGRESS,STATS'
 (( $+commands[exa]   )) && alias exa='exa -ga --group-directories-first --time-style=long-iso --color-scale'
 
-if (( $+commands[xclip] && $#DISPLAY )); then
-  alias x='xclip -selection clipboard -in'
-  alias v='xclip -selection clipboard -out'
-  alias c='xclip -selection clipboard -in -filter'
-  function copy-buffer-to-clipboard() {
-    print -rn -- "$PREBUFFER$BUFFER" | xclip -selection clipboard -in
+if [[ -v commands[xclip] && -n $DISPLAY ]]; then
+  function x() xclip -selection clipboard -in
+  function v() xclip -selection clipboard -out
+  function c() xclip -selection clipboard -in -filter
+elif [[ -v commands[base64] && -w $TTY ]]; then
+  function x() {
+    emulate -L zsh -o pipe_fail
+    {
+      print -n '\e]52;c;' && base64 | tr -d '\n' && print -n '\a'
+    } >$TTY
   }
+  function c() {
+    emulate -L zsh -o pipe_fail
+    local data
+    data=$(tee -- $TTY && print x) || return
+    data[-1]=
+    print -rn -- $data | x
+  }
+else
+  [[ -v functions[x] ]] && unfunction x
+  [[ -v functions[v] ]] && unfunction v
+  [[ -v functions[c] ]] && unfunction c
+fi
+
+if [[ -v functions[x] ]]; then
+  function copy-buffer-to-clipboard() print -rn -- "$PREBUFFER$BUFFER" | x
   zle -N copy-buffer-to-clipboard
   bindkey '^S' copy-buffer-to-clipboard
 fi
