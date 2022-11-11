@@ -14,7 +14,7 @@ Z4H_URL="https://raw.githubusercontent.com/romkatv/zsh4humans/v5"
 : "${Z4H:=${XDG_CACHE_HOME:-$HOME/.cache}/zsh4humans/v5}"
 [ -d ~/zsh4humans/main ] && Z4H_BOOTSTRAP_COMMAND='ln -s ~/zsh4humans/main "$Z4H_PACKAGE_DIR"'
 
-umask o-w
+umask 002
 
 if [ ! -e "$Z4H"/z4h.zsh ]; then
   mkdir -p -- "$Z4H" || return
