@@ -176,14 +176,21 @@ if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
   alias ls="${aliases[ls]:-ls} --group-directories-first"
 fi
 
-[[ ${${:-grep}:c:A:t} == busybox* ]] || alias grep='() {
-  setopt local_options pipe_fail
-  if [[ -t 1 ]]; then
-    \grep --color=always --exclude-dir={.bzr,CVS,.git,.hg,.svn} "$@" | tr -d "\r"
-  else
-    \grep --exclude-dir={.bzr,CVS,.git,.hg,.svn} "$@"
+function grep_no_cr() {
+  emulate -L zsh -o pipe_fail
+  local -a tty base=(grep)
+  if [[ ${${:-grep}:c:A:t} != busybox* ]]; then
+    base+=(--exclude-dir={.bzr,CVS,.git,.hg,.svn})
+    tty+=(--color=auto --line-buffered)
   fi
-}'
+  if [[ -t 1 ]]; then
+    $base $tty "$@" | tr -d "\r"
+  else
+    $base "$@"
+  fi
+}
+compdef grep_no_cr=grep
+alias grep=grep_no_cr
 
 (( $+commands[tree]  )) && alias tree='tree -a -I .git --dirsfirst'
 (( $+commands[gedit] )) && alias gedit='gedit &>/dev/null'
