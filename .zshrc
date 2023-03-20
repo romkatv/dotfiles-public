@@ -138,6 +138,7 @@ z4h bindkey z4h-cd-forward          Alt+Right
 z4h bindkey z4h-cd-up               Alt+Up
 z4h bindkey z4h-fzf-dir-history     Alt+Down
 z4h bindkey z4h-exit                Ctrl+D
+z4h bindkey z4h-quote-prev-zword    Alt+Q
 z4h bindkey copy-prev-shell-word    Alt+C
 z4h bindkey insert-last-word        Alt+L
 
