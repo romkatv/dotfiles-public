@@ -51,7 +51,7 @@ setopt rm_star_silent rc_quotes glob_star_short
 
 ulimit -c $(((4 << 30) / 512))  # 4GB
 
-path+=(~/.dotnet/tools(-/N))
+path+=(~/.dotnet/tools(-/N) '/mnt/c/Program Files/Microsoft VS Code/bin'(-/N))
 
 fpath=($Z4H/romkatv/archive $fpath)
 [[ -d ~/dotfiles/functions ]] && fpath=(~/dotfiles/functions $fpath)
