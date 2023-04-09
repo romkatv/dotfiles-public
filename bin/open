@@ -15,20 +15,21 @@ case $OSTYPE in
   ;|
   linux*)
     if [[ -r /proc/version && "$(</proc/version)" == *[Mm]icrosoft* &&
-          -v commands[powershell.exe] ]]; then
-      if [[ ${1-} == -- ]]; then
-        shift
-      fi
+          -v commands[wslpath] && -v commands[powershell.exe] ]]; then
       if [[ ${1-} == -* ]]; then
-        print -ru2 -- 'open: unsupported option: '${(q-)1}
-        exit 1
+        if [[ $1 == -- ]]; then
+          shift
+        else
+          print -ru2 -- 'open: unsupported option: '${(q-)1}
+          exit 1
+        fi
       fi
       if [[ $# != 1 || -z $1 ]]; then
         print -ru2 -- 'usage: open [OPTIONS] [--] FILE'
         exit 1
       fi
       local wfile
-      wfile=$(wslpath -ma -- $1)
+      wfile=$(command wslpath -ma -- $1)
       exec -- powershell.exe -c "Invoke-Item -LiteralPath '${wfile//\'/\'\'}'"
     elif [[ -v commands[xdg-open] ]]; then
       exec xdg-open "$@" </dev/null &>/dev/null
