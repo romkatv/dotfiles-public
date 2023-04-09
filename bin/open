@@ -30,7 +30,7 @@ case $OSTYPE in
       fi
       local wfile
       wfile=$(command wslpath -ma -- $1)
-      exec -- powershell.exe -c "Invoke-Item -LiteralPath '${wfile//\'/\'\'}'"
+      exec -- powershell.exe -c "Invoke-Item -LiteralPath '${wfile//\'/''}'"
     elif [[ -v commands[xdg-open] ]]; then
       exec xdg-open "$@" </dev/null &>/dev/null
     fi
