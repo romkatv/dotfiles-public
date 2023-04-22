@@ -1,0 +1,61 @@
+#!/usr/bin/env zsh
+#
+# Usage: add [--] [FILE]...
+#
+# Prints the sum of all numbers in the input file(s). If no files are specified,
+# reads STDIN. Each input line must be either empty or contain a single real
+# number (scientific notation is allowed) with optinal whitespace before and
+# after. Addition is done in the read order using 64-bit floating point
+# arithmetics.
+#
+# Example:
+#
+#   % add <<<$'420\n0.69'
+#   420.69
+
+emulate -L zsh -o extended_glob -o no_unset -o warn_create_global -o pipe_fail
+
+function process-line() {
+  line=${line##[[:space:]]#}
+  line=${line%%[[:space:]]#}
+  [[ -z $line ]] && return
+  if [[ $line != (|+|-)([0-9]##(|.[0-9]#)|.[0-9]##)(|[eE](|+|-)[0-9]##) ]]; then
+    print -ru2 -- "not a number: ${(q-)line}"
+    exit 1
+  fi
+  [[ $line == *[.eE]* ]] || line+=.
+  (( sum += line ))
+}
+
+() {
+
+[[ ${1-} == -- ]] && shift
+
+local line
+local -F sum
+command cat -- "$@" | while read -r line; do
+  process-line
+done
+(( pipestatus[1] )) && exit 'pipestatus[1]'
+process-line
+
+# If integers are 64-bit, set lim to 1 << 63. Else set lim to 1 << 31.
+local -F lim='((1 << 30))'
+(( lim = lim * lim ))
+if (( lim != 1152921504606846976 )) 2>/dev/null; then
+  (( lim = 1 << 28 ))
+fi
+(( lim *= 8 ))
+
+# If the result can be stored in an integer, print it as integer.
+if (( sum >= -lim && sum < lim )); then
+  local -i int=sum
+  if (( sum == int )); then
+    printf '%d\n' int
+    exit
+  fi
+fi
+
+printf '%.13g\n' sum
+
+} "$@"
