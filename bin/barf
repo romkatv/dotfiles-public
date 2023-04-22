@@ -9,7 +9,8 @@ function usage() {
   print -r -- 'usage: barf path/to/dir
 
 Read a tar.gz archive from stdin and extract it to the
-specified directory. If stdin is a tty, read from clipboard.'
+specified directory. If stdin is a tty, read from clipboard
+and clear it on success.'
 }
 
 () {
@@ -31,8 +32,10 @@ specified directory. If stdin is a tty, read from clipboard.'
   fi
 
   if [[ ! -t 0 ]]; then
+    local -i clear_xclip=0
     local in=(command cat)
   elif (( $+commands[xclip] && $#DISPLAY )); then
+    local -i clear_xclip=1
     local in=(command xclip -selection clipboard -out)
   else
     print -ru2 "barf: refusing to read archive contents from terminal"
@@ -58,4 +61,7 @@ specified directory. If stdin is a tty, read from clipboard.'
   fi
 
   $in | command $precmd tar -C $1 $tar_opt -xzf - || return
+  if (( clear_xclip )); then
+    command xclip -selection clipboard -in </dev/null
+  fi
 } "$@"
