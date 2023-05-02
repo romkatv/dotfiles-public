@@ -1,1 +1,1 @@
-MANPAGER="less -gp '^       ${(b)1}( .*)?\$'" man zshall
+MANPAGER="less -gp '^       '${(q)1}'( .*)?\$'" man zshall
