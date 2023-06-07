@@ -131,6 +131,7 @@ fi
   done
 }
 
+z4h bindkey z4h-accept-line         Enter
 z4h bindkey z4h-backward-kill-word  Ctrl+Backspace
 z4h bindkey z4h-backward-kill-zword Ctrl+Alt+Backspace
 z4h bindkey z4h-cd-back             Alt+Left
