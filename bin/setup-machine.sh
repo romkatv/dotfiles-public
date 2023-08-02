@@ -430,6 +430,11 @@ function disable_motd_news() {
   sudo systemctl disable motd-news.timer
 }
 
+function install_locale() {
+  sudo locale-gen en_US.UTF-8
+  sudo update-locale
+}
+
 if [[ "$(id -u)" == 0 ]]; then
   echo "$BASH_SOURCE: please run as non-root" >&2
   exit 1
@@ -440,6 +445,7 @@ umask g-w,o-w
 add_to_sudoers
 
 install_packages
+install_locale
 install_docker
 install_brew
 install_b2
