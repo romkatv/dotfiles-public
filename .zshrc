@@ -173,6 +173,9 @@ zstyle ':completion:*:ssh:argument-1:'       tag-order          hosts users
 zstyle ':completion:*:scp:argument-rest:'    tag-order          hosts files users
 zstyle ':completion:*:(ssh|scp|rdp):*:hosts' hosts
 
+alias '$'=' '
+alias '%'=' '
+
 alias ls="${aliases[ls]:-ls} -A"
 if [[ -n $commands[dircolors] && ${${:-ls}:c:A:t} != busybox* ]]; then
   alias ls="${aliases[ls]:-ls} --group-directories-first"
