@@ -88,8 +88,36 @@ fi
   done
 }
 
-function -arith-eval() { print -r -- $(( $@ )) }
-aliases[=]='noglob -arith-eval'
+function arith-eval() {
+  local _arith_eval
+  () {
+    emulate -L zsh -o extended_glob
+    local match mbegin mend
+    _arith_eval=( ${@//(#b)([0-9]),([0-9][0-9][0-9])/$match[1]$match[2]} )
+  } "$@"
+
+  _arith_eval="${(j: :)_arith_eval}"
+  typeset -F17 _arith_eval || return
+
+  emulate -L zsh -o extended_glob
+  local match mbegin mend long short x
+
+  long=$(=printf "%.16f" $_arith_eval) || return
+  short=$long
+  for x in {0..16}; do
+    short=$(=printf "%.${x}f" $_arith_eval) || return
+    (( short == long )) && break
+  done
+
+  while true; do
+    x=${short/#(#b)(|-)([0-9]##)([0-9][0-9][0-9])(|[,.eE])/$match[1]$match[2],$match[3]$match[4]}
+    [[ $x == $short ]] && break
+    short=$x
+  done
+
+  print -r -- $short
+}
+aliases[=]='noglob arith-eval'
 
 function md() { [[ $# == 1 ]] && mkdir -p -- "$1" && cd -- "$1" }
 
