@@ -1,12 +1,15 @@
 #!/usr/bin/env zsh
 
-local _arith_eval
+local _arith_eval=${(j: :)@}
 
 # Remove commas.
 () {
   emulate -L zsh -o extended_glob
-  local match mbegin mend
-  _arith_eval=${(j: :)${@//(#b)([0-9]),([0-9][0-9][0-9])/$match[1]$match[2]}}
+  while true; do
+    local match=() mbegin=() mend=()
+    _arith_eval=${_arith_eval//(#b)([0-9]),([0-9][0-9][0-9])/$match[1]$match[2]}
+    (( $#match )) || break
+  done
 } "$@"
 
 # Do the math carefully: respect user options and avoid shadowing parameters.
