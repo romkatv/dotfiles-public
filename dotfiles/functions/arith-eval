@@ -7,7 +7,8 @@ local _arith_eval=${(j: :)@}
   emulate -L zsh -o extended_glob
   while true; do
     local match=() mbegin=() mend=()
-    _arith_eval=${_arith_eval//(#b)([0-9]),([0-9][0-9][0-9])/$match[1]$match[2]}
+    # Fancy quote characters: https://www.compart.com/en/unicode/block/U+2000.
+    _arith_eval=${_arith_eval//(#b)([0-9])[$',\'\u2018\u2019\u201A\u201B']([0-9][0-9][0-9])/$match[1]$match[2]}
     (( $#match )) || break
   done
 } "$@"
