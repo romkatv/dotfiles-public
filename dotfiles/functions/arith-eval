@@ -2,22 +2,32 @@
 
 local _arith_eval=${(j: :)@}
 
-# Remove commas.
+# Remove thousand digit separators.
 () {
   emulate -L zsh -o extended_glob
+  local _arith_eval_sep=",'"
+  if [[ -o multibyte && $TERM != (dumb|linux) ]]; then
+    zmodload zsh/langinfo || return
+    if [[ $langinfo[CODESET] == (utf|UTF)* ]]; then
+      # Fancy quote characters: https://www.compart.com/en/unicode/block/U+2000.
+      _arith_eval_sep+=$'\u2018\u2019\u201A\u201B'
+    fi
+  fi
   while true; do
     local match=() mbegin=() mend=()
     # Fancy quote characters: https://www.compart.com/en/unicode/block/U+2000.
-    _arith_eval=${_arith_eval//(#b)([0-9])[$',\'\u2018\u2019\u201A\u201B']([0-9][0-9][0-9])/$match[1]$match[2]}
+    _arith_eval=${_arith_eval//(#b)([0-9])[$_arith_eval_sep]([0-9][0-9][0-9])/$match[1]$match[2]}
     (( $#match )) || break
   done
-} "$@"
+} || return
 
 # Do the math carefully: respect user options and avoid shadowing parameters.
 printf -v _arith_eval '%.13g' _arith_eval || return
 
 emulate -L zsh -o extended_glob
 local match mbegin mend x
+
+typeset -g ans=$_arith_eval
 
 # Add commas.
 while true; do
