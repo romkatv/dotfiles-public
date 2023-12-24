@@ -135,6 +135,7 @@ function install_packages() {
     p7zip-full
     p7zip-rar
     perl
+    poppler-utils
     python3
     python3-pip
     pigz
