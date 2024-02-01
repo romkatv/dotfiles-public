@@ -260,6 +260,16 @@ function install_gh() {
   rm "$deb"
 }
 
+function install_fx() {
+  local v="31.0.0"
+  ! command -v fx &>/dev/null || [[ "$(fx --version)" != "$v" ]] || return 0
+  local tmp
+  tmp="$(mktemp -- ~/bin/fx.XXXXXX)"
+  curl -fsSLo "$tmp" "https://github.com/antonmedv/fx/releases/download/${v}/fx_linux_amd64"
+  chmod +x -- "$tmp"
+  mv -- "$tmp" ~/bin/fx
+}
+
 function install_nuget() {
   (( WSL )) || return 0
   local v="5.8.1"
@@ -456,6 +466,7 @@ install_jc
 install_bat
 install_gh
 install_exa
+install_fx
 install_nuget
 install_bw
 # install_fonts
