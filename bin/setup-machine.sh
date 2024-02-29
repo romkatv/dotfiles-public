@@ -295,6 +295,16 @@ function install_bw() {
   rm -rf -- "$tmp"
 }
 
+function install_websocat() {
+  local v="1.12.0"
+  [[ ! -x ~/bin/websocat || "$(~/bin/websocat --version)" != "websocat $v" ]] || return 0
+  local tmp
+  tmp="$(mktemp -- ~/bin/websocat.XXXXXX)"
+  curl -fsSLo "$tmp" "https://github.com/vi/websocat/releases/download/v${v}/websocat.x86_64-unknown-linux-musl"
+  chmod +x -- "$tmp"
+  mv -- "$tmp" ~/bin/websocat
+}
+
 function fix_locale() {
   sudo tee /etc/default/locale >/dev/null <<<'LC_ALL="C.UTF-8"'
 }
@@ -469,6 +479,7 @@ install_exa
 install_fx
 install_nuget
 install_bw
+install_websocat
 # install_fonts
 
 patch_ssh
