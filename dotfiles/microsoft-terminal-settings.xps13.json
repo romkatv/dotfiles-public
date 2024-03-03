@@ -67,7 +67,7 @@
     ],
     "alwaysShowTabs": false,
     "copyFormatting": "none",
-    "defaultProfile": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
+    "defaultProfile": "{60c3e313-8e1a-58f6-8175-3650c2bd2b26}",
     "disableAnimations": true,
     "initialCols": 92,
     "initialPosition": "2100,1",
@@ -107,9 +107,9 @@
                 "source": "Windows.Terminal.Azure"
             },
             {
-                "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
+                "guid": "{60c3e313-8e1a-58f6-8175-3650c2bd2b26}",
                 "hidden": false,
-                "name": "Ubuntu-20.04",
+                "name": "Ubuntu-22.04",
                 "source": "Windows.Terminal.Wsl",
                 "startingDirectory": "/home/romka"
             }

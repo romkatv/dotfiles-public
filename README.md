@@ -80,8 +80,12 @@ wsl.exe --unregister DISTRO
 These steps allow you to recreate the whole WSL environment. Before proceeding, delete the current distro if you have it. See [WSL Removal](#wsl-removal).
 
 - Download `id_rsa` into the Windows `Downloads` folder. It's OK if it's downloaded as `id_rsa.txt`.
-- Go to https://www.microsoft.com/en-us/p/ubuntu-2004-lts/9n6svws3rx71 and install *Ubuntu 20.04 LTS*.
-- Click *Start > Ubuntu*. If you get an error, remove *Ubuntu* via *Add or remove programs* and install it again. Once *Start > Ubuntu* is working, create a new user.
+- Run these commands from *PowerShell*:
+  ```powershell
+  wsl.exe --set-default-version 1
+  wsl.exe --install -d Ubuntu-22.04
+  ```
+- When prompted, create a new user.
 - Type this (change the value of `GITHUB_USERNAME` if it's not the same as your WSL username):
 ```bash
 GITHUB_USERNAME=$USER bash -c \
@@ -99,7 +103,7 @@ GITHUB_USERNAME=$USER bash -c \
   - Click *Manage settings* under *Virus & threat protection settings*.
   - Click *Add or remove exclusions* under *Exclusions*.
   - Click *Add an exclusion > Folder*.
-  - Select `%USERPROFILE%\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc`.
+  - Select `%USERPROFILE%\AppData\Local\Packages\CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc`.
 
 ### Maintenance
 
