@@ -19,7 +19,7 @@ function clone_repo() {
     return 0
   fi
 
-  git --git-dir="$git_dir" init
+  git --git-dir="$git_dir" init -b master
   git --git-dir="$git_dir" config core.bare false
   git --git-dir="$git_dir" config status.showuntrackedfiles no
   git --git-dir="$git_dir" remote add origin "$uri"
