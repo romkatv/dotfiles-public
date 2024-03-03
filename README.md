@@ -72,6 +72,7 @@ wsl.exe --list
 ```
 - Delete a distro:
 ```powershell
+wsl.exe --terminate DISTRO
 wsl.exe --unregister DISTRO
 ```
 
@@ -93,7 +94,7 @@ GITHUB_USERNAME=$USER bash -c \
 ```
 - Say `Yes` when prompted to terminate WSL.
 - Run *Start > Windows Terminal*.
-  - Press <kbd>Ctrl+,</kbd>.
+  - Press <kbd>Ctrl+Shift+,</kbd>.
   - Replace the content of `settings.json` with [this](https://raw.githubusercontent.com/romkatv/dotfiles-public/master/dotfiles/microsoft-terminal-settings.json). Change "romkatv" to your WSL username.
 
 #### Optional: Windows Defender Exclusion
