@@ -176,7 +176,7 @@ function install_docker() {
     release="$(lsb_release -cs)"
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo apt-key fingerprint 0EBFCD88
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu
+    sudo add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu
       $release
       stable"
     sudo apt-get update -y
@@ -472,10 +472,10 @@ install_brew
 install_b2
 install_vscode
 install_ripgrep
-install_jc
+# install_jc
 install_bat
-install_gh
-install_exa
+# install_gh
+# install_exa
 install_fx
 install_nuget
 install_bw
