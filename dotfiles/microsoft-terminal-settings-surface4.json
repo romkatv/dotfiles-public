@@ -62,7 +62,7 @@
   ],
   "alwaysShowTabs": false,
   "copyFormatting": "none",
-  "defaultProfile": "{60c3e313-8e1a-58f6-8175-3650c2bd2b26}",
+  "defaultProfile": "{17bf3de4-5353-5709-bcf9-835bd952a95e}",
   "disableAnimations": true,
   "initialCols": 80,
   "initialPosition": "1250,1",
@@ -98,7 +98,7 @@
         "source": "Windows.Terminal.Azure"
       },
       {
-        "guid": "{60c3e313-8e1a-58f6-8175-3650c2bd2b26}",
+        "guid": "{17bf3de4-5353-5709-bcf9-835bd952a95e}",
         "hidden": false,
         "name": "Ubuntu-22.04",
         "source": "Windows.Terminal.Wsl",
