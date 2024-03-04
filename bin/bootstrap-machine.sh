@@ -71,8 +71,8 @@ zsh -fec 'fpath=(~/dotfiles/functions $fpath); autoload -Uz sync-dotfiles; sync-
 
 bash ~/bin/setup-machine.sh
 
-if [[ -f ~/bin/bootstrap-machine-private.sh ]]; then
-  bash ~/bin/bootstrap-machine-private.sh
+if [[ -f ~/bin/bootstrap-machine-private.zsh ]]; then
+  zsh ~/bin/bootstrap-machine-private.zsh
 fi
 
 if [[ -t 0 && -n "${WSL_DISTRO_NAME-}" ]]; then
