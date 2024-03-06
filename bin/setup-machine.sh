@@ -103,6 +103,7 @@ function install_packages() {
     ascii
     apt-transport-https
     autoconf
+    bc
     bfs
     bsdutils
     bzip2
