@@ -23,12 +23,12 @@ else
 fi
 
 () {
-  local var proj
+  local var proj dir
   for var proj in P10K powerlevel10k ZSYH zsh-syntax-highlighting ZASUG zsh-autosuggestions; do
     if [[ ${(P)var} == 0 ]]; then
       zstyle ":z4h:$proj" channel none
-    elif [[ -d ~/$proj ]]; then
-      zstyle ":z4h:$proj" channel command "zf_ln -s -- ~/$proj \$Z4H_PACKAGE_DIR"
+    elif [[ -e ${dir::=~/$proj} || -e ${dir::=~/zsh4humans/deps/$proj} ]]; then
+      zstyle ":z4h:$proj" channel command "zf_ln -s -- ${(q)dir} \$Z4H_PACKAGE_DIR"
     fi
   done
 }
