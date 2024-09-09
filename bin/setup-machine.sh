@@ -222,11 +222,11 @@ function install_exa() {
 }
 
 function install_ripgrep() {
-  local v="12.1.1"
+  local v="14.1.1"
   ! command -v rg &>/dev/null || [[ "$(rg --version)" != *" $v "* ]] || return 0
   local deb
   deb="$(mktemp)"
-  curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${v}/ripgrep_${v}_amd64.deb" >"$deb"
+  curl -fsSL "https://github.com/BurntSushi/ripgrep/releases/download/${v}/ripgrep_${v}-1_amd64.deb" >"$deb"
   sudo dpkg -i "$deb"
   rm "$deb"
 }
